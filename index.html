@@ -60,5 +60,101 @@
       TODO(henbos): Fill in.
     </p>
   </section>
+  <section>
+    <h2>Terminology</h2>
+    <p>When referring to exceptions, the terms <dfn
+      data-cite="!WEBIDL#dfn-throw">throw</dfn> and
+      <dfn data-dfn-for="exception" data-cite=
+      "!WEBIDL#dfn-create-exception">create</dfn> are
+      defined in [[WEBIDL]].</p>
+  </section>
+  <section id="rtcrtpreceiver-interface">
+    <h3>
+      <dfn>RTCRtpReceiver</dfn> extensions
+    </h3>
+    <p>
+      The <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpreceiver">RTCRtpReceiver</a></code>
+      interface is defined in [[WEBRTC]]. This documents extends that interface
+      by adding an additional internal slot and attribute.
+    </p>
+    <p>
+      Let <code>RTCRtpReceiver</code> objects have a
+      <dfn>[[\PlayoutDelayHint]]</dfn> internal slot initially
+      initialized to <code>null</code>.
+    </p>
+    <pre class="idl">partial interface RTCRtpReceiver {
+  attribute double? playoutDelayHint;
+  };</pre>
+    <section>
+      <h2>Attributes</h2>
+      <dl data-link-for="RTCRtpReceiver" data-dfn-for="RTCRtpReceiver"
+      class="attributes">
+        <dt><dfn><code>playoutDelayHint</code></dfn> of type <span
+          class="idlAttrType">double</span>, nullable</dt>
+        <dd>
+          <p>This attribute allows the application to give a hint to the User
+          Agent about what playout delay is acceptable. The User Agent SHOULD
+          NOT playout audio or video that is received unless this amount of time
+          has passed in seconds, allowing the User Agent to perform more or less
+          buffering than it might otherwise do. This allows to influence the
+          tradeoffs between having a higher delay and the risk that buffers such
+          as the jitter buffer will run out of audio or video frames to play due
+          to network jitter. This API only serves to provide a hint, and the
+          User Agent may ignore it. The hint SHOULD NOT be followed if it
+          significantly impacts audio or video quality (e.g. bad network), or if
+          the value implies allocating larger buffers than the User Agent is
+          willing to provide.</p>
+          <p class="note">
+            The playout delay hint applies even if DTX is used. For example, if
+            DTX is used and packets start flowing after silence, the hint can
+            influence the User Agent to buffer these packets rather than playing
+            them out.
+          </p>
+          <p>On getting, this attribute MUST return the value of the
+          <a>[[\PlayoutDelayHint]]</a> internal slot.</p>
+          <p>On setting, the User Agent MUST run the following steps:</p>
+          <ol>
+            <li>
+              <p>Let <var>receiver</var> be the
+              <code><a>RTCRtpReceiver</a></code> object on which the setter is
+              invoked.</p>
+            </li>
+            <li>
+              <p>Let <var>delay</var> be the argument to the setter.</p>
+            </li>
+            <li>
+              <p>If <var>delay</var> is negative, <a>throw</a> an
+              <code>InvalidAccessError</code> and abort these steps.</p>
+            </li>
+            <li>
+              <p>Set the value of <var>receiver</var>'s
+              <a>[[\PlayoutDelayHint]]</a> internal slot to
+              <var>delay</var>.</p>
+            </li>
+            <li>
+              <p>In parallel, begin executing the following steps:</p>
+              <ol>
+                <li>
+                  <p>Update the underlying system about the new delay hint, or
+                  that there is no hint if <var>delay</var> is
+                  <code>null</code>. If at any point in time this value is
+                  larger than the User Agent is able or willing to provide, the
+                  User Agent SHOULD use the maximum value available to match the
+                  requested delay as close as possible. If at any point in time
+                  this value is smaller than the User Agent determines is needed
+                  in order provide sufficient audio or video quality, the User
+                  Agent SHOULD use the smallest value possible.</p>
+                  <p class="note">
+                    If User Agent ignores the hint at any time, this is not
+                    reflected in the <a>[[\PlayoutDelayHint]]</a> internal slot.
+                  </p>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </dd>
+      </dl>
+    </section>
+  </section>
 </body>
 </html>
