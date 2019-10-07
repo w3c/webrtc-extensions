@@ -74,7 +74,7 @@
     </h3>
     <p>
       The <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpreceiver">RTCRtpReceiver</a></code>
-      interface is defined in [[WEBRTC]]. This documents extends that interface
+      interface is defined in [[WEBRTC]]. This document extends that interface
       by adding an additional internal slot and attribute.
     </p>
     <p>
@@ -155,6 +155,40 @@
         </dd>
       </dl>
     </section>
+  </section>
+  <section id="rtcrtpencodingparameters-interface">
+    <h3>
+      <dfn>RTCRtpEncodingParameters</dfn> extensions
+    </h3>
+    <p>
+      The <code><a href="https://w3c.github.io/webrtc-pc/#rtcrtpencodingparameters">RTCRtpEncodingParameters</a></code>
+      dictionary is defined in [[WEBRTC]]. This document extends that dictionary
+      by adding an additional boolean flag.
+    </p>
+    <pre class="idl">partial dictionary RTCRtpEncodingParameters {
+      boolean adaptivePtime = false;
+    };</pre>
+    <h2>Dictionary <code><a>RTCRtpEncodingParameters</a></code> Members</h2>
+    <dl data-link-for="RTCRtpEncodingParameters" data-dfn-for="RTCRtpEncodingParameters" class="dictionary-members">
+      <dt><dfn data-idl><code>adaptivePtime</code></dfn> of type <span class="idlMemberType">boolean</span>, defaulting to <code>false</code>.</dt>
+      <dd>
+        <p>Indicates whether this encoding MAY dynamically change
+        the frame length. If the value is <code>true</code>,
+        the user agent MAY use any valid frame length for any of its
+        frames, and MAY change this at any time. Valid values are multiples
+        of 10ms. If the <code>maxptime</code> attribute (defined in
+        [[RFC4566]] Section 6) is specified, that maximum applies.
+        <a href="https://w3c.github.io/webrtc-pc/#dfn-read-only-parameter">Read-only parameter.</a></p>
+        <p class="note">Using a longer frame length reduces the
+        bandwidth consumption due to overhead, but does so at the cost
+        of increased latency. Changing the frame length dynamically allows the
+        user agent to adapt its bandwidth allocation strategy based on the
+        current network conditions.</p>
+        <p>If <code>adaptivePtime</code> is set to <code>true</code>,
+        <code>ptime</code> MUST NOT be set; otherwise,
+        <code>InvalidModificationError</code> MUST be thrown.</p>
+      </dd>
+    </dl>
   </section>
 </body>
 </html>
