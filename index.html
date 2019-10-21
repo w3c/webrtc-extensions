@@ -110,6 +110,19 @@
             influence the User Agent to buffer these packets rather than playing
             them out.
           </p>
+          <p class="note">
+            If the track is paired with other tracks through
+            <code><a>RTCRtpReceiver</a></code>
+            <a href="https://w3c.github.io/webrtc-pc/#dfn-associatedremotemediastreams">
+            [[\AssociatedRemoteMediaStreams]]</a> internal slot, then it will
+            be synchronized with other tracks (for e.g. audio video
+            synchronization). This means that even if one of the paired tracks
+            is delayed through [[\PlayoutDelayHint]] then the User Agent
+            synchronization mechanism will automatically delay all others
+            paired tracks. If multiple such paired tracks are delayed through
+            <a>[[\PlayoutDelayHint]]</a> by different amounts then the largest
+            of those hints will take precedence in synchronization mechanism.
+          </p>
           <p>On getting, this attribute MUST return the value of the
           <a>[[\PlayoutDelayHint]]</a> internal slot.</p>
           <p>On setting, the User Agent MUST run the following steps:</p>
