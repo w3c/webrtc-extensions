@@ -62,11 +62,59 @@
   </section>
   <section>
     <h2>Terminology</h2>
+    <p>The term <dfn data-cite="!WEBRTC#dom-rtciceserver">RTCIceServer</dfn> is
+    defined in [[WEBRTC]].</p>
     <p>When referring to exceptions, the terms <dfn
       data-cite="!WEBIDL#dfn-throw">throw</dfn> and
       <dfn data-dfn-for="exception" data-cite=
       "!WEBIDL#dfn-create-exception">create</dfn> are
       defined in [[WEBIDL]].</p>
+  </section>
+  <section id="rtcpeerconnection-interface">
+    <h3>
+      <dfn>RTCPeerConnection</dfn> extensions
+    </h3>
+    <p>
+      The <code><a href="https://w3c.github.io/webrtc-pc/#interface-definition">RTCPeerConnection</a></code>
+      interface is defined in [[WEBRTC]]. This document extends that interface
+      by adding an additional static method.
+    </p>
+    <pre class="idl">partial interface RTCPeerConnection {
+  static sequence&lt;RTCIceServer&gt; getDefaultIceServers();
+};</pre>
+    <section>
+      <h2>Methods</h2>
+      <dl data-link-for="RTCPeerConnection" data-dfn-for=
+      "RTCPeerConnection" class="methods">
+        <dfn data-idl><code>getDefaultIceServers</code></dfn></dt>
+        <dd>
+          <p>Returns a list of ICE servers that are configured into the
+          browser. A browser might be configured to use local or private
+          STUN or TURN servers. This method allows an application to learn
+          about these servers and optionally use them.</p>
+          <p class="fingerprint">This list is likely to be persistent and
+          is the same across origins. It thus increases the
+          fingerprinting surface of the browser. In privacy-sensitive
+          contexts, browsers can consider mitigations such as only
+          providing this data to whitelisted origins (or not providing it
+          at all.)</p>
+          <p class="note">Since the use of this information is left to
+          the discretion of application developers, configuring a user
+          agent with these defaults does not per se increase a user's
+          ability to limit the exposure of their IP addresses.</p>
+          <p class="note">If set, the configured default ICE servers exposed by
+          <a data-link-for="RTCPeerConnection">getDefaultIceServers</a> on
+          <code><a>RTCPeerConnection</a></code> instances provides persistent
+          information across time and origins which increases the fingerprinting
+          surface of a given browser.</p>
+          <div class="issue atrisk">
+            <p><code>getDefaultIceServers()</code> was moved from [[WEBRTC]] to
+            this extension spec due to lack of support from implementers and
+            concerns discussed in <a href="https://github.com/w3c/webrtc-pc/issues/2023">webrtc-pc#2023</a>.</p>
+          </div>
+        </dd>
+      </dl>
+    </section>
   </section>
   <section id="rtcrtpreceiver-interface">
     <h3>
