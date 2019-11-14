@@ -141,17 +141,17 @@
           class="idlAttrType">double</span>, nullable</dt>
         <dd>
           <p>This attribute allows the application to give a hint to the User
-          Agent about what playout delay is acceptable. The User Agent SHOULD
-          NOT playout audio or video that is received unless this amount of time
-          has passed in seconds, allowing the User Agent to perform more or less
-          buffering than it might otherwise do. This allows to influence the
-          tradeoffs between having a higher delay and the risk that buffers such
-          as the jitter buffer will run out of audio or video frames to play due
-          to network jitter. This API only serves to provide a hint, and the
-          User Agent may ignore it. The hint SHOULD NOT be followed if it
-          significantly impacts audio or video quality (e.g. bad network), or if
-          the value implies allocating larger buffers than the User Agent is
-          willing to provide.</p>
+          Agent about what total delay is acceptable before the playout. The
+          User Agent SHOULD NOT playout audio or video that is received unless
+          this total amount of time has passed in seconds, allowing the User
+          Agent to perform more or less buffering than it might otherwise do.
+          This allows to influence the tradeoffs between having a higher delay
+          and the risk that buffers such as the jitter buffer will run out of
+          audio or video frames to play due to network jitter. This API only
+          serves to provide a hint, and the User Agent may ignore it. The hint
+          SHOULD NOT be followed if it significantly impacts audio or video
+          quality (e.g. bad network), or if the value implies allocating larger
+          buffers than the User Agent is willing to provide.</p>
           <p class="note">
             The playout delay hint applies even if DTX is used. For example, if
             DTX is used and packets start flowing after silence, the hint can
@@ -170,6 +170,13 @@
             paired tracks. If multiple such paired tracks are delayed through
             <a>[[\PlayoutDelayHint]]</a> by different amounts then the largest
             of those hints will take precedence in synchronization mechanism.
+          </p>
+          <p class="note">
+            Receiver's current delay can be measured as the delta
+            <code><a href="https://w3c.github.io/webrtc-stats/#dom-rtcinboundrtpstreamstats-jitterbufferdelay">
+            jitterBufferDelay</a></code> divided by the delta
+            <code><a href="https://w3c.github.io/webrtc-stats/#dom-rtcinboundrtpstreamstats-jitterbufferemittedcount">
+            jitterBufferEmittedCount</a></code>.
           </p>
           <p>On getting, this attribute MUST return the value of the
           <a>[[\PlayoutDelayHint]]</a> internal slot.</p>
@@ -208,6 +215,23 @@
                   <p class="note">
                     If User Agent ignores the hint at any time, this is not
                     reflected in the <a>[[\PlayoutDelayHint]]</a> internal slot.
+                  </p>
+                </li>
+                <li>
+                  <p>Modifying the delay of the underlying system SHOULD affect
+                  the internal audio or video buffering gradually in order not
+                  to hurt user experience. Audio samples or video frames SHOULD
+                  be accelerated or decelerated before playout, similarly to how
+                  it is done for
+                  <a href="https://tools.ietf.org/html/rfc5888#section-7">
+                  audio/video synchronization</a> or in response to congestion
+                  control.</p>
+                  <p class="note">
+                    For audio, acceleration and deceleration can be measured
+                    with <code><a href="https://w3c.github.io/webrtc-stats/#dom-rtcinboundrtpstreamstats-insertedsamplesfordeceleration">insertedSamplesForDeceleration</a></code>
+                    and <code><a href="https://w3c.github.io/webrtc-stats/#dom-rtcinboundrtpstreamstats-removedsamplesforacceleration">removedSamplesForAcceleration</a></code>.
+                    For video, this may result in the same frame being rendered
+                    multiple times or frames may be dropped.
                   </p>
                 </li>
               </ol>
