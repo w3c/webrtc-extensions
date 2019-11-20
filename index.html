@@ -140,18 +140,20 @@
         <dt><dfn><code>playoutDelayHint</code></dfn> of type <span
           class="idlAttrType">double</span>, nullable</dt>
         <dd>
-          <p>This attribute allows the application to give a hint to the User
-          Agent about what total delay is acceptable before the playout. The
+          <p>This attribute allows the application to specify a target duration
+          of time between network reception of media and playout. The
           User Agent SHOULD NOT playout audio or video that is received unless
-          this total amount of time has passed in seconds, allowing the User
+          this amount of time has passed in seconds, allowing the User
           Agent to perform more or less buffering than it might otherwise do.
           This allows to influence the tradeoffs between having a higher delay
           and the risk that buffers such as the jitter buffer will run out of
-          audio or video frames to play due to network jitter. This API only
-          serves to provide a hint, and the User Agent may ignore it. The hint
-          SHOULD NOT be followed if it significantly impacts audio or video
-          quality (e.g. bad network), or if the value implies allocating larger
-          buffers than the User Agent is willing to provide.</p>
+          audio or video frames to play due to network jitter. 
+          If the given delay value is larger than the User Agent is able or
+          willing to provide, the User Agent MUST use the maximum value
+          available to match the requested delay as close as possible. If at
+          any point in time delay is smaller than the User Agent determines
+          is needed in order provide sufficient audio or video quality, the User
+          Agent MUST use the smallest value possible.</p>
           <p class="note">
             The playout delay hint applies even if DTX is used. For example, if
             DTX is used and packets start flowing after silence, the hint can
@@ -203,18 +205,14 @@
               <p>In parallel, begin executing the following steps:</p>
               <ol>
                 <li>
-                  <p>Update the underlying system about the new delay hint, or
-                  that there is no hint if <var>delay</var> is
-                  <code>null</code>. If at any point in time this value is
-                  larger than the User Agent is able or willing to provide, the
-                  User Agent SHOULD use the maximum value available to match the
-                  requested delay as close as possible. If at any point in time
-                  this value is smaller than the User Agent determines is needed
-                  in order provide sufficient audio or video quality, the User
-                  Agent SHOULD use the smallest value possible.</p>
+                  <p>Update the underlying system about the new delay request,
+                  or that there is no hint if <var>delay</var> is
+                  <code>null</code>.</p>
                   <p class="note">
-                    If User Agent ignores the hint at any time, this is not
-                    reflected in the <a>[[\PlayoutDelayHint]]</a> internal slot.
+                    If User Agent chooses delay different from requested one,
+                    for e.g. due to network conditions or physical memory
+                    constraints, this is not reflected in the
+                    <a>[[\PlayoutDelayHint]]</a> internal slot.
                   </p>
                 </li>
                 <li>
