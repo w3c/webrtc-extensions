@@ -261,12 +261,14 @@
         send this encoding, in frames per second. The user agent is free to
         allocate bandwidth between the encodings, as long as the
         <code>maxFramerate</code> value is not exceeded.</p>
+        <p>When set with <code>addTransceiver</code>, the frame rate is required
+        to be 0.0 or greater. If this is not the case, <a>throw</a> a
+        <code>RangeError</code>.</p>
         <p>If changed with <code>setParameters</code>, the new frame rate takes
-        effect after the current picture is completed; setting the max framerate
-        to zero thus has the effect of freezing the video on the next frame.</p>
-        <p>Upon setting with <code>addTransceiver</code> or
-        <code>setParameters</code>, if the value is less than 0.0,
-        <a>throw</a> a <code>RangeError</code>.</p>
+        effect after the current picture is completed; setting the max frame
+        rate to zero thus has the effect of freezing the video on the next
+        frame. Upon setting with <code>setParameters</code>, if the value is
+        less than 0.0, <a>reject</a> with a <code>RangeError</code>.</p>
         <div class="issue atrisk">
           <p><code>maxFramerate</code> was moved from [[WEBRTC]] to this
           extension spec due to lack of support from implementers.</p>
