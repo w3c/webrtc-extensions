@@ -131,17 +131,17 @@
     </p>
     <p>
       Let <code>RTCRtpReceiver</code> objects have a
-      <dfn>[[\PlayoutDelayHint]]</dfn> internal slot initially
+      <dfn>[[\PlayoutDelay]]</dfn> internal slot initially
       initialized to <code>null</code>.
     </p>
     <pre class="idl">partial interface RTCRtpReceiver {
-  attribute double? playoutDelayHint;
+  attribute double? playoutDelay;
   };</pre>
     <section>
       <h2>Attributes</h2>
       <dl data-link-for="RTCRtpReceiver" data-dfn-for="RTCRtpReceiver"
       class="attributes">
-        <dt><dfn><code>playoutDelayHint</code></dfn> of type <span
+        <dt><dfn><code>playoutDelay</code></dfn> of type <span
           class="idlAttrType">double</span>, nullable</dt>
         <dd>
           <p>This attribute allows the application to specify a target duration
@@ -169,10 +169,10 @@
             [[\AssociatedRemoteMediaStreams]]</a> internal slot, then it will
             be synchronized with other tracks (for e.g. audio video
             synchronization). This means that even if one of the paired tracks
-            is delayed through [[\PlayoutDelayHint]] then the User Agent
+            is delayed through [[\PlayoutDelay]] then the User Agent
             synchronization mechanism will automatically delay all others
             paired tracks. If multiple such paired tracks are delayed through
-            <a>[[\PlayoutDelayHint]]</a> by different amounts then the largest
+            <a>[[\PlayoutDelay]]</a> by different amounts then the largest
             of those hints will take precedence in synchronization mechanism.
           </p>
           <p class="note">
@@ -183,7 +183,7 @@
             jitterBufferEmittedCount</a></code>.
           </p>
           <p>On getting, this attribute MUST return the value of the
-          <a>[[\PlayoutDelayHint]]</a> internal slot.</p>
+          <a>[[\PlayoutDelay]]</a> internal slot.</p>
           <p>On setting, the User Agent MUST run the following steps:</p>
           <ol>
             <li>
@@ -195,13 +195,12 @@
               <p>Let <var>delay</var> be the argument to the setter.</p>
             </li>
             <li>
-              <p>If <var>delay</var> is negative, <a>throw</a> an
-              <code>TypeError</code> and abort these steps.</p>
+              <p>If <var>delay</var> is negative or larger than 4 seconds then,
+              <a>throw</a> an <code>TypeError</code> and abort these steps.</p>
             </li>
             <li>
-              <p>Set the value of <var>receiver</var>'s
-              <a>[[\PlayoutDelayHint]]</a> internal slot to
-              <var>delay</var>.</p>
+              <p>Set the value of <var>receiver</var>'s <a>[[\PlayoutDelay]]</a>
+              internal slot to <var>delay</var>.</p>
             </li>
             <li>
               <p>In parallel, begin executing the following steps:</p>
@@ -219,7 +218,7 @@
                     If User Agent chooses delay different from requested one,
                     for e.g. due to network conditions or physical memory
                     constraints, this is not reflected in the
-                    <a>[[\PlayoutDelayHint]]</a> internal slot.
+                    <a>[[\PlayoutDelay]]</a> internal slot.
                   </p>
                 </li>
                 <li>
@@ -237,6 +236,11 @@
                     and <code><a href="https://w3c.github.io/webrtc-stats/#dom-rtcinboundrtpstreamstats-removedsamplesforacceleration">removedSamplesForAcceleration</a></code>.
                     For video, this may result in the same frame being rendered
                     multiple times or frames may be dropped.
+
+                    With constant audio/video feed received under the perfect
+                    network conditions, for e.g. loopback connection over
+                    localhost, it SHOULD take less than 30 seconds on average to
+                    reach 1 second buffering level from empty buffer.
                   </p>
                 </li>
               </ol>
