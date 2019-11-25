@@ -230,17 +230,18 @@
                   <a href="https://tools.ietf.org/html/rfc5888#section-7">
                   audio/video synchronization</a> or in response to congestion
                   control.</p>
+                  <p>The acceleration or deceleration rate may vary depending on
+                  network conditions or the type of audio received (e.g. speech
+                  or background noise). It MAY take several seconds to achieve 1
+                  second of buffering but SHOULD not take more than 30 seconds
+                  assuming packets are being received. The speed MAY be
+                  different for audio and video.</p>
                   <p class="note">
                     For audio, acceleration and deceleration can be measured
                     with <code><a href="https://w3c.github.io/webrtc-stats/#dom-rtcinboundrtpstreamstats-insertedsamplesfordeceleration">insertedSamplesForDeceleration</a></code>
                     and <code><a href="https://w3c.github.io/webrtc-stats/#dom-rtcinboundrtpstreamstats-removedsamplesforacceleration">removedSamplesForAcceleration</a></code>.
                     For video, this may result in the same frame being rendered
                     multiple times or frames may be dropped.
-
-                    With constant audio/video feed received under the perfect
-                    network conditions, for e.g. loopback connection over
-                    localhost, it SHOULD take less than 30 seconds on average to
-                    reach 1 second buffering level from empty buffer.
                   </p>
                 </li>
               </ol>
