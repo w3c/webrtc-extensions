@@ -82,11 +82,12 @@
     </h3>
     <p>
       The <code><a href="https://w3c.github.io/webrtc-pc/#interface-definition">RTCPeerConnection</a></code>
-      interface is defined in [[WEBRTC]]. This document extends that interface
-      by adding an additional static method.
+      interface is defined in [[WEBRTC]]. This document extends that interface.
     </p>
     <pre class="idl">partial interface RTCPeerConnection {
   static sequence&lt;RTCIceServer&gt; getDefaultIceServers();
+  Promise&lt;sequence&lt;RTCRtpCodecCapability&gt;&gt; getDecoderCapabilities();
+  Promise&lt;sequence&lt;RTCRtpCodecCapability&gt;&gt; getEncoderCapabilities();
 };</pre>
     <section>
       <h2>Methods</h2>
@@ -118,6 +119,32 @@
             this extension spec due to lack of support from implementers and
             concerns discussed in <a href="https://github.com/w3c/webrtc-pc/issues/2023">webrtc-pc#2023</a>.</p>
           </div>
+        </dd>
+        <dfn data-idl><code>getDecoderCapabilities</code></dfn>
+        <dd>
+          <p>Returns a list of codecs that are supported by the decoder.
+          In addition to the information provided by the static function
+          <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpreceiver-getcapabilities">RtpReceiver.getCapabilities()</a></code>
+          there is a boolean telling if the decoding will be hardware
+          accelerated.</p>
+          <p class="fingerprint">This list is persistent and thus increases the
+          fingerprinting surface of the browser. The browser may choose to take
+          precautious actions such as only providing this information to white-
+          listed origins, prompt the user for permission, etc.
+          </p>
+        </dd>
+        <dfn data-idl><code>getEncoderCapabilities</code></dfn>
+        <dd>
+          <p>Returns a list of codecs that are supported by the encoder.
+          In addition to the information provided by the static function
+          <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpsend-getcapabilities">RtpSender.getCapabilities()</a></code>
+          there is a boolean telling if the encoding will be hardware
+          accelerated.</p>
+          <p class="fingerprint">This list is persistent and thus increases the
+          fingerprinting surface of the browser. The browser may choose to take
+          precautious actions such as only providing this information to white-
+          listed origins, prompt the user for permission, etc.
+          </p>
         </dd>
       </dl>
     </section>
@@ -300,6 +327,31 @@
           <p><code>maxFramerate</code> was moved from [[WEBRTC]] to this
           extension spec due to lack of support from implementers.</p>
         </div>
+      </dd>
+    </dl>
+  </section>
+  <section id="rtcrtpcodeccapability-dictionary">
+    <h3>
+      <dfn>RTCRtpCodecCapability</dfn> extensions
+    </h3>
+    <p>
+      The <code><a href="https://w3c.github.io/webrtc-pc/#rtcrtpcodeccapability">RTCRtpCodecCapability</a></code>
+      dictionary is defined in [[WEBRTC]]. This document extends that dictionary
+      by adding an additional boolean flag.
+    </p>
+    <pre class="idl">partial dictionary RTCRtpCodecCapability {
+      boolean hardwareAccelerated;
+    };</pre>
+    <h2>Dictionary <code><a>RTCRtpCodecCapability</a></code> Members</h2>
+    <dl data-link-for="RTCRtpCodecCapability" data-dfn-for="RTCRtpCodecCapability" class="dictionary-members">
+      <dt><dfn data-idl><code>hardwareAccelerated</code></dfn> of type <span class="idlMemberType">boolean</span></dt>
+      <dd>
+        <p>Indicates whether this codec will be hardware accelerated or not.
+        This value is never set when returned from the static functions
+        <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpreceiver-getcapabilities">RtpReceiver.getCapabilities()</a></code>
+        or
+        <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpsender-getcapabilities">RtpSender.getCapabilities()</a></code>.
+        </p>
       </dd>
     </dl>
   </section>
