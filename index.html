@@ -60,8 +60,25 @@
   <section id="introduction">
     <h2>Introduction</h2>
     <p>
-      TODO(henbos): Fill in.
+      This document contains proposed extensions to the [[WEBRTC]] specification,
+      where it was thought inappropriate to incorporate them directly into that specification
+      at the point in time when they were written, but they were too small to warrant
+      writing a separate document.
     </p>
+    <p>
+      If, at a later time, it is a good time to add them to the base specification, that
+      will be done. Deciding factors will include maturity of the extension, consensus on
+      adding it, and implementation experience.
+    </p>
+    <p>
+      This document contains a number of sections that have extensions for one specific
+      interface or dictionary in the base specification. When an extension only affects
+      one interface or dictionary, it will only be described there. If an extension affects
+      multiple interfaces or dictionaries, there will be a subsection in the informative
+      "Overviews" section that describes the extension as a whole, while the normative changes
+      are in the sections for the individual interfaces.
+    </p>
+    
   </section>
   <section>
     <h2>Terminology</h2>
@@ -75,6 +92,26 @@
       defined in [[WEBIDL]].</p>
     <p>The <dfn>OAuth Client</dfn> and <dfn>Authorization Server</dfn> roles
       are defined in [[RFC6749]] Section 1.1.</p>
+  </section>
+  <section id="conformance">
+  </section>
+  <section id="overviews">
+    <h2>
+      Overviews
+    </h2>
+    <section id="rtp-header-control">
+      <h3>RTP header control</h3>
+      <p>
+        The extension for RTP header extension control consists of 2 parts:
+      </p>
+      <ul>
+        <li>An extension to RTCRtpTransceiver, to set and query the RTP header extensions
+          negotiated in SDP.
+        </li>
+        <li>An extension to RTCRtpHeaderExtensionParameters, to be used with setParameters()
+          to set the RTP header extensions sent by an RTCRtpSender.</li>
+      </ul>
+    </section>
   </section>
   <section id="rtcpeerconnection-interface">
     <h3>
@@ -119,6 +156,102 @@
             concerns discussed in <a href="https://github.com/w3c/webrtc-pc/issues/2023">webrtc-pc#2023</a>.</p>
           </div>
         </dd>
+      </dl>
+    </section>
+  </section>
+  <section id="rtcrtptransceiver-interface">
+    <h3>
+      <dfn>RTCRtpTransceiver</dfn> extensions
+    </h3>
+    <p>
+      The <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtptransceiver">RTCRtpTransceiver</a></code>
+      interface is defined in [[WEBRTC]]. This document extends that interface
+      by adding an additional method and attribute in order to control negotiation of
+      RTP header extensions.
+    </p>
+    <pre class="idl">
+dictionary RTCRtpHeaderExtensionCapabilityWithDirection : RTCRtpHeaderExtensionCapability {
+  RTCRtpTransceiverDirection direction = "sendrecv";
+};
+      
+partial interface RTCRtpTransceiver {
+  void setOfferedRtpHeaderExtensions(
+    sequence&lt;RTCRtopHeaderExtensionCapabilityWithDirection&gt; headerExtensionsToOffer);
+  readonly attribute FrozenArray&lt;RTCRtpHeaderExtensionCapabilityWithDirection&gt; headerExtensionsNegotiated;
+};
+    </pre>
+    <p>
+      Let [[\HeaderExtensionsToOffer]] be an internal slot of the RTCRtpTransceiver,
+      initialized to the platform-specific initial set of RTP header extensions that
+      is offered on an initial CreateOffer. This list MUST include all header extensions
+      that are marked Mandatory to Implement in the underlying protocol. The direction
+      attribute for all extensions that are mandatory to use MUST be initialized to
+      "sendrecv".
+    </p>
+    <p class="note">The list of header extensions that MUST/SHOULD be supported is listed in
+      draft-ietf-rtcweb-rtp-usage, section 5.2. The "mid" extension is mandatory to use when
+      BUNDLE is in use.
+    </p>
+    <p>
+      Let [[\HeaderExtensionsNegotiated]] be an internal slot of the RTCRtpTransceiver,
+      initialized to an empty list.
+    </p>
+    <p>
+      In the algorithms for generating initial offers in JSEP section 5.1.1,
+      read "for each supported RTP header extension" as "For each RTP header extension
+      listed in [[\HeaderExtensionsToOffer]] where direction is not "stopped"".
+    </p>
+    <p class="note">
+      Since JSEP does not know about WebRTC internal slots, merging this change requires
+      more work on a JSEP revision.
+    </p>
+    <p>
+      In the algorithm to <a>set an SDP description</a>, add a bullet in the sections
+      for processing answer and pranswer (bullet 3.2.8.1.7 and 3.2.8.2.6):
+      <ul>
+        <li>Set the transceiver's [[\HeaderExtensionsNegotiated]] slot to the list of
+          RTP header extensins from the answer.
+        </li>
+      </ul>
+    </p>
+    <section>
+      <h2>Methods</h2>
+      <dl>
+        <dt>setOfferedRtpHeaderExtensions</dt>
+        <dd>
+          Execute the following steps:
+          <ol>
+            <li>Let <var>extlist</var> be the list of extensions.</li>
+            <li>
+              For each extension <var>ext</var> in <var>extlist</var>, do the following:
+              <ol>
+                <li>If <var>ext</var>'s "uri" value is not a supported extension, throw
+                  a NotSupported error.
+                </li>
+                <li>If <var>ext</var>'s "direction" value is not "sendrecv", and "uri"
+                  indicates a mandatory-to-use attribute, throw an IllegalArgument error.
+                </li>
+                <li>if <var>ext</var>'s "direction" value is "stopped", and "uri" indicates
+                  a mandatory-to-implement extension, throw an IllegalArgument error.
+                </li>
+              </ol>
+            </li>
+            <li>
+              For each mandatory-to-implement extension <var>mext</var>, if <var>mext</var>
+              is not present in <extlist>, throw an IllegalArgument error.
+            </li>
+            <li>
+              Set the [[\HeaderExtensionsToOffer]] to <var>extlist</var>.
+            </li>
+          </ol>
+        </dd>
+      </dl>
+    </section>
+    <section>
+      <h2>Attributes</h2>
+      <dl>
+        <dt>HeaderExtensionsNegotiated, readonly</dt>
+        <dd>Returns the value of the [[\HeaderExtensionsNegotiated]] slot.</dd>
       </dl>
     </section>
   </section>
