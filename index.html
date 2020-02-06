@@ -176,7 +176,7 @@ dictionary RTCRtpHeaderExtensionCapabilityWithDirection : RTCRtpHeaderExtensionC
       
 partial interface RTCRtpTransceiver {
   void setOfferedRtpHeaderExtensions(
-    sequence&lt;RTCRtopHeaderExtensionCapabilityWithDirection&gt; headerExtensionsToOffer);
+    sequence&lt;RTCRtpHeaderExtensionCapabilityWithDirection&gt; headerExtensionsToOffer);
   readonly attribute FrozenArray&lt;RTCRtpHeaderExtensionCapabilityWithDirection&gt; headerExtensionsNegotiated;
 };
     </pre>
@@ -238,7 +238,7 @@ partial interface RTCRtpTransceiver {
             </li>
             <li>
               For each mandatory-to-implement extension <var>mext</var>, if <var>mext</var>
-              is not present in <extlist>, throw an IllegalArgument error.
+              is not present in <var>extlist</var>, throw an IllegalArgument error.
             </li>
             <li>
               Set the [[\HeaderExtensionsToOffer]] to <var>extlist</var>.
@@ -254,6 +254,68 @@ partial interface RTCRtpTransceiver {
         <dd>Returns the value of the [[\HeaderExtensionsNegotiated]] slot.</dd>
       </dl>
     </section>
+    <section>
+      <h2>Modifications to existing procedures</h2>
+      <p>
+        In the <a>final steps to create an offer</a>, add a step:
+      </p>
+      <ol>
+        <li>If the [[\HeaderExtensionsToOffer]] internal slot is set, for
+          each extension in [[\HeaderExtensionsToOffer]], add an appropriate
+          "a=hdrext" line.
+        </li>
+      </ol>
+      <p>
+        In the <a>set an RTCSessionDescription</a> algorithm, add a step
+        right after the step that sets transceiver.[[\Sender]].[[\SendCodecs]],
+        saying "For each transciever, set [[\HeaderExtensionsNegotiated]] to
+        an empty list, and then
+        for each "a=hdrext" line, add an appropriate
+        RTCRtpHeaderExtensionCapabilityWithDirection to the list.
+      </p>
+    </section>
+  </section>
+  <section id="rtcrtpheaderextensionparameters-interface">
+    <h3>
+      <dfn>RTCRtpHeaderExtensionParameters</dfn> extensions
+    </h3>
+    <p>
+      The <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpheaderextensionparameters">RTCRtpHeaderExtensionParameters</a></code>
+      dictionary is defined in [[WEBRTC]]. This document extends that interface
+      by adding an additional member. Note that since WebIDL doesn't permit
+      "partial dictionary", this is a new dictionary class; the getParameters
+      and setParameters calls must then be considered to have been updated to
+      take the new dictionary, but this isn't expressible in WebIDL.
+    </p>
+    <pre class="idl">
+      dictionary RTCRtpHeaderExtensionParametersWithEnabled : RTCRtpHeaderExtensionParameters {
+        boolean enabled;
+      };
+    </pre>
+    <section>
+      <h2>Attributes</h2>
+      <dl>
+        <dt>enabled, of type boolean</dt>
+        <dd>
+          <p>When returned from getParameters(), true when the RTP sender is
+            configured to send this header extension when appropriate. If the
+            attribute is missing, it means that it cannot be disabled.
+          </p>
+          <p>
+            When passed to setParameters(), true when the RTP sender should
+            send this header extension when appropriate; false when the RTP
+            sender should never send this extension.
+          </p>
+        </dd>
+      </dl>
+    </section>
+    <p>
+      The inclusion of a settable member of RTCRtpHeaderExtensionParameters
+      means that it is no longer a read-only member of RTCRtpParameters.
+      However, the "uri", "id" and "encrypted" members of
+      RTCRtpHeaderExtensionParameters are now read-only.
+    </p>
+    
   </section>
   <section id="rtcrtpreceiver-interface">
     <h3>
