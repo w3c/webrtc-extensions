@@ -170,14 +170,14 @@
       RTP header extensions.
     </p>
     <pre class="idl">
-dictionary RTCRtpHeaderExtensionCapabilityWithDirection : RTCRtpHeaderExtensionCapability {
+partial dictionary RTCRtpHeaderExtensionCapability {
   RTCRtpTransceiverDirection direction = "sendrecv";
 };
       
 partial interface RTCRtpTransceiver {
   void setOfferedRtpHeaderExtensions(
-    sequence&lt;RTCRtpHeaderExtensionCapabilityWithDirection&gt; headerExtensionsToOffer);
-  readonly attribute FrozenArray&lt;RTCRtpHeaderExtensionCapabilityWithDirection&gt; headerExtensionsNegotiated;
+    sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
+  readonly attribute FrozenArray&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsNegotiated;
 };
     </pre>
     <p>
@@ -271,7 +271,7 @@ partial interface RTCRtpTransceiver {
         saying "For each transciever, set [[\HeaderExtensionsNegotiated]] to
         an empty list, and then
         for each "a=hdrext" line, add an appropriate
-        RTCRtpHeaderExtensionCapabilityWithDirection to the list.
+        RTCRtpHeaderExtensionCapability to the list.
       </p>
     </section>
   </section>
