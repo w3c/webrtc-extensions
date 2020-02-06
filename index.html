@@ -282,13 +282,10 @@ partial interface RTCRtpTransceiver {
     <p>
       The <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpheaderextensionparameters">RTCRtpHeaderExtensionParameters</a></code>
       dictionary is defined in [[WEBRTC]]. This document extends that interface
-      by adding an additional member. Note that since WebIDL doesn't permit
-      "partial dictionary", this is a new dictionary class; the getParameters
-      and setParameters calls must then be considered to have been updated to
-      take the new dictionary, but this isn't expressible in WebIDL.
+      by adding an additional member.
     </p>
     <pre class="idl">
-      dictionary RTCRtpHeaderExtensionParametersWithEnabled : RTCRtpHeaderExtensionParameters {
+      partial dictionary RTCRtpHeaderExtensionParameters {
         boolean enabled;
       };
     </pre>
