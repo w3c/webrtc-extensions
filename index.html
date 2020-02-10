@@ -329,6 +329,38 @@
       </dd>
     </dl>
   </section>
+  <section id="rtcrtpcontributingsource-dictionary">
+    <h3>
+      <dfn>RTCRtpContributingSource</dfn> extensions
+    </h3>
+    <p>
+      The <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpcontributingsource">RTCRtpContributingSource</a></code>
+      dictionary is defined in [[WEBRTC]]. This document extends that dictionary
+      by adding an additional data.
+    </p>
+    <pre class="idl">partial dictionary RTCRtpContributingSource {
+      DOMHighResTimeStamp captureTimestamp;
+      DOMHighResTimeStamp captureClockOffset;
+    };</pre>
+    <h2>Dictionary <code><a>RTCRtpContributingSource</a></code> Members</h2>
+    <dl data-link-for="RTCRtpContributingSource" data-dfn-for="RTCRtpContributingSource" class="dictionary-members">
+      <dt><dfn data-idl><code>captureTimestamp</code></dfn> of type <span class="idlMemberType">DOMHighResTimeStamp</span>.</dt>
+      <dd>
+        <p>The <code>captureTimestamp</code> is the timestamp of when the latest rendered frame was originally captured. Its reference clock is the capture system's NTP clock (same clock used to generate NTP timestamps for RTCP sender reports on that system). This information can be used to measure and accomplish audio-video synchronization.</p>
+        <p>The <code>captureTimestamp</code> MUST be sourced from the "absolute capture timestamp" field defined by <a href="http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time">RTP Header Extension for Absolute Capture Time</a>. If the RTP header extension is absent and cannot be interpolated, the <code>captureTimestamp</code> MUST be absent.
+        <p>This timestamp can be converted to a local timestamp using the following formula:
+            captureTimestamp - captureClockOffset
+        </p>
+      </dd>
+      <dt><dfn data-idl><code>captureClockOffset</code></dfn> of type <span class="idlMemberType">DOMHighResTimeStamp</span>.</dt>
+      <dd>
+        <p>The <code>captureClockOffset</code> is the estimated clock skew between the capture system's NTP clock and the local system's Performance.timeOrigin + Performance.now() clock. This offset can be used to estimate the capture system’s NTP clock using the following formula:
+          Performance.timeOrigin + Performance.now() + captureClockOffset
+        </p>
+        The <code>captureClockOffset</code> MUST be sourced from the "estimated capture clock offset" field defined by <a href="http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time">RTP Header Extension for Absolute Capture Time</a>. If the RTP header extension is absent and cannot be interpolated, the <code>captureTimestamp</code> MUST be absent.
+      </dd>     
+    </dl>
+  </section>
   <section id="rtcicecredentialtype-enum">
     <h3>
       <dfn>RTCIceCredentialType</dfn> extensions
