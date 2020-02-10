@@ -308,34 +308,6 @@
       </dd>
     </dl>
   </section>
-  <section id="rtcrtpcontributingsource-dictionary">
-    <h3>
-      <dfn>RTCRtpContributingSource</dfn> extensions
-    </h3>
-    <p>
-      The <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpcontributingsource">RTCRtpContributingSource</a></code>
-      dictionary is defined in [[WEBRTC]]. This document extends that dictionary
-      by adding an additional data.
-    </p>
-    <pre class="idl">partial dictionary RTCRtpContributingSource {
-      DOMHighResTimeStamp captureTimestamp;
-      DOMHighResTimeStamp estimatedOneWayDelay;
-    };</pre>
-    <h2>Dictionary <code><a>RTCRtpContributingSource</a></code> Members</h2>
-    <dl data-link-for="RTCRtpContributingSource" data-dfn-for="RTCRtpContributingSource" class="dictionary-members">
-      <dt><dfn data-idl><code>captureTimestamp</code></dfn> of type <span class="idlMemberType">DOMHighResTimeStamp</span>.</dt>
-      <dd>
-        <p>The <code>captureTimestamp</code> is the timestamp that, the most recent frame (from an RTP packet originating from this source) delivered to the <a data-xref-type="_IDL_" href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpreceiver" class="internalDFN" data-link-type="idl"><code><code>RTCRtpReceiver</code></code></a>'s <a data-xref-type="_IDL_" data-cite-path="" data-type="interface" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack"><code>MediaStreamTrack</code></a>, was originally captured. Its reference clock is the capture system's NTP clock (same clock used to generate NTP timestamps for RTCP sender reports on that system). This information can be used to measure and accomplish audio-video synchronization.</p>
-        <p>The <code>captureTimestamp</code> MUST be either sourced from the <a href="http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time#absolute-capture-timestamp">absolute capture timestamp</a> field of the <a href="http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time">RTP Header Extension for Absolute Capture Time</a> or extrapolated based on this RTP header extension according to the <a href="http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time#timestamp-interpolation">timestamp interpolation</a>. Otherwise, the <code>captureTimestamp</code> MUST be absent.
-      </dd>
-      <dt><dfn data-idl><code>estimatedOneWayDelay</code></dfn> of type <span class="idlMemberType">DOMHighResTimeStamp</span>.</dt>
-      <dd>
-        <p>The <code>estimatedOneWayDelay</code> is an estimated total time that, the most recent frame (from an RTP packet originating from this source) delivered to the <a data-xref-type="_IDL_" href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpreceiver" class="internalDFN" data-link-type="idl"><code><code>RTCRtpReceiver</code></code></a>'s <a data-xref-type="_IDL_" data-cite-path="" data-type="interface" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack"><code>MediaStreamTrack</code></a> spent, from it was originally captured, to it was delivered to the <a data-xref-type="_IDL_" href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpreceiver" class="internalDFN" data-link-type="idl"><code><code>RTCRtpReceiver</code></code></a>'s <a data-xref-type="_IDL_" data-cite-path="" data-type="interface" href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack"><code>MediaStreamTrack</code></a>.
-        </p>
-        <p> The <code>estimatedOneWayDelay</code> MUST be based on the <code>captureTimestamp</code>, and equal <a data-xref-type="_IDL_" href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpcontributingsource-timestamp" class="internalDFN" data-link-type="idl"><code>timestamp</code></a> - <code>captureTimestamp</code> transformed to the clock generating <a data-xref-type="_IDL_" href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpcontributingsource-timestamp" class="internalDFN" data-link-type="idl"><code>timestamp</code></a>. 
-      </dd>     
-    </dl>
-  </section>
   <section id="rtcicecredentialtype-enum">
     <h3>
       <dfn>RTCIceCredentialType</dfn> extensions
@@ -567,6 +539,111 @@ enum RTCIceCredentialType {
   },	
   credentialType: 'oauth'
 }</code></pre>
+  </section>
+  <section id="rtcrtpcontributingsource-dictionary">
+    <h3>
+      <dfn>RTCRtpContributingSource</dfn> extensions
+    </h3>
+    <p>
+      The <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpcontributingsource">RTCRtpContributingSource</a></code>
+      dictionary is defined in [[WEBRTC]]. This document extends that dictionary
+      by adding two additional data.
+    </p>
+    <pre class="idl">partial dictionary RTCRtpContributingSource {
+      DOMHighResTimeStamp captureTimestamp;
+      DOMHighResTimeStamp senderCaptureTimeOffset;
+    };</pre>
+    <h2>Dictionary <code><a>RTCRtpContributingSource</a></code> Members</h2>
+    <dl data-link-for="RTCRtpContributingSource" data-dfn-for="RTCRtpContributingSource" class="dictionary-members">
+      <dt><dfn data-idl><code>captureTimestamp</code></dfn> of type <span class="idlMemberType">DOMHighResTimeStamp</span>.</dt>
+      <dd>
+        <p>The <code>captureTimestamp</code> is the timestamp that, the most
+        recent frame (from an RTP packet originating from this source) delivered
+        to the <a data-xref-type="_IDL_" href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpreceiver"
+        class="internalDFN" data-link-type="idl">
+        <code>RTCRtpReceiver</code></a>'s
+        <a data-xref-type="_IDL_" data-cite-path="" data-type="interface"
+        href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack">
+        <code>MediaStreamTrack</code></a>,
+        was originally captured. Its reference clock is the capture system's NTP
+        clock (same clock used to generate NTP timestamps for RTCP sender
+        reports on that system). This information can be used to measure and
+        accomplish audio-video synchronization.</p>
+        <p>The <code>captureTimestamp</code> MUST be either sourced from the
+        <a href="http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time#absolute-capture-timestamp">
+        absolute capture timestamp</a>
+        field of the
+        <a href="http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time">
+        RTP Header Extension for Absolute Capture Time</a> 
+        or extrapolated based on this RTP header extension according to the
+        <a href="http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time#timestamp-interpolation">
+        timestamp interpolation</a>.
+        Otherwise, the <code>captureTimestamp</code> MUST be absent.
+      </dd>
+      <dt><dfn data-idl><code>senderCaptureTimeOffset</code></dfn> of type <span class="idlMemberType">DOMHighResTimeStamp</span>.</dt>
+      <dd>
+        <p>The <code>senderCaptureTimeOffset</code> is the sender's estimate of
+        the offset between its own NTP clock and the capture system's NTP clock,
+        for the same frame that the <code>captureTimestamp</code> was originated
+        from. The sender is referred to as the system that owns the NTP clock
+        that is used to generate the NTP timestamps for the RTCP sender reports
+        on this stream. The sender can be different from the capture system, when
+        RTCP-terminating intermediate systems (e.g. mixers) are involved. The
+        <code>senderCaptureTimeOffset</code> can be used to estimate one-way delay
+        for the most recent frame.</p>
+        <p class="note"> One way to estimate one-way delay is to translate the
+        <code>captureTimestamp</code>, which was generated by the capture
+        system's NTP clock, into the local NTP clock that generated
+        <a data-xref-type="_IDL_" href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpcontributingsource-timestamp"
+        class="internalDFN" data-link-type="idl"><code>timestamp</code></a>,
+        by adding an estimated clock offset between the two clocks, and then
+        calculate the time difference between the translated <code>captureTimestamp</code> and
+        <a data-xref-type="_IDL_" href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpcontributingsource-timestamp"
+        class="internalDFN" data-link-type="idl"><code>timestamp</code></a>.
+        The offset between the capture system's NTP clock and the local NTP clock
+        can be calculated as the sum of the <code>senderCaptureTimeOffset</code>
+        and an estimated offset between the sender's NTP clock and the local NTP clock.
+        The latter can be based on
+        <a data-xref-type="_IDL_" data-cite-path="" data-type="interface"
+        href="https://www.w3.org/TR/webrtc-stats/#dom-rtcremoteinboundrtpstreamstats">
+        <code>RTCRemoteInboundRtpStreamStats</code></a>
+        and
+        <a data-xref-type="_IDL_" data-cite-path="" data-type="interface"
+        href="https://www.w3.org/TR/webrtc-stats/#dom-rtcremoteoutboundrtpstreamstats">
+        <code>RTCRemoteOutboundRtpStreamStats</code></a>
+        as:
+        <a data-xref-type="_IDL_" data-cite-path="" data-type="interface"
+        href="https://www.w3.org/TR/webrtc-stats/#dom-rtcremoteoutboundrtpstreamstats">
+        <code>RTCRemoteOutboundRtpStreamStats</code></a>.
+        <a data-xref-type="attribute|dict-member" data-link-for="RTCStats"
+        data-link-type="dict-member" data-xref-for="RTCStats" data-cite-path=""
+        data-type="attribute" href="https://www.w3.org/TR/webrtc-stats/#dom-rtcstats-timestamp">
+        <code>timestamp</code></a> - (
+        <a data-xref-type="_IDL_" data-cite-path="" data-type="interface"
+        href="https://www.w3.org/TR/webrtc-stats/#dom-rtcremoteoutboundrtpstreamstats">
+        <code>RTCRemoteOutboundRtpStreamStats</code></a>.
+        <a data-xref-type="attribute|dict-member" data-link-for="RTCRemoteOutboundRtpStreamStats"
+        data-link-type="dict-member" data-xref-for="RTCRemoteOutboundRtpStreamStats" data-cite-path=""
+        data-type="attribute" href="https://www.w3.org/TR/webrtc-stats/#dom-rtcremoteoutboundrtpstreamstats-remotetimestamp">
+        <code>remoteTimestamp</code></a>
+        + <a data-xref-type="_IDL_" data-cite-path="" data-type="interface"
+        href="https://www.w3.org/TR/webrtc-stats/#dom-rtcremoteinboundrtpstreamstats">
+        <code>RTCRemoteInboundRtpStreamStats</code></a>.
+        <a data-xref-type="attribute|dict-member" data-link-for="RTCRemoteInboundRtpStreamStats"
+        data-link-type="dict-member" data-xref-for="RTCRemoteInboundRtpStreamStats" data-cite-path=""
+        data-type="attribute" href="https://www.w3.org/TR/webrtc-stats/#dom-rtcremoteinboundrtpstreamstats-roundtriptime">
+        <code>roundTripTime</code></a> / 2). </p>
+        <p>The <code>senderCaptureTimeOffset</code> MUST be either sourced from the
+        <a href="http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time#estimated-capture-clock-offset">
+        estimated capture clock offset</a>
+        field of the <a href="http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time">
+        RTP Header Extension for Absolute Capture Time</a>
+        or extrapolated based on this RTP header extension according to the
+        <a href="http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time#timestamp-interpolation">
+        timestamp interpolation</a>.
+        Otherwise, the <code>senderCaptureTimeOffset</code> MUST be absent.</p>
+      </dd>     
+    </dl>
   </section>
 </body>
 </html>
