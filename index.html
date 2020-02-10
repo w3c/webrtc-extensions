@@ -308,6 +308,27 @@
       </dd>
     </dl>
   </section>
+  <section id="rtcrtpcontributingsource-dictionary">
+    <h3>
+      <dfn>RTCRtpContributingSource</dfn> extensions
+    </h3>
+    <p>
+      The <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpcontributingsource">RTCRtpContributingSource</a></code>
+      dictionary is defined in [[WEBRTC]]. This document extends that dictionary
+      by adding an additional data.
+    </p>
+    <pre class="idl">partial dictionary RTCRtpContributingSource {
+      long long absoluteCaptureTimestamp;
+    };</pre>
+    <h2>Dictionary <code><a>RTCRtpContributingSource</a></code> Members</h2>
+    <dl data-link-for="RTCRtpContributingSource" data-dfn-for="RTCRtpContributingSource" class="dictionary-members">
+      <dt><dfn data-idl><code>absoluteCaptureTimestamp</code></dfn> of type <span class="idlMemberType">long long</span>.</dt>
+      <dd>
+        <p>The <code>absoluteCaptureTimestamp</code> indicates the NTP timestamp when the most recently rendered RTP packet, originating from this source, was captured. This inforamtion can be used to measure and/or accomplish audio-video synchronization.</p>
+        <p> The <code>absoluteCaptureTimestamp</code> MUST be based on the absolute capture timestamp defined in <a href="http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time"> RTP Header Extension for Absolute Capture Time</a>. If the Absolute Capture Time RTP header extension is absent and cannot be interpolated, the <code>absoluteCaptureTimestamp</code> MUST be absent.</p>
+      </dd>
+    </dl>
+  </section>
   <section id="rtcicecredentialtype-enum">
     <h3>
       <dfn>RTCIceCredentialType</dfn> extensions
