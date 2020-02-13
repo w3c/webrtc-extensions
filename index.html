@@ -28,7 +28,6 @@
     "shortName": "webrtc-extensions",
     "specStatus": "unofficial",
     "subjectPrefix": "[webrtc-extensions]",
-    // "wg": "WICG",
     "otherLinks": [{
       "key": "Repository",
       "data": [{
@@ -82,8 +81,14 @@
   </section>
   <section>
     <h2>Terminology</h2>
-    <p>The term <dfn data-cite="!WEBRTC#dom-rtciceserver">RTCIceServer</dfn> and
-    is <dfn data-cite="!WEBRTC#dfn-ice-agent">ICE Agent</dfn> defined in
+    <p>
+      The terms <dfn data-cite="!WEBRTC#dom-rtciceserver">RTCIceServer</dfn>,
+      <dfn data-cite="!WEBRTC#dfn-ice-agent">ICE Agent</dfn>,
+      <dfn data-cite="!WEBRTC#dom-rtcrtpheaderextensioncapability">RTCRtpHeaderExtensionCapability</dfn>,
+      <dfn data-cite="!WEBRTC#dom-rtcrtptransceiverdirection">RTCRtpTransceiverDirection</dfn>,
+      <dfn data-cite="!WEBRTC#dom-rtcrtpheaderextensionparameters">RTCRtpHeaderExtensionParameters</dfn>,
+      <dfn data-cite="!WEBRTC#set-description">set an RTCSessionDescription</dfn>,
+      and <dfn data-cite="!WEBRTC#dfn-final-steps-to-create-an-offer">final steps to create an offer</dfn>, are defined in
     [[WEBRTC]].</p>
     <p>When referring to exceptions, the terms <dfn
       data-cite="!WEBIDL#dfn-throw">throw</dfn> and
@@ -111,6 +116,19 @@
         <li>An extension to RTCRtpHeaderExtensionParameters, to be used with setParameters()
           to set the RTP header extensions sent by an RTCRtpSender.</li>
       </ul>
+      <p>
+        The RTP header extension mechanism is defined in [[RFC8285]], with
+        the SDP negotiation mechanism defined in section 5. It goes into some
+        detail on the meaning of "direction" with regard to RTP header
+        extensions, and gives a detailed procedure for negotiating RTP header
+        extension IDs.
+      </p>
+      <p>
+        This API extension gives the means to control the use and direction of
+        RTP header extensions as documented in [[RFC8285]]. It does not
+        influence the ID negotiation mechanism, except for being able to
+        control the number of extensions offered.
+      </p>
     </section>
   </section>
   <section id="rtcpeerconnection-interface">
@@ -206,7 +224,7 @@ partial interface RTCRtpTransceiver {
       more work on a JSEP revision.
     </p>
     <p>
-      In the algorithm to <a>set an SDP description</a>, add a bullet in the sections
+      In the algorithm to <a>set an RTCSessionDescription</a>, add a bullet in the sections
       for processing answer and pranswer (bullet 3.2.8.1.7 and 3.2.8.2.6):
       <ul>
         <li>Set the transceiver's [[\HeaderExtensionsNegotiated]] slot to the list of
@@ -277,10 +295,10 @@ partial interface RTCRtpTransceiver {
   </section>
   <section id="rtcrtpheaderextensionparameters-interface">
     <h3>
-      <dfn>RTCRtpHeaderExtensionParameters</dfn> extensions
+      <code><a>RTCRtpHeaderExtensionParameters</a></code> extensions
     </h3>
     <p>
-      The <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpheaderextensionparameters">RTCRtpHeaderExtensionParameters</a></code>
+      The <code><a>RTCRtpHeaderExtensionParameters</a></code>
       dictionary is defined in [[WEBRTC]]. This document extends that interface
       by adding an additional member.
     </p>
@@ -294,17 +312,24 @@ partial interface RTCRtpTransceiver {
       <dl>
         <dt>enabled, of type boolean</dt>
         <dd>
-          <p>When returned from getParameters(), true when the RTP sender is
+          <p>When returned from getParameters(), "enabled" is true
+            when the RTP sender is
             configured to send this header extension when appropriate. If the
             attribute is missing, it means that it cannot be disabled.
           </p>
           <p>
-            When passed to setParameters(), true when the RTP sender should
-            send this header extension when appropriate; false when the RTP
-            sender should never send this extension.
+            When passed to setParameters(), "enabled" is true when the RTP
+            sender should
+            send this header extension when appropriate, and is false
+            when the RTP sender should never send this extension.
           </p>
         </dd>
       </dl>
+      <p class="note">
+        The list of extensions returned from getParameters() will only include
+        the extensions that have been negotiated for sending. Changing the
+        list, apart from setting the "enabled" member, is not permitted.
+      </p>
     </section>
     <p>
       The inclusion of a settable member of RTCRtpHeaderExtensionParameters
@@ -312,7 +337,6 @@ partial interface RTCRtpTransceiver {
       However, the "uri", "id" and "encrypted" members of
       RTCRtpHeaderExtensionParameters are now read-only.
     </p>
-    
   </section>
   <section id="rtcrtpreceiver-interface">
     <h3>
