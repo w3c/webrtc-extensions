@@ -201,11 +201,12 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
     </pre>
     <p>
       Let [[\HeaderExtensionsToOffer]] be an internal slot of the RTCRtpTransceiver,
-      initialized to the platform-specific initial set of RTP header extensions that
-      is offered on an initial CreateOffer. This list MUST include all header extensions
-      that are marked Mandatory to Implement in the underlying protocol. The direction
+      initialized to the platform-specific list of implemented RTP header extensions.
+      The direction
       attribute for all extensions that are mandatory to use MUST be initialized to
-      an appropriate value other than "stopped".
+      an appropriate value other than "stopped". The direction attribute for extensions
+      that will not be offered by default in an initial offer MUST be initialized to
+      "stopped".
     </p>
     <p class="note">The list of header extensions that MUST/SHOULD be supported is listed in
       [[RTCWEB-RTP]], section 5.2. The "mid" extension is mandatory to use when
@@ -263,24 +264,25 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
             <li>
               For each extension <var>ext</var> in <var>extlist</var>, do the following:
               <ol>
-                <li>If <var>ext</var>'s "uri" value is not a supported extension, throw
-                  a NotSupported error.
+                <li>If <var>ext</var>'s "uri" value is not present in
+                  [[\HeaderExtensionsToOffer]], throw a NotSupported error.
                 </li>
-                <li>If <var>ext</var>'s "direction" value is not "sendrecv", and "uri"
+                <li>
+                  Let <var>entry</var> be the entry with the same "uri" value in
+                  [[\HeaderExtensionsToOffer]].
+                </li>
+                <li>If <var>ext</var>'s "direction" field is not "sendrecv", and "uri"
                   indicates a mandatory-to-use attribute that is required to be both
                   sent and received, throw an IllegalArgument error.
                 </li>
-                <li>if <var>ext</var>'s "direction" value is "stopped", and "uri" indicates
+                <li>if <var>ext</var>'s "direction" field is "stopped", and "uri" indicates
                   a mandatory-to-implement extension, throw an IllegalArgument error.
                 </li>
+                <li>
+                  Set the "direction" field of <var>entry</var> to <var>ext</var>'s
+                  "direction" field.
+                </li>
               </ol>
-            </li>
-            <li>
-              For each mandatory-to-implement extension <var>mext</var>, if <var>mext</var>
-              is not present in <var>extlist</var>, throw an IllegalArgument error.
-            </li>
-            <li>
-              Set the [[\HeaderExtensionsToOffer]] to <var>extlist</var>.
             </li>
           </ol>
         </dd>
