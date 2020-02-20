@@ -216,43 +216,45 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       Let [[\HeaderExtensionsNegotiated]] be an internal slot of the RTCRtpTransceiver,
       initialized to an empty list.
     </p>
-    <p>
-      In the algorithms for generating initial offers in [[RTCWEB-JSEP]] section 5.1.1,
-      replace "for each supported RTP header extension, an "a=extmap" line, as specified in
-      [[RFC5285]], section 5" " with "For each RTP header extension "e"
-      listed in [[\HeaderExtensionsToOffer]] where direction is not "stopped", an "a=extmap"
-      line, as specified in [[RFC5285]], section 5, with direction taken from "e"'s direction
-      attribute."
-    </p>
-    <p>
-      In the algorithm for generating subsequent offers in [[RTCWEB-JSEP]] section 5.2.2, replace "The
-      RTP header extensions MUST only include those that are present in the most recent answer"
-      with "For each RTP header extension listed in [[\HeaderExtensionsToOffer]] that is
-      also present in the most recent answer, and where direction is not "stopped", generate
-      an appropriate "a=extmap" line with "direction" set according to the rules of [[RFC5285]]
-      section 6, considering the direction in [[\HeaderExtensionsToOffer]] to indicate the
-      answerer's desired usage". This preserves the property that the set of extensions
-      may not grow with subsequent offers.
-    </p>
-    <p>
-      In the algorithm for generating initial answers in [[RTCWEB-JSEP]] section 5.3.1, replace "For
-      each supported RTP header extension that is present in the offer" with "For each
-      supported RTP header extension that is present in the offer and is also present in
-      [[\HeaderExtensionsToOffer]] with a direction different from "stopped"".
-    </p>
-    <p class="note">
-      Since JSEP does not know about WebRTC internal slots, merging this change requires
-      more work on a JSEP revision.
-    </p>
-    <p>
-      In the algorithm to <a>set an RTCSessionDescription</a>, add a bullet in the sections
-      for processing answer and pranswer (bullet 3.2.8.1.7 and 3.2.8.2.6):
-      <ul>
-        <li>Set the transceiver's [[\HeaderExtensionsNegotiated]] slot to the list of
-          RTP header extensions from the answer.
-        </li>
-      </ul>
-    </p>
+    <section>
+      <h2>Modifications to existing procedures</h2>
+      <p>
+        In the <a>set an RTCSessionDescription</a> algorithm, add a step
+        right after the step that sets transceiver.[[\Sender]].[[\SendCodecs]],
+        saying "For each transciever, set [[\HeaderExtensionsNegotiated]] to
+        an empty list, and then
+        for each "a=hdrext" line, add an appropriate
+        RTCRtpHeaderExtensionCapability to the list.
+      </p>
+      <p>
+        In the algorithms for generating initial offers in [[RTCWEB-JSEP]] section 5.2.1,
+        replace "for each supported RTP header extension, an "a=extmap" line, as specified in
+        [[RFC5285]], section 5" " with "For each RTP header extension "e"
+        listed in [[\HeaderExtensionsToOffer]] where direction is not "stopped", an "a=extmap"
+        line, as specified in [[RFC5285]], section 5, with direction taken from "e"'s direction
+        attribute."
+      </p>
+      <p>
+        In the algorithm for generating subsequent offers in [[RTCWEB-JSEP]] section 5.2.2, replace "The
+        RTP header extensions MUST only include those that are present in the most recent answer"
+        with "For each RTP header extension listed in [[\HeaderExtensionsToOffer]] that is
+        also present in the most recent answer, and where direction is not "stopped", generate
+        an appropriate "a=extmap" line with "direction" set according to the rules of [[RFC5285]]
+        section 6, considering the direction in [[\HeaderExtensionsToOffer]] to indicate the
+        answerer's desired usage". This preserves the property that the set of extensions
+        may not grow with subsequent offers.
+      </p>
+      <p>
+        In the algorithm for generating initial answers in [[RTCWEB-JSEP]] section 5.3.1, replace "For
+        each supported RTP header extension that is present in the offer" with "For each
+        supported RTP header extension that is present in the offer and is also present in
+        [[\HeaderExtensionsToOffer]] with a direction different from "stopped"".
+      </p>
+      <p class="note">
+        Since JSEP does not know about WebRTC internal slots, merging this change requires
+        more work on a JSEP revision.
+      </p>
+    </section>
     <section>
       <h2>Methods</h2>
       <dl>
@@ -264,6 +266,9 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
             <li>
               For each extension <var>ext</var> in <var>extlist</var>, do the following:
               <ol>
+                <li>
+                  If <var>ext</var>'s "uri" value is missing, throw a TypeError.
+                </li>
                 <li>If <var>ext</var>'s "uri" value is not present in
                   [[\HeaderExtensionsToOffer]], throw a NotSupported error.
                 </li>
@@ -298,26 +303,6 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
         <dd>Returns the value of the [[\HeaderExtensionsNegotiated]] slot.</dd>
       </dl>
     </section>
-    <section>
-      <h2>Modifications to existing procedures</h2>
-      <p>
-        In the <a>final steps to create an offer</a>, add a step:
-      </p>
-      <ol>
-        <li>If the [[\HeaderExtensionsToOffer]] internal slot is set, for
-          each extension in [[\HeaderExtensionsToOffer]], add an appropriate
-          "a=hdrext" line.
-        </li>
-      </ol>
-      <p>
-        In the <a>set an RTCSessionDescription</a> algorithm, add a step
-        right after the step that sets transceiver.[[\Sender]].[[\SendCodecs]],
-        saying "For each transciever, set [[\HeaderExtensionsNegotiated]] to
-        an empty list, and then
-        for each "a=hdrext" line, add an appropriate
-        RTCRtpHeaderExtensionCapability to the list.
-      </p>
-    </section>
   </section>
   <section id="rtcrtpheaderextensionparameters-interface">
     <h3>
@@ -338,7 +323,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       <dl>
         <dt>enabled, of type boolean</dt>
         <dd>
-          <p>When returned from getParameters() on an RTPSender, "enabled" is true
+          <p>When returned from getParameters() on an RTCRTPSender, "enabled" is true
             when the RTP sender is
             configured to send this header extension when appropriate. If the
             attribute is missing, it means that it is enabled and cannot be disabled.
@@ -349,22 +334,26 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
             to false instructs the RTP sender to never send this extension.
           </p>
           <p>
-            When calling getParameters() on an RTPReceiver, the "enabled" member will
-            always be missing, indicating that there is no control surface here.
+            When calling getParameters() on an RTCRTPReceiver, the "enabled" member will
+            always be missing.
           </p>
         </dd>
       </dl>
       <p class="note">
         The list of extensions returned from getParameters() on a sender will only include
-        the extensions that have been negotiated for sending. Changing the
-        list, apart from setting the "enabled" member, is not permitted.
+        the extensions that have been negotiated for sending.
       </p>
     </section>
     <p>
       The inclusion of a settable member of RTCRtpHeaderExtensionParameters
-      means that it is no longer a read-only member of RTCRtpParameters.
+      means that "headerExtensions" is no longer a read-only member of RTCRtpParameters.
       The "uri", "id" and "encrypted" members of
       RTCRtpHeaderExtensionParameters remain read-only.
+    </p>
+    <p>
+      Changing the
+      list, apart from setting the "enabled" member, MUST cause setParameters() to reject
+      with an InvalidModificationError.
     </p>
   </section>
   <section id="rtcrtpreceiver-interface">
