@@ -91,19 +91,19 @@
         <li><dfn data-cite="!WEBRTC#dom-rtcrtpheaderextensionparameters">RTCRtpHeaderExtensionParameters</dfn></li>
         <li><dfn data-cite="!WEBRTC#set-description">set an RTCSessionDescription</dfn></li>
         <li><dfn data-cite="!WEBRTC#dfn-final-steps-to-create-an-offer">final steps to create an offer</dfn></li>
-        <li><dfn data-cite="!WEBRTC#dom-rtcrtpreceiver">RTCRtpReceiver</dfn></li>
-        <li><dfn data-cite="!WEBRTC#dom-rtcrtpcontributingsource">RTCRtpContributingSource</dfn> and
-        <dfn data-cite="!WEBRTC#dom-rtcrtpcontributingsource-timestamp">RTCRtpContributingSource.timestamp</dfn></li>
+        <li><dfn data-cite="!WEBRTC#dom-rtcrtpreceiver"><code>RTCRtpReceiver</code></dfn></li>
+        <li><dfn data-cite="!WEBRTC#dom-rtcrtpcontributingsource"><code>RTCRtpContributingSource</code></dfn> and
+        <dfn data-cite="!WEBRTC#dom-rtcrtpcontributingsource-timestamp"><code>RTCRtpContributingSource.timestamp</code></dfn></li>
       </ul>
     </p>
     <p>
       The term
-      <dfn data-cite=!GETUSERMEDIA#dom-mediastreamtrack>MediaStreamTrack</dfn>
+      <dfn data-cite=!GETUSERMEDIA#dom-mediastreamtrack><code>MediaStreamTrack</code></dfn>
       is defined in [[!GETUSERMEDIA]].
     </p>
     <p>
       The term
-      <dfn data-cite="!hr-time#dom-domhighrestimestamp">DOMHighResTimeStamp</dfn>
+      <dfn data-cite="!hr-time#dom-domhighrestimestamp"><code>DOMHighResTimeStamp</code></dfn>
       is defined in [[!hr-time]].
     </p>
     <p>
@@ -119,11 +119,11 @@
     <p>
       The following terms are defined in [[!WEBRTC-STATS]]:
       <ul>
-        <li><dfn data-cite=!WEBRTC-STATS#dom-rtcremoteinboundrtpstreamstats>RTCRemoteInboundRtpStreamStats</dfn> and
-        <dfn data-cite=!WEBRTC-STATS#dom-rtcremoteinboundrtpstreamstats-roundtriptime>RTCRemoteInboundRtpStreamStats.roundTripTime</dfn></li>
-        <li><dfn data-cite=!WEBRTC-STATS#dom-rtcremoteoutboundrtpstreamstats>RTCRemoteOutboundRtpStreamStats</dfn>,
-        <dfn data-cite=!WEBRTC-STATS#dom-rtcstats-timestamp>RTCRemoteOutboundRtpStreamStats.timestamp</dfn> and
-        <dfn data-cite=!WEBRTC-STATS#dom-rtcremoteoutboundrtpstreamstats-remotetimestamp>RTCRemoteOutboundRtpStreamStats.remoteTimestamp</dfn></li>
+        <li><dfn data-cite=!WEBRTC-STATS#dom-rtcremoteinboundrtpstreamstats><code>RTCRemoteInboundRtpStreamStats</code></dfn> and
+        <dfn data-cite=!WEBRTC-STATS#dom-rtcremoteinboundrtpstreamstats-roundtriptime><code>RTCRemoteInboundRtpStreamStats.roundTripTime</code></dfn></li>
+        <li><dfn data-cite=!WEBRTC-STATS#dom-rtcremoteoutboundrtpstreamstats><code>RTCRemoteOutboundRtpStreamStats</code></dfn>,
+        <dfn data-cite=!WEBRTC-STATS#dom-rtcstats-timestamp><code>RTCRemoteOutboundRtpStreamStats.timestamp</code></dfn> and
+        <dfn data-cite=!WEBRTC-STATS#dom-rtcremoteoutboundrtpstreamstats-remotetimestamp><code>RTCRemoteOutboundRtpStreamStats.remoteTimestamp</code></dfn></li>
       </ul>
     </p>
     <p>When referring to exceptions, the terms <dfn
@@ -816,7 +816,7 @@ enum RTCIceCredentialType {
     </h3>
     <p>
       The {{RTCRtpContributingSource}} dictionary is defined in [[WEBRTC]]. This
-      document extends that dictionary by adding two additional data.
+      document extends that dictionary by adding two additional members.
     </p>
     <p>
       In this section, the <dfn>capture system</dfn> refers to the system where
@@ -852,53 +852,101 @@ enum RTCIceCredentialType {
     <dl data-link-for="RTCRtpContributingSource" data-dfn-for="RTCRtpContributingSource" class="dictionary-members">
       <dt><dfn data-idl><code>captureTimestamp</code></dfn> of type {{DOMHighResTimeStamp}}.</dt>
       <dd>
-        <p>The {{captureTimestamp}} is the timestamp that, the most
-        recent frame (from an RTP packet originating from this source) delivered
-        to the {{RTCRtpReceiver}}'s {{MediaStreamTrack}},
-        was originally captured. Its reference clock is the capture system's NTP
-        clock (same clock used to generate NTP timestamps for RTCP sender
-        reports on that system). This information can be used to measure and
-        accomplish audio-video synchronization.</p>
-        <p>The {{captureTimestamp}} MUST be either sourced from the
-        <a>absolute capture timestamp</a>
-        field of the
-        <a>RTP Header Extension for Absolute Capture Time</a>
-        or extrapolated based on this RTP header extension according to the
-        <a>timestamp interpolation</a>.
-        Otherwise, the {{captureTimestamp}} MUST be absent.
+        <p>
+          The {{captureTimestamp}} is the timestamp that, the most recent frame
+          (from an RTP packet originating from this source) delivered to the
+          {{RTCRtpReceiver}}'s {{MediaStreamTrack}}, was originally captured.
+          Its reference clock is the <a>capture system</a>'s NTP clock (same
+          clock used to generate NTP timestamps for RTCP sender reports on that
+          system).
+        </p>
+        <p>
+          On populating this member, the user agent MUST run the following
+          steps:
+        </p>
+        <ol>
+          <li>
+            <p>If the relevant RTP packet contains the
+            <a>RTP Header Extension for Absolute Capture Time</a>, return the
+            value of the <a>absolute capture timestamp</a> field and abort
+            these steps.</p>
+          </li>
+          <li>
+            <p>Otherwise, if the relevant RTP packet does not contain the
+            <a>RTP Header Extension for Absolute Capture Time</a> but a
+            previous RTP packet did, return the result of calculating the
+            absolute capture timestamp according to
+            <a>timestamp interpolation</a> and abort these steps.</p>
+          </li>
+          <li>
+            Otherwise, return <code>undefined</code>.
+          </li>
+        </ol>
+        <p class="note">
+          If multiple receiving tracks are sourced from the same
+          <a>capture system</a>, two {{captureTimestamp}}s can be used to
+          accurately measure audio-video synchronization since both timestamps
+          are based on the same system's clock.
+        </p>
       </dd>
       <dt><dfn data-idl><code>senderCaptureTimeOffset</code></dfn> of type {{DOMHighResTimeStamp}}.</dt>
       <dd>
-        <p>The {{senderCaptureTimeOffset}} is the sender's estimate of
-        the offset between its own NTP clock and the capture system's NTP clock,
-        for the same frame that the {{captureTimestamp}} was originated
-        from. The sender is referred to as the system that owns the NTP clock
-        that is used to generate the NTP timestamps for the RTCP sender reports
-        on this stream. The sender can be different from the capture system, when
-        RTCP-terminating intermediate systems (e.g. mixers) are involved. The
-        {{senderCaptureTimeOffset}} can be used to estimate one-way delay
-        for the most recent frame.</p>
-        <p class="note">One way to estimate one-way delay is to translate the
-        {{captureTimestamp}}, which was generated by the capture
-        system's NTP clock, into the local NTP clock that generated
-        <a><code>RTCRtpContributingSource.timestamp</code></a>,
-        by adding an estimated clock offset between the two clocks, and then
-        calculate the time difference between the translated {{captureTimestamp}} and
-        <a><code>RTCRtpContributingSource.timestamp</code></a>.
-        The offset between the capture system's NTP clock and the local NTP clock
-        can be calculated as the sum of the {{senderCaptureTimeOffset}}
-        and an estimated offset between the sender's NTP clock and the local NTP clock.
-        The latter can be based on {{RTCRemoteInboundRtpStreamStats}}
-        and {{RTCRemoteOutboundRtpStreamStats}} as:
-        <a><code>RTCRemoteOutboundRtpStreamStats.timestamp</code></a> -
-        (<a><code>RTCRemoteOutboundRtpStreamStats.remoteTimestamp</code></a> +
-        <a><code>RTCRemoteInboundRtpStreamStats.roundTripTime</code></a> / 2).</p>
-        <p>The {{senderCaptureTimeOffset}} MUST be either sourced from the
-        <a>estimated capture clock offset</a> field of the
-        <a>RTP Header Extension for Absolute Capture Time</a>
-        or extrapolated based on this RTP header extension according to the
-        <a>timestamp interpolation</a>.
-        Otherwise, the {{senderCaptureTimeOffset}} MUST be absent.</p>
+        <p>
+          The {{senderCaptureTimeOffset}} is the <a>sender system</a>'s
+          estimate of the offset between its own NTP clock and the
+          <a>capture system</a>'s NTP clock, for the same frame that the
+          {{captureTimestamp}} was originated from.
+        </p>
+        <p>
+          On populating this member, the user agent MUST run the following
+          steps:
+        </p>
+        <ol>
+          <li>
+            <p>If the relevant RTP packet contains the
+            <a>RTP Header Extension for Absolute Capture Time</a>, return the
+            value of the <a>estimated capture clock offset</a> field and abort
+            these steps.</p>
+          </li>
+          <li>
+            <p>Otherwise, if the relevant RTP packet does not contain the
+            <a>RTP Header Extension for Absolute Capture Time</a> but a
+            previous RTP packet did, return the result of calculating the
+            estimated capture clock offset according to
+            <a>timestamp interpolation</a> and abort these steps.</p>
+          </li>
+          <li>
+            Otherwise, return <code>undefined</code>.
+          </li>
+        </ol>
+        <p class="note">
+          The time of capture can estimatedly be expressed in the
+          <a>sender system</a>'s clock as follows:
+          <dfn>senderCaptureTimestamp</dfn> = {{captureTimestamp}} +
+          {{senderCaptureTimeOffset}}.
+        </p>
+        <p class="note">
+          The offset between the <a>sender system</a>'s clock and the
+          <a>receiver system</a>'s clock can be estimated as follows:
+          <dfn>senderReceiverTimeOffset</dfn> =
+          <a>RTCRemoteOutboundRtpStreamStats.timestamp</a> -
+          (<a>RTCRemoteOutboundRtpStreamStats.remoteTimestamp</a> +
+          <a>RTCRemoteInboundRtpStreamStats.roundTripTime</a> / 2).
+        </p>
+        <p class="note">
+          The time of capture can estimatedly be expressed in the
+          <a>receiver system</a>'s clock as follows:
+          <dfn>receiverCaptureTimestamp</dfn> = <a>senderCaptureTimestamp</a> +
+          <a>senderReceiverTimeOffset</a>.
+        </p>
+        <p class="note">
+          The one-way delay between the <a>capture system</a>'s time of capture
+          and the <a>receiver system</a>'s time of playout can be estimated as
+          follows:
+          <a>RTCRtpContributingSource.timestamp</a> -
+          <a>receiverCaptureTimestamp</a>.
+        </p>
+        </p>
       </dd>
     </dl>
   </section>
