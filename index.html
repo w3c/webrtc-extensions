@@ -904,16 +904,17 @@ enum RTCIceCredentialType {
         <ol>
           <li>
             <p>If the relevant RTP packet contains the
-            <a>RTP Header Extension for Absolute Capture Time</a>, return the
+            <a>RTP Header Extension for Absolute Capture Time</a> and the
+            <a>estimated capture clock offset</a> field is present, return the
             value of the <a>estimated capture clock offset</a> field and abort
             these steps.</p>
           </li>
           <li>
             <p>Otherwise, if the relevant RTP packet does not contain the
-            <a>RTP Header Extension for Absolute Capture Time</a> but a
-            previous RTP packet did, return the result of calculating the
-            estimated capture clock offset according to
-            <a>timestamp interpolation</a> and abort these steps.</p>
+            <a>RTP Header Extension for Absolute Capture Time</a>'s
+            <a>estimated capture clock offset</a> field, but a
+            previous RTP packet did, return the most recent value that was
+            present and abort these steps.</p>
           </li>
           <li>
             Otherwise, return <code>undefined</code>.
