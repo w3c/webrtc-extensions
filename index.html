@@ -82,14 +82,50 @@
   <section>
     <h2>Terminology</h2>
     <p>
-      The terms <dfn data-cite="!WEBRTC#dom-rtciceserver">RTCIceServer</dfn>,
-      <dfn data-cite="!WEBRTC#dfn-ice-agent">ICE Agent</dfn>,
-      <dfn data-cite="!WEBRTC#dom-rtcrtpheaderextensioncapability">RTCRtpHeaderExtensionCapability</dfn>,
-      <dfn data-cite="!WEBRTC#dom-rtcrtptransceiverdirection">RTCRtpTransceiverDirection</dfn>,
-      <dfn data-cite="!WEBRTC#dom-rtcrtpheaderextensionparameters">RTCRtpHeaderExtensionParameters</dfn>,
-      <dfn data-cite="!WEBRTC#set-description">set an RTCSessionDescription</dfn>,
-      and <dfn data-cite="!WEBRTC#dfn-final-steps-to-create-an-offer">final steps to create an offer</dfn>, are defined in
-    [[WEBRTC]].</p>
+      The following terms are defined in [[!WEBRTC]]:
+      <ul>
+        <li><dfn data-cite="!WEBRTC#dom-rtciceserver">RTCIceServer</dfn></li>
+        <li><dfn data-cite="!WEBRTC#dfn-ice-agent">ICE Agent</dfn></li>
+        <li><dfn data-cite="!WEBRTC#dom-rtcrtpheaderextensioncapability">RTCRtpHeaderExtensionCapability</dfn></li>
+        <li><dfn data-cite="!WEBRTC#dom-rtcrtptransceiverdirection">RTCRtpTransceiverDirection</dfn></li>
+        <li><dfn data-cite="!WEBRTC#dom-rtcrtpheaderextensionparameters">RTCRtpHeaderExtensionParameters</dfn></li>
+        <li><dfn data-cite="!WEBRTC#set-description">set an RTCSessionDescription</dfn></li>
+        <li><dfn data-cite="!WEBRTC#dfn-final-steps-to-create-an-offer">final steps to create an offer</dfn></li>
+        <li><dfn data-cite="!WEBRTC#dom-rtcrtpreceiver">RTCRtpReceiver</dfn></li>
+        <li><dfn data-cite="!WEBRTC#dom-rtcrtpcontributingsource">RTCRtpContributingSource</dfn> and
+        <dfn data-cite="!WEBRTC#dom-rtcrtpcontributingsource-timestamp">RTCRtpContributingSource.timestamp</dfn></li>
+      </ul>
+    </p>
+    <p>
+      The term
+      <dfn data-cite=!GETUSERMEDIA#dom-mediastreamtrack>MediaStreamTrack</dfn>
+      is defined in [[!GETUSERMEDIA]].
+    </p>
+    <p>
+      The term
+      <dfn data-cite="!hr-time#dom-domhighrestimestamp">DOMHighResTimeStamp</dfn>
+      is defined in [[!hr-time]].
+    </p>
+    <p>
+      The following terms are defined in
+      <!-- TODO: When webrtc.org website is fixed, change links to "http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time" -->
+      <a href="https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/abs-capture-time/index.md"><dfn>RTP Header Extension for Absolute Capture Time</dfn></a>:
+      <ul>
+        <li><a href="https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/abs-capture-time/index.md#absolute-capture-timestamp"><dfn>absolute capture timestamp</dfn></a>
+        <li><a href="https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/abs-capture-time/index.md#timestamp-interpolation"><dfn>timestamp interpolation</dfn></a>
+        <li><a href="https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/abs-capture-time/index.md#estimated-capture-clock-offset"><dfn>estimated capture clock offset</dfn></a>
+      </ul>
+    </p>
+    <p>
+      The following terms are defined in [[!WEBRTC-STATS]]:
+      <ul>
+        <li><dfn data-cite=!WEBRTC-STATS#dom-rtcremoteinboundrtpstreamstats>RTCRemoteInboundRtpStreamStats</dfn> and
+        <dfn data-cite=!WEBRTC-STATS#dom-rtcremoteinboundrtpstreamstats-roundtriptime>RTCRemoteInboundRtpStreamStats.roundTripTime</dfn></li>
+        <li><dfn data-cite=!WEBRTC-STATS#dom-rtcremoteoutboundrtpstreamstats>RTCRemoteOutboundRtpStreamStats</dfn>,
+        <dfn data-cite=!WEBRTC-STATS#dom-rtcstats-timestamp>RTCRemoteOutboundRtpStreamStats.timestamp</dfn> and
+        <dfn data-cite=!WEBRTC-STATS#dom-rtcremoteoutboundrtpstreamstats-remotetimestamp>RTCRemoteOutboundRtpStreamStats.remoteTimestamp</dfn></li>
+      </ul>
+    </p>
     <p>When referring to exceptions, the terms <dfn
       data-cite="!WEBIDL#dfn-throw">throw</dfn> and
       <dfn data-dfn-for="exception" data-cite=
@@ -358,10 +394,10 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
   </section>
   <section id="rtcrtpreceiver-interface">
     <h3>
-      <dfn>RTCRtpReceiver</dfn> extensions
+      {{RTCRtpReceiver}} extensions
     </h3>
     <p>
-      The <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpreceiver">RTCRtpReceiver</a></code>
+      The {{RTCRtpReceiver}}
       interface is defined in [[WEBRTC]]. This document extends that interface
       by adding an additional internal slot and attribute.
     </p>
@@ -776,50 +812,38 @@ enum RTCIceCredentialType {
   </section>
   <section id="rtcrtpcontributingsource-dictionary">
     <h3>
-      <dfn>RTCRtpContributingSource</dfn> extensions
+      {{RTCRtpContributingSource}} extensions
     </h3>
     <p>
-      The <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpcontributingsource">RTCRtpContributingSource</a></code>
-      dictionary is defined in [[WEBRTC]]. This document extends that dictionary
-      by adding two additional data.
+      The {{RTCRtpContributingSource}} dictionary is defined in [[WEBRTC]]. This
+      document extends that dictionary by adding two additional data.
     </p>
     <pre class="idl">partial dictionary RTCRtpContributingSource {
       DOMHighResTimeStamp captureTimestamp;
       DOMHighResTimeStamp senderCaptureTimeOffset;
     };</pre>
-    <h2>Dictionary <code><a>RTCRtpContributingSource</a></code> Members</h2>
+    <h2>Dictionary {{RTCRtpContributingSource}} Members</h2>
     <dl data-link-for="RTCRtpContributingSource" data-dfn-for="RTCRtpContributingSource" class="dictionary-members">
-      <dt><dfn data-idl><code>captureTimestamp</code></dfn> of type <span class="idlMemberType">DOMHighResTimeStamp</span>.</dt>
+      <dt><dfn data-idl><code>captureTimestamp</code></dfn> of type {{DOMHighResTimeStamp}}.</dt>
       <dd>
-        <p>The <code>captureTimestamp</code> is the timestamp that, the most
+        <p>The {{captureTimestamp}} is the timestamp that, the most
         recent frame (from an RTP packet originating from this source) delivered
-        to the <a data-xref-type="_IDL_" href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpreceiver"
-        class="internalDFN" data-link-type="idl">
-        <code>RTCRtpReceiver</code></a>'s
-        <a data-xref-type="_IDL_" data-cite-path="" data-type="interface"
-        href="https://www.w3.org/TR/mediacapture-streams/#dom-mediastreamtrack">
-        <code>MediaStreamTrack</code></a>,
+        to the {{RTCRtpReceiver}}'s {{MediaStreamTrack}},
         was originally captured. Its reference clock is the capture system's NTP
         clock (same clock used to generate NTP timestamps for RTCP sender
         reports on that system). This information can be used to measure and
         accomplish audio-video synchronization.</p>
-        <p>The <code>captureTimestamp</code> MUST be either sourced from the
-        <a href="https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/abs-capture-time/index.md#absolute-capture-timestamp">
-        <!--Change to "http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time#absolute-capture-timestamp"-->
-        absolute capture timestamp</a>
+        <p>The {{captureTimestamp}} MUST be either sourced from the
+        <a>absolute capture timestamp</a>
         field of the
-        <a href="https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/abs-capture-time/index.md">
-        <!--Change to "http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time"-->
-        RTP Header Extension for Absolute Capture Time</a> 
+        <a>RTP Header Extension for Absolute Capture Time</a>
         or extrapolated based on this RTP header extension according to the
-        <a href="https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/abs-capture-time/index.md#timestamp-interpolation">
-        <!--Change to "http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time#timestamp-interpolation"-->
-        timestamp interpolation</a>.
-        Otherwise, the <code>captureTimestamp</code> MUST be absent.
+        <a>timestamp interpolation</a>.
+        Otherwise, the {{captureTimestamp}} MUST be absent.
       </dd>
-      <dt><dfn data-idl><code>senderCaptureTimeOffset</code></dfn> of type <span class="idlMemberType">DOMHighResTimeStamp</span>.</dt>
+      <dt><dfn data-idl><code>senderCaptureTimeOffset</code></dfn> of type {{DOMHighResTimeStamp}}.</dt>
       <dd>
-        <p>The <code>senderCaptureTimeOffset</code> is the sender's estimate of
+        <p>The {{senderCaptureTimeOffset}} is the sender's estimate of
         the offset between its own NTP clock and the capture system's NTP clock,
         for the same frame that the <code>captureTimestamp</code> was originated
         from. The sender is referred to as the system that owns the NTP clock
@@ -829,62 +853,25 @@ enum RTCIceCredentialType {
         <code>senderCaptureTimeOffset</code> can be used to estimate one-way delay
         for the most recent frame.</p>
         <p class="note"> One way to estimate one-way delay is to translate the
-        <code>captureTimestamp</code>, which was generated by the capture
+        {{captureTimestamp}}, which was generated by the capture
         system's NTP clock, into the local NTP clock that generated
-        <a data-xref-type="_IDL_" href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpcontributingsource-timestamp"
-        class="internalDFN" data-link-type="idl"><code>timestamp</code></a>,
+        <a><code>RTCRtpContributingSource.timestamp</code></a>,
         by adding an estimated clock offset between the two clocks, and then
-        calculate the time difference between the translated <code>captureTimestamp</code> and
-        <a data-xref-type="_IDL_" href="https://w3c.github.io/webrtc-pc/#dom-rtcrtpcontributingsource-timestamp"
-        class="internalDFN" data-link-type="idl"><code>timestamp</code></a>.
+        calculate the time difference between the translated {{captureTimestamp}} and
+        <a><code>RTCRtpContributingSource.timestamp</code></a>.
         The offset between the capture system's NTP clock and the local NTP clock
-        can be calculated as the sum of the <code>senderCaptureTimeOffset</code>
+        can be calculated as the sum of the {{senderCaptureTimeOffset}}
         and an estimated offset between the sender's NTP clock and the local NTP clock.
-        The latter can be based on
-        <a data-xref-type="_IDL_" data-cite-path="" data-type="interface"
-        href="https://www.w3.org/TR/webrtc-stats/#dom-rtcremoteinboundrtpstreamstats">
-        <code>RTCRemoteInboundRtpStreamStats</code></a>
-        and
-        <a data-xref-type="_IDL_" data-cite-path="" data-type="interface"
-        href="https://www.w3.org/TR/webrtc-stats/#dom-rtcremoteoutboundrtpstreamstats">
-        <code>RTCRemoteOutboundRtpStreamStats</code></a>
-        as:
-        <a data-xref-type="_IDL_" data-cite-path="" data-type="interface"
-        href="https://www.w3.org/TR/webrtc-stats/#dom-rtcremoteoutboundrtpstreamstats">
-        <code>RTCRemoteOutboundRtpStreamStats</code></a>.
-        <a data-xref-type="attribute|dict-member" data-link-for="RTCStats"
-        data-link-type="dict-member" data-xref-for="RTCStats" data-cite-path=""
-        data-type="attribute" href="https://www.w3.org/TR/webrtc-stats/#dom-rtcstats-timestamp">
-        <code>timestamp</code></a> - (
-        <a data-xref-type="_IDL_" data-cite-path="" data-type="interface"
-        href="https://www.w3.org/TR/webrtc-stats/#dom-rtcremoteoutboundrtpstreamstats">
-        <code>RTCRemoteOutboundRtpStreamStats</code></a>.
-        <a data-xref-type="attribute|dict-member" data-link-for="RTCRemoteOutboundRtpStreamStats"
-        data-link-type="dict-member" data-xref-for="RTCRemoteOutboundRtpStreamStats" data-cite-path=""
-        data-type="attribute" href="https://www.w3.org/TR/webrtc-stats/#dom-rtcremoteoutboundrtpstreamstats-remotetimestamp">
-        <code>remoteTimestamp</code></a>
-        + <a data-xref-type="_IDL_" data-cite-path="" data-type="interface"
-        href="https://www.w3.org/TR/webrtc-stats/#dom-rtcremoteinboundrtpstreamstats">
-        <code>RTCRemoteInboundRtpStreamStats</code></a>.
-        <a data-xref-type="attribute|dict-member" data-link-for="RTCRemoteInboundRtpStreamStats"
-        data-link-type="dict-member" data-xref-for="RTCRemoteInboundRtpStreamStats" data-cite-path=""
-        data-type="attribute" href="https://www.w3.org/TR/webrtc-stats/#dom-rtcremoteinboundrtpstreamstats-roundtriptime">
-        <code>roundTripTime</code></a> / 2). </p>
-        <p>The <code>senderCaptureTimeOffset</code> MUST be either sourced from the
-        <a href="https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/abs-capture-time/index.md#estimated-capture-clock-offset">
-        <!--Change to "http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time#estimated-capture-clock-offset"-->
-        estimated capture clock offset</a>
-        field of the
-        <a href="https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/abs-capture-time/index.md">
-        <!--Change to "http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time"-->
-        RTP Header Extension for Absolute Capture Time</a>
+        The latter can be based on {{RTCRemoteInboundRtpStreamStats}}
+        and {{RTCRemoteOutboundRtpStreamStats}} as:
+        <a><code>RTCRemoteOutboundRtpStreamStats.timestamp</code></a> - (
+        <a><code>RTCRemoteOutboundRtpStreamStats.remoteTimestamp</code></a> +
+        <a><code>RTCRemoteInboundRtpStreamStats.roundTripTime</code></a> / 2).</p>
+        <p>The {{senderCaptureTimeOffset}} MUST be either sourced from the
+        <a>estimated capture clock offset</a> field of the
+        <a>RTP Header Extension for Absolute Capture Time</a>
         or extrapolated based on this RTP header extension according to the
-        <a href="https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/abs-capture-time/index.md#timestamp-interpolation">
-        <!--Change to "http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time#timestamp-interpolation"-->
-        timestamp interpolation</a>.
-        Otherwise, the <code>senderCaptureTimeOffset</code> MUST be absent.</p>
+        <a>timestamp interpolation</a>.
+        Otherwise, the {{senderCaptureTimeOffset}} MUST be absent.</p>
       </dd>
-    </dl>
-  </section>
-</body>
-</html>
+    </dl
