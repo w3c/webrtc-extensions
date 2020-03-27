@@ -79,9 +79,9 @@ This new API has also been accepted in WebRTC 1.0 extensions. See the specificat
 
 #### Detailed design discussion
 
-#####[Tricky design choice #1]: multiple ways to surface end-to-end delay
+##### [Tricky design choice 1]: multiple ways to surface end-to-end delay
 
-The proposed solution is, as API2, to surface the sender-capture time offset as the raw data existing the absolute capture time RTP header extension. Then the calculation of end-to-end delay requires other data, as depicted in the code example in API2. Alternatively, we can surface another derived quality, even just the end-to-end delay. However, for the sake of clarity and testability in the specification, it would be best to report the raw data.
+The proposed solution is, as [API 2], to surface the sender-capture time offset as the raw data existing the absolute capture time RTP header extension. Then the calculation of end-to-end delay requires other data, as depicted in the code example in [API 2]. Alternatively, we can surface another derived quality, even just the end-to-end delay. However, for the sake of clarity and testability in the specification, it would be best to report the raw data.
 
 #### Considered alternatives
 
