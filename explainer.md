@@ -1,6 +1,12 @@
 ## Explainer
 
-### New data fields in RTCRtpContributingSource for audio-video synchronization and end-to-end delay measurements
+### Introduction
+
+This document explains [extensions to the WEBRTC specification](https://w3c.github.io/webrtc-extensions).
+
+This document contains a number of sections that have extensions for one specific interface or dictionary in the base specification. When an extension only affects one interface or dictionary, it will only be described there. If an extension affects multiple interfaces or dictionaries, there will be a subsection in the informative "Overviews" section that describes the extension as a whole, while the normative changes are in the sections for the individual interfaces.
+
+### RTCRtpContributingSource extensions on captureTimestamp and senderCaptureTimeOffset
 
 Authors:
 minyue@chromium.org
@@ -12,7 +18,9 @@ https://www.chromestatus.com/feature/5728533701722112
 
 #### Abstract
 
-This document provides a solution for real-time communication systems measure end-to-end delay and audio video synchronization performance. This solution is particularly desired by systems, where an intermediate steam regenerator that terminates the streams originating from senders, an audiuo mixer as an example, is involved.
+This section explains the two new data fields in RTCRtpContributingSource, namely captureTimestamp and senderCaptureTimeOffset, see [here](https://w3c.github.io/webrtc-extensions/#rtcrtpcontributingsource-dictionary). They are introduced for audio-video synchronization and end-to-end delay measurements, .
+
+The solution to audio-video synchronization and end-to-end delay measurements described here is particularly desired by systems, where an intermediate steam regenerator that terminates the streams originating from senders, an audiuo mixer as an example, is involved.
 
 #### Introduction
 
@@ -25,9 +33,9 @@ The solution proposed in this document is based on a new RTP header extension, n
 
 With the absolute capture timestamps, end receivers can accurately measure the audio-video synchronization performance. With the `estimated clock offset`, which gets updated at each intermediate hop, end receivers can estimate their respective clock offset with respect to the capturer's clock, and then together with the absolute capture timestamp, measure the end-to-end delay. 
 
-The absolute capture time RTP header extension has been adopted by WebRTC, see the specification [here](https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/abs-capture-time/index.md).
+The absolute capture time RTP header extension is defined [here](https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/abs-capture-time/index.md).
 
-To surface the information to web applications, two data fields are proposed to be added to RTCRtpContributingSource, and has been adopted by WebRTC 1.0 extensions, see the specification [here](https://w3c.github.io/webrtc-extensions/#rtcrtpcontributingsource-dictionary).
+The two new data fields in RTCRtpContributingSource are to surface the two data fields in the absolute capture time RTP header extension.
 
 #### Goals
 
@@ -40,7 +48,7 @@ This proposal does not aim for improving the accuracy of end-to-end delay measur
 
 #### [API 1]: captureTimestamp
 
-We propose to add captureTimestamp, type of DOMHighResTimeStamp, to the RTCRtpContributingSource dictionary. This surfaces the absolute capture timestamp in the absolute capture time RTP header extension, when it is present or can be extrapolated from previously received data, for the last rendered audio or video frame. It can be used for measuring audio video synchronization performance as illustrated in the following exemplar code:
+This specification adds captureTimestamp, type of DOMHighResTimeStamp, to the RTCRtpContributingSource dictionary. This surfaces the absolute capture timestamp in the absolute capture time RTP header extension, when it is present or can be extrapolated from previously received data, for the last rendered audio or video frame. It can be used for measuring audio video synchronization performance as illustrated in the following exemplar code:
 
     [receiverAudio, receiverVideo] = peerconnection.getReceivers();
 
@@ -106,6 +114,8 @@ We reject the proposals in [RFC6051] since they cannot overcome the problem of s
 #### Stakeholder Feedback / Opposition
 
 The proposal has been presented to W3C WG and browser implementers. While there is no signal from other implementers to implement this yet, the proposal has been reviewed without concerns raised.
+
+Real applications, Google Hangouts and Meet, for example, have been asking for reliable audio video synchronization and end-to-end delay measurements for several years, which we can back up with [discussions](https://github.com/w3c/webrtc-stats/issues/158) from 2017.
 
 #### References & acknowledgements
 
