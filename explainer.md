@@ -2,9 +2,7 @@
 
 ### Introduction
 
-This document explains [extensions to the WEBRTC specification](https://w3c.github.io/webrtc-extensions).
-
-This document contains a number of sections that have extensions for one specific interface or dictionary in the base specification. When an extension only affects one interface or dictionary, it will only be described there. If an extension affects multiple interfaces or dictionaries, there will be a subsection in the informative "Overviews" section that describes the extension as a whole, while the normative changes are in the sections for the individual interfaces.
+This document explains [extensions to the WEBRTC specification](https://w3c.github.io/webrtc-extensions). This document contains a number of sections, each of which contains design details to one specific extension.
 
 ### RTCRtpContributingSource extensions on captureTimestamp and senderCaptureTimeOffset
 
@@ -18,7 +16,7 @@ https://www.chromestatus.com/feature/5728533701722112
 
 #### Abstract
 
-This section explains the two new data fields in RTCRtpContributingSource, namely captureTimestamp and senderCaptureTimeOffset, see [here](https://w3c.github.io/webrtc-extensions/#rtcrtpcontributingsource-dictionary). They are introduced for audio-video synchronization and end-to-end delay measurements, .
+This section explains the two new data fields in RTCRtpContributingSource, namely captureTimestamp and senderCaptureTimeOffset, see [here](https://w3c.github.io/webrtc-extensions/#rtcrtpcontributingsource-dictionary). They are introduced for audio-video synchronization and end-to-end delay measurements.
 
 The solution to audio-video synchronization and end-to-end delay measurements described here is particularly desired by systems, where an intermediate steam regenerator that terminates the streams originating from senders, an audiuo mixer as an example, is involved.
 
