@@ -18,18 +18,18 @@ https://www.chromestatus.com/feature/5728533701722112
 
 This section explains the two new data fields in RTCRtpContributingSource, namely captureTimestamp and senderCaptureTimeOffset, see [here](https://w3c.github.io/webrtc-extensions/#rtcrtpcontributingsource-dictionary). They are introduced for audio-video synchronization and end-to-end delay measurements.
 
-The solution to audio-video synchronization and end-to-end delay measurements described here is particularly desired by systems, where an intermediate steam regenerator that terminates the streams originating from senders, an audio mixer as an example, is involved.
+The solution to audio-video synchronization and end-to-end delay measurements described here is particularly desired by systems, where an intermediate stream regenerator that terminates the streams originating from senders is involved. One example of this is an audio mixer.
 
 #### Introduction
 
 In simple real-time communication systems, which involves only a sender and a receiver, the RTCP scheme [RFC3550] allows estimation of round-trip time and thus end-to-end delay.
 However, in a more sophisticated system, where an intermediate stream regenerator is involved, the estimation of end-to-end delay becomes more difficult. For example, if audio mixing is performed on the server side, the server terminates inbound media streams, processes the media data, and then generates new outbound media streams with fresh synchronization information.
 
-The solution proposed in this document is based on a new RTP header extension, namely absolute capture time, which contains two data fields:
+The solution proposed in this document is based on a new RTP header extension, absolute capture time, which contains two data fields:
  * an absolute capture timestamp, which is stamped by the original capturer, and is supposed to be received untouched by the end receivers.
  * an estimated clock offset with respect to the capturer's clock, which is supposed to be read and updated by every intermediate sender.
 
-With the absolute capture timestamps, end receivers can accurately measure the audio-video synchronization performance. With the `estimated clock offset`, which gets updated at each intermediate hop, end receivers can estimate their respective clock offset with respect to the capturer's clock, and then together with the absolute capture timestamp, measure the end-to-end delay. 
+With the absolute capture timestamps, end receivers can accurately measure how synchronized the audio and video tracks are. With the `estimated clock offset`, which gets updated at each intermediate hop, end receivers can estimate their clock offset with respect to the capturer's clock, and then, together with the absolute capture timestamp, measure the end-to-end delay. 
 
 The absolute capture time RTP header extension is defined [here](https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/abs-capture-time/index.md).
 
@@ -46,24 +46,24 @@ This proposal does not aim for improving the accuracy of end-to-end delay measur
 
 #### [API 1]: captureTimestamp
 
-This specification adds captureTimestamp, type of DOMHighResTimeStamp, to the RTCRtpContributingSource dictionary. This surfaces the absolute capture timestamp in the absolute capture time RTP header extension, when it is present or can be extrapolated from previously received data, for the last rendered audio or video frame. It can be used for measuring audio video synchronization performance as illustrated in the following exemplar code:
+This specification adds captureTimestamp, type of DOMHighResTimeStamp, to the RTCRtpContributingSource dictionary. This surfaces the absolute capture timestamp in the absolute capture time RTP header extension, when it is present or can be extrapolated from previously received data, for the last rendered audio or video frame. It can be used for measuring audio video synchronization performance as illustrated in the following example code:
 
     [receiverAudio, receiverVideo] = peerconnection.getReceivers();
 
-    latestCaptureTimestampsAudio = receiverAudio.getSynchronizationSources()[0].captureTimeStamp;
-    latestCaptureTimestampsVideo = receiverVideo.getSynchronizationSources()[0].captureTimeStamp;
+    latestCaptureTimestampAudio = receiverAudio.getSynchronizationSources()[0].captureTimeStamp;
+    latestCaptureTimestampVideo = receiverVideo.getSynchronizationSources()[0].captureTimeStamp;
 
-    avSynchronization = latestCaptureTimestampsAudio - latestCaptureTimestampsVideo;
+    synchronizationError = latestCaptureTimestampAudio - latestCaptureTimestampVideo;
 
 #### [API 2]: senderCaptureTimeOffset
 
 This specification also adds senderCaptureTimeOffset, type of DOMHighResTimeStamp, to the RTCRtpContributingSource dictionary. In this context, the sender refers to the system that directly sends RTP and RTCP packets to the receiver, and thus the sender-receiver path only represents the "last hop" in a system that involves intermediate stream regenerators.
 
-An exemplar code to use captureTimestamp and senderCaptureTimeOffset to calculate end-to-end delay follows:
+An example code to use captureTimestamp and senderCaptureTimeOffset to calculate end-to-end delay:
 
     receiver = peerconnection.getReceivers()[0];
     csrc = receiver.getSynchronizationSources()[0];
-    latestCaptureTimestamps = csrc.captureTimeStamp;
+    latestCaptureTimestamp = csrc.captureTimeStamp;
     latestSenderCaptureTimeOffset = csrc.SenderCaptureTimeOffset;
     receiverTimestamp = csrc.timestamp;
     
@@ -76,7 +76,7 @@ An exemplar code to use captureTimestamp and senderCaptureTimeOffset to calculat
     // Calcuates sender-capturer clock offset.
     captureReceiverTimeOffset = senderReceiverTimeOffset + latestSenderCaptureTimeOffset;
     
-    receiverCaptureTimestamp = latestCaptureTimestamps + captureReceiverTimeOffset;
+    receiverCaptureTimestamp = latestCaptureTimestamp + captureReceiverTimeOffset;
     endToEndDelay = receiverTimestamp - receiverCaptureTimestamp.
 
 #### Detailed design discussion
@@ -87,6 +87,8 @@ The proposed solution is, as [API 2], to surface the sender-capture time offset 
 
 #### Considered alternatives
 
+We believe that given the choice of signaling protocol, the API suggested here is obvious. This section will sketch some of the other proposals for signaling protocols that have been considered and rejected over the development of this proposal.
+
 ##### [Alternative 1] Intermediate servers bake round-trip-time from capturer in its RTCP.
 
 If an intermediate server includes the one-way delay from the original capturer in the NTP timestamps in its RTCP packets, the end receiver does not have to care if there was a server in-between or not. The proposed way of updating the `estimated clock offset` with respect to the capturer's clock, as the second data in the absolute capture time RTP header extension, is based on the same principle.
@@ -95,15 +97,15 @@ However, without the original capture timestamp, this method may fail if the int
 
 ##### [Alternative 2] Audio Timing Header Extension
 
-In WebRTC, [video-timing](https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/video-timing/index.md) has been proposed as an experimental RTP header extension. We reject the idea of reusing it for audio or adding an audio version of it, since it has a duration-based design that requires its header extension to be sent with every frame, hence consuming significantly more bandwidth than our timestamp-based design.
+In WebRTC, [video-timing](https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/video-timing/index.md) has been proposed as an experimental RTP header extension. We rejected the idea of reusing it for audio or adding an audio version of it, since it has a duration-based design that requires its header extension to be sent with every frame, hence consuming significantly more bandwidth than our timestamp-based design.
 
 ##### [Alternative 3] [RFC5484]: SMPTE Time-Code
 
-We reject the proposal in [RFC5484] to use SMPTE time-codes. It seems needlessly complex for our use cases. It would also only help us solve the desynchronization metric problem, and not provide us with a solution for a one-way delay metric.
+We rejected the proposal in [RFC5484] to use SMPTE time-codes. It seems needlessly complex for our use cases. It would also only help us solve the desynchronization metric problem, and not provide us with a solution for a one-way delay metric.
 
 ##### [Alternative 4] [RFC6051]: Rapid Synchronisation of RTP Flows
 
-We reject the proposals in [RFC6051] since they cannot overcome the problem of synchronizing beyond mixers. The extended version of abs-capture-time does however borrow design elements from the RFC’s In-Band Delivery of Synchronisation Metadata section.
+We rejected the proposals in [RFC6051] since they cannot overcome the problem of synchronizing beyond mixers. The extended version of abs-capture-time does however borrow design elements from the RFC’s In-Band Delivery of Synchronisation Metadata section.
 
 #### Stakeholder Feedback / Opposition
 
