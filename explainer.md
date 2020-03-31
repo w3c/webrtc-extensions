@@ -55,11 +55,9 @@ This specification adds captureTimestamp, type of DOMHighResTimeStamp, to the RT
 
     avSynchronization = latestCaptureTimestampsAudio - latestCaptureTimestampsVideo;
 
-This new API has been accepted in WebRTC 1.0 extensions. See the specification [here](https://w3c.github.io/webrtc-extensions/#dom-rtcrtpcontributingsource-capturetimestamp).
-
 #### [API 2]: senderCaptureTimeOffset
 
-We also propose to add senderCaptureTimeOffset, type of DOMHighResTimeStamp, to the RTCRtpContributingSource dictionary. In this context, the sender refers to the system that directly sends RTP and RTCP packets to the receiver, and thus the sender-receiver path only represents the "last hop" in a system that involves intermediate stream regenerators.
+This specification also adds senderCaptureTimeOffset, type of DOMHighResTimeStamp, to the RTCRtpContributingSource dictionary. In this context, the sender refers to the system that directly sends RTP and RTCP packets to the receiver, and thus the sender-receiver path only represents the "last hop" in a system that involves intermediate stream regenerators.
 
 An exemplar code to use captureTimestamp and senderCaptureTimeOffset to calculate end-to-end delay follows:
 
@@ -80,8 +78,6 @@ An exemplar code to use captureTimestamp and senderCaptureTimeOffset to calculat
     
     receiverCaptureTimestamp = latestCaptureTimestamps + captureReceiverTimeOffset;
     endToEndDelay = receiverTimestamp - receiverCaptureTimestamp.
-
-This new API has also been accepted in WebRTC 1.0 extensions. See the specification [here](https://w3c.github.io/webrtc-extensions/#dom-rtcrtpcontributingsource-sendercapturetimeoffset).
 
 #### Detailed design discussion
 
