@@ -16,7 +16,7 @@ https://www.chromestatus.com/feature/5728533701722112
 
 #### Abstract
 
-This section explains the two new data fields in RTCRtpContributingSource, namely captureTimestamp and senderCaptureTimeOffset, see [here](https://w3c.github.io/webrtc-extensions/#rtcrtpcontributingsource-dictionary). They are introduced for audio-video synchronization and end-to-end delay measurements.
+This section explains the two new data fields in RTCRtpContributingSource, namely captureTimestamp and senderCaptureTimeOffset, see [here](https://w3c.github.io/webrtc-extensions/#rtcrtpcontributingsource-dictionary). They are introduced for audio-video synchronization and end-to-end delay measurements. These measurements are critial quality indices of a real-time communication system, and they can be very well used for monitoring the performance of such a system and A/B testing of new features. The audio-video synchronization measurement may also be used for achieving audio-video synchronization by adjusting the playout delay of the audio or the video stream accordingly.
 
 The solution to audio-video synchronization and end-to-end delay measurements described here is particularly desired by systems, where an intermediate stream regenerator that terminates the streams originating from senders is involved. One example of this is an audio mixer.
 
