@@ -392,6 +392,77 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       with an InvalidModificationError.
     </p>
   </section>
+  <section id="recrtpsender-interface">
+    <h3>
+      {{RTCRtpSender}} extensions
+    </h3>
+    <p>
+      The {{RTCRtpSender}} interface is defined in [[WEBRTC]]. This document
+      extends that interface by adding an additional method.
+    </p>
+    <pre class="idl">partial interface RTCRtpSender {
+      Promise&lt;unsigned long> requestKeyFrame();
+      };</pre>
+    <section>
+      <h2>Methods</h2>
+      <p>
+        <dl data-link-for="RTCRtpSender" class="methods">
+          <dt>
+            <dfn data-idl><code>requestKeyFrame</code></dfn></dt>
+          <dd>
+            <p>
+              Requests a keyframe. When called, the UA MUST perform
+              the following steps:
+            </p>
+            <ul>
+              <li>
+                Let <var>p</var> be a new promise.
+              </li>
+              <li>
+                Let <var>connection</var> be the sender''s associated
+                {{RTCPeerConnection}}.
+              </li>
+              <li>
+                Return  <var>p</var>, and let it be the result of
+                [= chaining =] the following steps to
+                    <var>connection</var>'s [= operations chain =].
+              </li>
+              <li>If the sender''s 'kind' is not "video", reject <var>p</var>
+                with {{NotAllowedError}}.
+              </li>
+              <li>
+                If the sender''s track is not set, if the track is ended,
+                or if the track is muted, reject <var>p</var> with
+                {{InvalidStateError}}.
+              </li>
+              <li>
+                Instruct the encoder of the track to produce a keyframe.
+              </li>
+              <li>
+                If the production of a keyframe fails, reject <var>p</var>
+                with {{OperationError}}.
+              <li>
+                When the encoder has produced a keyframe, and it has been
+                assigned an RTP timestamp, resolve <var>p</var> with this
+                timestamp.
+              </li>
+            </ul>
+          </dd>
+        </dl>
+      </p>
+    </section>
+    <p>
+      This call can be emulated by making the following calls,
+      except that the outgoing RTP timestamp is not recorded, and
+      the encoder may choose to encode an extra black frame:
+      <pre>
+        let track = sender.track;
+        await sender.replaceTrack(null);
+        await sender.replaceTrack(track);
+      </pre>
+    </p>
+  </section>
+
   <section id="rtcrtpreceiver-interface">
     <h3>
       {{RTCRtpReceiver}} extensions
