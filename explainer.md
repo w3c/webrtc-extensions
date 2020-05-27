@@ -122,3 +122,83 @@ Real applications, Google Hangouts and Meet, for example, have been asking for r
 
 Many thanks for valuable feedback and advice from:
 Harald Alvestrand
+
+### A new flag in RTCRtpEncodingParameters for adaptive packet rate
+
+Authors:
+minyue@chromium.org
+eladalon@chromium.org
+jakobi@google.com
+hbos@chromium.org
+
+Participate
+https://www.chromestatus.com/feature/ (To be added).
+https://github.com/w3c/webrtc-pc/issues/2300
+https://github.com/w3c/webrtc-pc/issues/2309
+ 
+#### Abstract
+This document provides an API for enabling/disabling a sender in a real-time audio-video calling to adapt its audio packet rate for a better utilizing of the network connection between the sender and other participants.
+
+#### Introduction
+Congestion control is a common way for real-time audio-video conferencing to achieve a good performance [1], because, without it, the senders in a calling may send too much data and congest the network, and as a consequence, detriments the real time requirement of the calling.
+
+A common congestion control is to adapt the bitrate of the audio and/or the video streams according to an estimate of the link capacity of the network. This proposal is focused on the audio bitrate adaptation. The total bitrate of an audio stream equals
+
+    total_birate = codec_bitrate + header_size * packet_rate,
+
+An audio codec compresses a given audio into a sequence of packets, each representing a trunk of the audio, and the duration of a trunk is referred to as the packet time. The average bitrate of these packets is the codec bitrate. Then, depending on the protocols used for transmission, various layers of headers can be added to the packets, as an example, RTP [RFC3550], TURN [RFC5766], UDP [RFC768] and IP. These headers count for a significant part of the total bitrate. With a packet rate of 50 (packets per second), the header rate can be as high as 33 kbps, which is equivalent to a codec rate for delivering a high quality full-band audio.
+
+Obviously, it is not ideal to only have a control on the codec bitrate. An efficient bitrate adaptation should also change the packet rate. The audio packet rate is analogous to the video frame rate, which also plays an important role in the video bitrate adaptation.
+
+Despite the great value of adapting packet rate, it can be difficult to ship the feature as default, since it may introduce interoperability problems. Although there seems to be no specifications to force a fixed packet rate, some implementations may have taken it as an assumption and may fail or perform suboptimally. Therefore the proposal is to add a new flag, [adaptivePTime](https://w3c.github.io/webrtc-extensions/#dom-rtcrtpencodingparameters-adaptiveptime), in RTCRtpEncodingParameters, so that RTC applications can enable adaptive packet rate.
+
+#### Goals
+Allow a sender in a real-time audio-video calling to choose whether or not to enable adaptive packet rate.
+
+##### Non-goals
+This document does not specify the algorithm for packet rate adaptation. The way to probe the link capacity and decide the packet rate is up to implementations.
+
+#### [API]: adaptivePTime
+Add adaptivePTime, type of boolean, to the RTCRtpEncodingParameters dictionary. It can be used for enabling adaptive packet rate. The choice of the name is due to the fact that ptime is a commonly used word for the audio packet interval, in the context of RTC, see, e.g., [RFC3264]. An example code of the usage of this flag follows:
+
+    const pc = new RTCPeerConnection();
+    const { sender } = pc.addTransceiver('audio', {
+      sendEncodings: [{
+        adaptivePTime: true
+      }]
+    });
+
+#### Detailed design discussion
+##### [Tricky design choice 1]: where to put the flag
+As an alternative to RTCRtpEncodingParameters, RTCConfiguration was considered to be the host of the adaptivePTime flag, see discussions [1](https://github.com/w3c/webrtc-pc/issues/2300) and [2](https://github.com/w3c/webrtc-pc/issues/2309). Consensus was reached that RTCRtpEncodingParameters is a better place since the flag can be set on a per RTCRtpSender basis.
+
+##### [Tricky design choice 2]: the format of the API
+Another discussion was arround wether to expose the full control of packet rate, see [this](https://github.com/w3c/webrtc-pc/issues/2309), which was basically suggesting to use ptime, which had been proposed as a member in RTCRtpEncodingParameters, instead of adding a flag. This leaves the implementation of packet rate adaptation algorithm to the application developers, which gives them more flexibility but also brings difficulties to non-experts. Eventually, we decided to adopt the adaptivePTime, and also abondened the ptime, see [this](https://github.com/w3c/webrtc-pc/issues/2311), which means the implementation of packet rate adaptation algorithm is up to browsers.
+
+#### Considered alternatives
+##### [Alternative 1] SDP parameter ptime
+We have considered using the parameter ptime as defined in Session Description Protocol (SDP)[RFC4566], and interpret the absence of it as allowing packet rate adaptation. But there are two problems
+
+ * This will not guarantee interoperability, as the absence of ptime can be interpreted as a fixed default packet time by some implementations, e.g., Opus interpretes as a default packet time of 20 milliseconds [RFC7587].
+
+ * The parameter ptime is a receiver preference, and therefore, we need to munge the SDP, if we want to control the sender. SDP munging is discouraged.
+
+##### [Alternative 2] New SDP parameter
+The effort of standardizing a new SDP parameter is large. Another drawback is that the SDP negotiation lacks dynamic nature, as it is difficult to re-configure during a call.
+
+#### Stakeholder Feedback / Opposition
+The need for an adaptive packet rate has been raised in a public discussion, and the concern on interoperability was also mentioned there. Mozilla seems to be interested in implementing it.
+
+#### References & acknowledgements
+
+ * [1] G. Carlucci, L. De Cicco, S. Holmer and S. Mascolo, "Congestion Control for Web Real-Time Communication," in IEEE/ACM Transactions on Networking, vol. 25, no. 5, pp. 2629-2642, Oct. 2017.
+ * [RFC3550] Schulzrinne, H., Casner, S., Frederick, R., and V. Jacobson, "RTP: A Transport Protocol for Real-Time Applications", STD 64, RFC 3550, July 2003.
+ * [RFC768] Postel, J., "User Datagram Protocol", STD 6, RFC 768, August 1980.
+ * [RFC5766] Mahy, R., Matthews, P., and J. Rosenberg, "Traversal Using Relays around NAT (TURN): Relay Extensions to Session Traversal Utilities for NAT (STUN)", RFC 5766, April 2010.
+ * [RFC3264] Rosenberg, J. and H. Schulzrinne, "An Offer/Answer Model with Session Description Protocol (SDP)", RFC 3264, June 2002.
+ * [RFC4566] Handley, M., Jacobson, V., and C. Perkins, "SDP: Session Description Protocol", RFC 4566, July 2006.
+ * [RFC7587] Spittka, J., Vos, K., and JM. Valin, "RTP Payload Format for the Opus Speech and Audio Codec", RFC 7587, June 2015.
+
+Many thanks for valuable feedback and advice from:
+Harald Alvestrand, Jan-Ivar Bruaroey, Philipp Hancke, Roman Shpount and Justin Uberti (in alphabetical order).
+
