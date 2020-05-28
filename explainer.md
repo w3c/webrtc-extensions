@@ -187,7 +187,7 @@ We have considered using the parameter ptime as defined in Session Description P
 The effort of standardizing a new SDP parameter is large. Another drawback is that the SDP negotiation lacks dynamic nature, as it is difficult to re-configure during a call.
 
 #### Stakeholder Feedback / Opposition
-The need for an adaptive packet rate has been raised in a public discussion, and the concern on interoperability was also mentioned there. Mozilla seems to be interested in implementing it.
+The need for an adaptive packet rate has been raised in a public discussion, and the concern on interoperability was also mentioned there. Mozilla has been involved in the discussions and seemed fine with the proposal.
 
 #### References & acknowledgements
 
@@ -201,4 +201,3 @@ The need for an adaptive packet rate has been raised in a public discussion, and
 
 Many thanks for valuable feedback and advice from:
 Harald Alvestrand, Jan-Ivar Bruaroey, Philipp Hancke, Roman Shpount and Justin Uberti (in alphabetical order).
-
