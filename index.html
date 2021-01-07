@@ -229,7 +229,7 @@ partial dictionary RTCRtpHeaderExtensionCapability {
 };
       
 partial interface RTCRtpTransceiver {
-  void setOfferedRtpHeaderExtensions(
+  undefined setOfferedRtpHeaderExtensions(
 sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
   readonly attribute FrozenArray&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer;
   readonly attribute FrozenArray&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsNegotiated;
