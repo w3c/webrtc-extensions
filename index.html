@@ -314,10 +314,10 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
                 </li>
                 <li>If <var>ext</var>'s "direction" field is not "sendrecv", and "uri"
                   indicates a mandatory-to-use attribute that is required to be both
-                  sent and received, throw an IllegalArgument error.
+                  sent and received, throw an InvalidModificationError error.
                 </li>
                 <li>if <var>ext</var>'s "direction" field is "stopped", and "uri" indicates
-                  a mandatory-to-implement extension, throw an IllegalArgument error.
+                  a mandatory-to-implement extension, throw an InvalidModificationError error.
                 </li>
                 <li>
                   Set the "direction" field of <var>entry</var> to <var>ext</var>'s
