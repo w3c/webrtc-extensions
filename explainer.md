@@ -140,7 +140,7 @@ https://github.com/w3c/webrtc-pc/issues/2309
 This document provides an API for enabling/disabling a sender in a real-time audio-video call to adapt its audio packet rate to better utilize the network connection between the sender and other participants.
 
 #### Introduction
-Congestion control is a common way for real-time audio-video conferencing to achieve a good performance [1], because, without it, the senders in a call may send too much data and congest the network, thus degrading call quality by increasing latency.
+Congestion control is a common way for real-time audio-video conferencing to achieve a good performance [1], because, without it, the senders in a call may send too much data and congest the network, thus degrading call quality.
 
 A common congestion control is to adapt the bitrate of the audio and/or the video streams according to an estimate of the link capacity of the network. This proposal is focused on the audio bitrate adaptation. The total bitrate of an audio stream equals
 
