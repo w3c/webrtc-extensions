@@ -256,10 +256,10 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
                 </li>
                 <li>If <var>ext</var>'s  "direction" field is not "sendrecv", and {{RTCRtpHeaderExtensionParameters/uri}}
                   indicates a mandatory-to-use attribute that is required to be both
-                  sent and received, [=exception/throw=] an {{IllegalArgumentError}}.
+                  sent and received, [=exception/throw=] an {{InvalidModificationError}}.
                 </li>
                 <li>if <var>ext</var>'s "direction" field is "stopped", and {{RTCRtpHeaderExtensionParameters/uri}} indicates
-                  a mandatory-to-implement extension, [=exception/throw=] an {{IllegalArgumentError}}.
+                  a mandatory-to-implement extension, [=exception/throw=] an {{InvalidModificationError}}.
                 </li>
                 <li>
                   Set the "direction" field of <var>entry</var> to <var>ext</var>'s
@@ -885,6 +885,42 @@ enum RTCIceCredentialType {
         </p>
       </dd>
     </dl>
-  </section>
+</section>
+<section>
+    <h3>
+      {{RTCRtpSynchronizationSource}} extensions
+    </h3>
+    <p>This document extends {{RTCRtpSynchronizationSource}} with a {{RTCRtpSynchronizationSource/voiceActivityFlag}} member (initially defined in the WebRTC 1.0 specification but later dropped due to lack of implementation).</p>
+  <pre class="idl">
+    partial dictionary RTCRtpSynchronizationSource {
+    boolean voiceActivityFlag;
+    };</pre>
+              <dl data-link-for="RTCRtpSynchronizationSource" data-dfn-for=
+            "RTCRtpSynchronizationSource" class="dictionary-members">
+              <dt data-tests=
+              "RTCRtpReceiver-getSynchronizationSources.https.html">
+                <dfn data-idl="">voiceActivityFlag</dfn> of type <span class=
+                "idlMemberType">boolean</span>
+              </dt>
+              <dd>
+                <p class="needs-test">
+                  Only present for audio receivers. Whether the last RTP
+                  packet, delivered from this source, contains voice activity
+                  (true) or not (false). If the RFC 6464 extension header was
+                  not present, or if the peer has signaled that it is not using
+                  the V bit by setting the "vad" extension attribute to "off",
+                  as described in [[!RFC6464]], Section 4,
+                  {{voiceActivityFlag}} will be absent.
+                </p>
+                <div class="issue atrisk">
+                  <p>
+                    {{RTCRtpSynchronizationSource/voiceActivityFlag}} is marked
+                    as a feature at risk, since there is no clear commitment
+                    from implementers.
+                  </p>
+                </div>
+              </dd>
+            </dl>
+</section>
 </body>
 </html>

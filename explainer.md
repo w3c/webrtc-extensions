@@ -137,23 +137,23 @@ https://github.com/w3c/webrtc-pc/issues/2300
 https://github.com/w3c/webrtc-pc/issues/2309
  
 #### Abstract
-This document provides an API for enabling/disabling a sender in a real-time audio-video calling to adapt its audio packet rate for a better utilizing of the network connection between the sender and other participants.
+This document provides an API for enabling/disabling a sender in a real-time audio-video call to adapt its audio packet rate to better utilize the network connection between the sender and other participants.
 
 #### Introduction
-Congestion control is a common way for real-time audio-video conferencing to achieve a good performance [1], because, without it, the senders in a calling may send too much data and congest the network, and as a consequence, detriments the real time requirement of the calling.
+Congestion control is a common way for real-time audio-video conferencing to achieve a good performance [1], because, without it, the senders in a call may send too much data and congest the network, thus degrading call quality.
 
 A common congestion control is to adapt the bitrate of the audio and/or the video streams according to an estimate of the link capacity of the network. This proposal is focused on the audio bitrate adaptation. The total bitrate of an audio stream equals
 
     total_birate = codec_bitrate + header_size * packet_rate,
 
-An audio codec compresses a given audio into a sequence of packets, each representing a trunk of the audio, and the duration of a trunk is referred to as the packet time. The average bitrate of these packets is the codec bitrate. Then, depending on the protocols used for transmission, various layers of headers can be added to the packets, as an example, RTP [RFC3550], TURN [RFC5766], UDP [RFC768] and IP. These headers count for a significant part of the total bitrate. With a packet rate of 50 (packets per second), the header rate can be as high as 33 kbps, which is equivalent to a codec rate for delivering a high quality full-band audio.
+An audio codec compresses audio into a sequence of packets, each representing a frame of the audio, and the duration of a trunk is referred to as the packet time. The average bitrate of these packets is the codec bitrate. Then, depending on the protocols used for transmission, various layers of headers can be added to the packets, as an example, RTP [RFC3550], TURN [RFC5766], UDP [RFC768] and IP. These headers account for a significant portion of the total bitrate. With a packet rate of 50 (packets per second), the header rate can be as high as 37.6 kbps, which is equivalent to a codec rate for delivering a high quality full-band audio.
 
 Obviously, it is not ideal to only have a control on the codec bitrate. An efficient bitrate adaptation should also change the packet rate. The audio packet rate is analogous to the video frame rate, which also plays an important role in the video bitrate adaptation.
 
 Despite the great value of adapting packet rate, it can be difficult to ship the feature as default, since it may introduce interoperability problems. Although there seems to be no specifications to force a fixed packet rate, some implementations may have taken it as an assumption and may fail or perform suboptimally. Therefore the proposal is to add a new flag, [adaptivePTime](https://w3c.github.io/webrtc-extensions/#dom-rtcrtpencodingparameters-adaptiveptime), in RTCRtpEncodingParameters, so that RTC applications can enable adaptive packet rate.
 
 #### Goals
-Allow a sender in a real-time audio-video calling to choose whether or not to enable adaptive packet rate.
+Allow a sender in a real-time audio-video call to choose whether or not to enable adaptive packet rate.
 
 ##### Non-goals
 This document does not specify the algorithm for packet rate adaptation. The way to probe the link capacity and decide the packet rate is up to implementations.
