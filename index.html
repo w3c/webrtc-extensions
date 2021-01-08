@@ -21,7 +21,8 @@
       }
       // Add additional editors here.
       // https://github.com/w3c/respec/wiki/editors
-    ],
+               ],
+    "xref": ["webrtc", "hr-time", "mediacapture-streams", "webrtc-stats"],
     "shortName": "webrtc-extensions",
     "specStatus": "ED",
     "subjectPrefix": "[webrtc-extensions]"
@@ -61,35 +62,7 @@
       "Overviews" section that describes the extension as a whole, while the normative changes
       are in the sections for the individual interfaces.
     </p>
-    
-  </section>
-  <section>
-    <h2>Terminology</h2>
-    <p>
-      The following terms are defined in [[!WEBRTC]]:
-      <ul>
-        <li><dfn data-cite="!WEBRTC#dom-rtciceserver">RTCIceServer</dfn></li>
-        <li><dfn data-cite="!WEBRTC#dfn-ice-agent">ICE Agent</dfn></li>
-        <li><dfn data-cite="!WEBRTC#dom-rtcrtpheaderextensioncapability">RTCRtpHeaderExtensionCapability</dfn></li>
-        <li><dfn data-cite="!WEBRTC#dom-rtcrtptransceiverdirection">RTCRtpTransceiverDirection</dfn></li>
-        <li><dfn data-cite="!WEBRTC#dom-rtcrtpheaderextensionparameters">RTCRtpHeaderExtensionParameters</dfn></li>
-        <li><dfn data-cite="!WEBRTC#set-description">set an RTCSessionDescription</dfn></li>
-        <li><dfn data-cite="!WEBRTC#dfn-final-steps-to-create-an-offer">final steps to create an offer</dfn></li>
-        <li><dfn data-cite="!WEBRTC#dom-rtcrtpreceiver"><code>RTCRtpReceiver</code></dfn></li>
-        <li><dfn data-cite="!WEBRTC#dom-rtcrtpcontributingsource"><code>RTCRtpContributingSource</code></dfn> and
-        <dfn data-cite="!WEBRTC#dom-rtcrtpcontributingsource-timestamp"><code>RTCRtpContributingSource.timestamp</code></dfn></li>
-      </ul>
-    </p>
-    <p>
-      The term
-      <dfn data-cite=!GETUSERMEDIA#dom-mediastreamtrack><code>MediaStreamTrack</code></dfn>
-      is defined in [[!GETUSERMEDIA]].
-    </p>
-    <p>
-      The term
-      <dfn data-cite="!hr-time#dom-domhighrestimestamp"><code>DOMHighResTimeStamp</code></dfn>
-      is defined in [[!hr-time]].
-    </p>
+
     <p>
       The following terms are defined in
       <!-- TODO: When webrtc.org website is fixed, change links to "http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time" -->
@@ -100,21 +73,6 @@
         <li><a href="https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/abs-capture-time/index.md#estimated-capture-clock-offset"><dfn>estimated capture clock offset</dfn></a>
       </ul>
     </p>
-    <p>
-      The following terms are defined in [[!WEBRTC-STATS]]:
-      <ul>
-        <li><dfn data-cite=!WEBRTC-STATS#dom-rtcremoteinboundrtpstreamstats><code>RTCRemoteInboundRtpStreamStats</code></dfn> and
-        <dfn data-cite=!WEBRTC-STATS#dom-rtcremoteinboundrtpstreamstats-roundtriptime><code>RTCRemoteInboundRtpStreamStats.roundTripTime</code></dfn></li>
-        <li><dfn data-cite=!WEBRTC-STATS#dom-rtcremoteoutboundrtpstreamstats><code>RTCRemoteOutboundRtpStreamStats</code></dfn>,
-        <dfn data-cite=!WEBRTC-STATS#dom-rtcstats-timestamp><code>RTCRemoteOutboundRtpStreamStats.timestamp</code></dfn> and
-        <dfn data-cite=!WEBRTC-STATS#dom-rtcremoteoutboundrtpstreamstats-remotetimestamp><code>RTCRemoteOutboundRtpStreamStats.remoteTimestamp</code></dfn></li>
-      </ul>
-    </p>
-    <p>When referring to exceptions, the terms <dfn
-      data-cite="!WEBIDL#dfn-throw">throw</dfn> and
-      <dfn data-dfn-for="exception" data-cite=
-      "!WEBIDL#dfn-create-exception">create</dfn> are
-      defined in [[WEBIDL]].</p>
     <p>The <dfn>OAuth Client</dfn> and <dfn>Authorization Server</dfn> roles
       are defined in [[RFC6749]] Section 1.1.</p>
   </section>
@@ -130,11 +88,11 @@
         The extension for RTP header extension control consists of 2 parts:
       </p>
       <ul>
-        <li>An extension to RTCRtpTransceiver, to set and query the RTP header extensions
+        <li>An extension to {{RTCRtpTransceiver}}, to set and query the RTP header extensions
           negotiated in SDP.
         </li>
-        <li>An extension to RTCRtpHeaderExtensionParameters, to be used with setParameters()
-          to set the RTP header extensions sent by an RTCRtpSender.</li>
+        <li>An extension to {{RTCRtpHeaderExtensionParameters}}, to be used with setParameters()
+          to set the RTP header extensions sent by an {{RTCRtpSender}}.</li>
       </ul>
       <p>
         The RTP header extension mechanism is defined in [[RFC8285]], with
@@ -153,10 +111,10 @@
   </section>
   <section id="rtcpeerconnection-interface">
     <h3>
-      <dfn>RTCPeerConnection</dfn> extensions
+      {{RTCPeerConnection}} extensions
     </h3>
     <p>
-      The <code><a href="https://w3c.github.io/webrtc-pc/#interface-definition">RTCPeerConnection</a></code>
+      The {{RTCPeerConnection}}
       interface is defined in [[WEBRTC]]. This document extends that interface
       by adding an additional static method.
     </p>
@@ -167,7 +125,7 @@
       <h2>Methods</h2>
       <dl data-link-for="RTCPeerConnection" data-dfn-for=
       "RTCPeerConnection" class="methods">
-        <dt><dfn data-idl><code>getDefaultIceServers</code></dfn></dt>
+        <dt><dfn data-idl>getDefaultIceServers</dfn></dt>
         <dd>
           <p>Returns a list of ICE servers that are configured into the
           browser. A browser might be configured to use local or private
@@ -184,12 +142,12 @@
           agent with these defaults does not per se increase a user's
           ability to limit the exposure of their IP addresses.</p>
           <p class="note">If set, the configured default ICE servers exposed by
-          <a data-link-for="RTCPeerConnection">getDefaultIceServers</a> on
-          <code><a>RTCPeerConnection</a></code> instances provides persistent
+          {{RTCPeerConnection/getDefaultIceServers}} on
+          {{RTCPeerConnection}} instances provides persistent
           information across time and origins which increases the fingerprinting
           surface of a given browser.</p>
           <div class="issue atrisk">
-            <p><code>getDefaultIceServers()</code> was moved from [[WEBRTC]] to
+            <p>{{RTCPeerConnection/getDefaultIceServers()}} was moved from [[WEBRTC]] to
             this extension spec due to lack of support from implementers and
             concerns discussed in <a href="https://github.com/w3c/webrtc-pc/issues/2023">webrtc-pc#2023</a>.</p>
           </div>
@@ -199,10 +157,10 @@
   </section>
   <section id="rtcrtptransceiver-interface">
     <h3>
-      <dfn>RTCRtpTransceiver</dfn> extensions
+      {{RTCRtpTransceiver}} extensions
     </h3>
     <p>
-      The <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcrtptransceiver">RTCRtpTransceiver</a></code>
+      The {{RTCRtpTransceiver}}
       interface is defined in [[WEBRTC]]. This document extends that interface
       by adding an additional method and attribute in order to control negotiation of
       RTP header extensions.
@@ -239,7 +197,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
     <section>
       <h2>Modifications to existing procedures</h2>
       <p>
-        In the <a>set an RTCSessionDescription</a> algorithm, add a step
+        In the <a data-cite="WEBRTC#set-description">set a session description</a> algorithm, add a step
         right after the step that sets transceiver.[[\Sender]].[[\SendCodecs]],
         saying "For each transciever, set [[\HeaderExtensionsNegotiated]] to
         an empty list, and then
@@ -287,10 +245,10 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
               For each extension <var>ext</var> in <var>extlist</var>, do the following:
               <ol>
                 <li>
-                  If <var>ext</var>'s "uri" value is missing, throw a TypeError.
+                  If <var>ext</var>'s "uri" value is missing, [=exception/throw=] a TypeError.
                 </li>
                 <li>If <var>ext</var>'s "uri" value is not present in
-                  [[\HeaderExtensionsToOffer]], throw a NotSupported error.
+                  [[\HeaderExtensionsToOffer]], [=exception/throw=] a NotSupported error.
                 </li>
                 <li>
                   Let <var>entry</var> be the entry with the same "uri" value in
@@ -298,10 +256,10 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
                 </li>
                 <li>If <var>ext</var>'s "direction" field is not "sendrecv", and "uri"
                   indicates a mandatory-to-use attribute that is required to be both
-                  sent and received, throw an IllegalArgument error.
+                  sent and received, [=exception/throw=] an IllegalArgument error.
                 </li>
                 <li>if <var>ext</var>'s "direction" field is "stopped", and "uri" indicates
-                  a mandatory-to-implement extension, throw an IllegalArgument error.
+                  a mandatory-to-implement extension, [=exception/throw=] an IllegalArgument error.
                 </li>
                 <li>
                   Set the "direction" field of <var>entry</var> to <var>ext</var>'s
@@ -315,21 +273,21 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
     </section>
     <section>
       <h2>Attributes</h2>
-      <dl>
-        <dt>headerExtensionsToOffer, readonly</dt>
+      <dl data-dfn-for=RTCRtpTransceiver>
+        <dt><dfn>headerExtensionsToOffer</dfn>, readonly</dt>
         <dd>Returns the value of the [[\HeaderExtensionsToOffer]] slot.</dd>
-        <dt>headerExtensionsNegotiated, readonly</dt>
+        <dt><dfn>headerExtensionsNegotiated</dfn>, readonly</dt>
         <dd>Returns the value of the [[\HeaderExtensionsNegotiated]] slot.</dd>
       </dl>
     </section>
   </section>
   <section id="rtcrtpheaderextensionparameters-interface">
     <h3>
-      <code><a>RTCRtpHeaderExtensionParameters</a></code> extensions
+      {{RTCRtpHeaderExtensionParameters}} extensions
     </h3>
     <p>
-      The <code><a>RTCRtpHeaderExtensionParameters</a></code>
-      dictionary is defined in [[WEBRTC]]. This document extends that interface
+      The {{RTCRtpHeaderExtensionParameters}}
+      dictionary is defined in [[WEBRTC]]. This document extends that dictionary
       by adding an additional member.
     </p>
     <pre class="idl">
@@ -340,39 +298,39 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
     <section>
       <h2>Attributes</h2>
       <dl>
-        <dt>enabled, of type boolean</dt>
+        <dt><dfn data-dfn-for="RTCRtpHeaderExtensionParameters">enabled</dfn>, of type boolean</dt>
         <dd>
-          <p>When returned from getParameters() on an RTCRTPSender, "enabled" is true
+          <p>When returned from {{RTCRtpSender/getParameters()}} on an {{RTCRtpSender}}, {{RTCRtpHeaderExtensionParameters/enabled}} is <code>true</code>
             when the RTP sender is
             configured to send this header extension when appropriate. If the
             attribute is missing, it means that it is enabled and cannot be disabled.
           </p>
           <p>
-            When passed to setParameters(), setting "enabled" to true instructs the
-            RTP sender to send this header extension when appropriate. Setting "enabled"
-            to false instructs the RTP sender to never send this extension.
+            When passed to {{RTCRtpSender/setParameters()}}, setting {{RTCRtpHeaderExtensionParameters/enabled}} to <code>true</code> instructs the
+            RTP sender to send this header extension when appropriate. Setting {{RTCRtpHeaderExtensionParameters/enabled}}
+            to <code>false</code> instructs the RTP sender to never send this extension.
           </p>
           <p>
-            When calling getParameters() on an RTCRTPReceiver, the "enabled" member will
+            When calling {{RTCRtpReceiver/getParameters()}} on an {{RTCRtpReceiver}}, the {{RTCRtpHeaderExtensionParameters/enabled}} member will
             always be missing.
           </p>
         </dd>
       </dl>
       <p class="note">
-        The list of extensions returned from getParameters() on a sender will only include
+        The list of extensions returned from {{RTCRtpSender/getParameters()}} on a sender will only include
         the extensions that have been negotiated for sending.
       </p>
     </section>
     <p>
-      The inclusion of a settable member of RTCRtpHeaderExtensionParameters
-      means that "headerExtensions" is no longer a read-only member of RTCRtpParameters.
-      The "uri", "id" and "encrypted" members of
-      RTCRtpHeaderExtensionParameters remain read-only.
+      The inclusion of a settable member of {{RTCRtpHeaderExtensionParameters}}
+      means that {{RTCRtpParameters/headerExtensions}} is no longer a read-only member of {{RTCRtpParameters}}.
+      The {{RTCRtpHeaderExtensionParameters/uri}}, {{RTCRtpHeaderExtensionParameters/id}} and {{RTCRtpHeaderExtensionParameters/encrypted}} members of
+      {{RTCRtpHeaderExtensionParameters}} remain read-only.
     </p>
     <p>
       Changing the
-      list, apart from setting the "enabled" member, MUST cause setParameters() to reject
-      with an InvalidModificationError.
+      list, apart from setting the {{RTCRtpHeaderExtensionParameters/enabled}} member, MUST cause {{RTCRtpSender/setParameters()}} to reject
+      with an {{InvalidModificationError}}.
     </p>
   </section>
   <section id="rtcrtpreceiver-interface">
@@ -385,7 +343,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       by adding an additional internal slot and attribute.
     </p>
     <p>
-      Let <code>RTCRtpReceiver</code> objects have a
+      Let {{RTCRtpReceiver}} objects have a
       <dfn>[[\PlayoutDelay]]</dfn> internal slot initially
       initialized to <code>null</code>.
     </p>
@@ -396,7 +354,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       <h2>Attributes</h2>
       <dl data-link-for="RTCRtpReceiver" data-dfn-for="RTCRtpReceiver"
       class="attributes">
-        <dt><dfn><code>playoutDelay</code></dfn> of type <span
+        <dt><dfn>playoutDelay</dfn> of type <span
           class="idlAttrType">double</span>, nullable</dt>
         <dd>
           <p>This attribute allows the application to specify a target duration
@@ -419,8 +377,8 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
           </p>
           <p class="note">
             If the track is paired with other tracks through
-            <code><a>RTCRtpReceiver</a></code>
-            <a href="https://w3c.github.io/webrtc-pc/#dfn-associatedremotemediastreams">
+            {{RTCRtpReceiver}}
+            <a data-cite="WEBRTC#dfn-associatedremotemediastreams">
             [[\AssociatedRemoteMediaStreams]]</a> internal slot, then it will
             be synchronized with other tracks (for e.g. audio video
             synchronization). This means that even if one of the paired tracks
@@ -432,10 +390,8 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
           </p>
           <p class="note">
             The receiver's average delay can be measured as the delta
-            <code><a href="https://w3c.github.io/webrtc-stats/#dom-rtcinboundrtpstreamstats-jitterbufferdelay">
-            jitterBufferDelay</a></code> divided by the delta
-            <code><a href="https://w3c.github.io/webrtc-stats/#dom-rtcinboundrtpstreamstats-jitterbufferemittedcount">
-            jitterBufferEmittedCount</a></code>.
+            {{RTCInboundRtpStreamStats/jitterBufferDelay}} divided by the delta
+            {{RTCInboundRtpStreamStats/jitterBufferEmittedCount}}.
           </p>
           <p>On getting, this attribute MUST return the value of the
           <a>[[\PlayoutDelay]]</a> internal slot.</p>
@@ -443,7 +399,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
           <ol>
             <li>
               <p>Let <var>receiver</var> be the
-              <code><a>RTCRtpReceiver</a></code> object on which the setter is
+              {{RTCRtpReceiver}} object on which the setter is
               invoked.</p>
             </li>
             <li>
@@ -451,7 +407,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
             </li>
             <li>
               <p>If <var>delay</var> is negative or larger than 4 seconds then,
-              <a>throw</a> an <code>RangeError</code> and abort these steps.</p>
+              [=exception/throw=] a {{RangeError}} and abort these steps.</p>
             </li>
             <li>
               <p>Set the value of <var>receiver</var>'s <a>[[\PlayoutDelay]]</a>
@@ -482,7 +438,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
                   to hurt user experience. Audio samples or video frames SHOULD
                   be accelerated or decelerated before playout, similarly to how
                   it is done for
-                  <a href="https://tools.ietf.org/html/rfc5888#section-7">
+                  <a data-cite="RFC5888#section-7">
                   audio/video synchronization</a> or in response to congestion
                   control.</p>
                   <p>The acceleration or deceleration rate may vary depending on
@@ -493,8 +449,8 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
                   different for audio and video.</p>
                   <p class="note">
                     For audio, acceleration and deceleration can be measured
-                    with <code><a href="https://w3c.github.io/webrtc-stats/#dom-rtcinboundrtpstreamstats-insertedsamplesfordeceleration">insertedSamplesForDeceleration</a></code>
-                    and <code><a href="https://w3c.github.io/webrtc-stats/#dom-rtcinboundrtpstreamstats-removedsamplesforacceleration">removedSamplesForAcceleration</a></code>.
+                    with {{RTCInboundRtpStreamStats/insertedSamplesForDeceleration}}
+                    and {{RTCInboundRtpStreamStats/removedSamplesForAcceleration}}.
                     For video, this may result in the same frame being rendered
                     multiple times or frames may be dropped.
                   </p>
@@ -508,10 +464,10 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
   </section>
   <section id="rtcrtpencodingparameters-dictionary">
     <h3>
-      <dfn>RTCRtpEncodingParameters</dfn> extensions
+      RTCRtpEncodingParameters extensions
     </h3>
     <p>
-      The <code><a href="https://w3c.github.io/webrtc-pc/#rtcrtpencodingparameters">RTCRtpEncodingParameters</a></code>
+      The {{RTCRtpEncodingParameters}}
       dictionary is defined in [[WEBRTC]]. This document extends that dictionary
       by adding an additional boolean flag.
     </p>
@@ -519,9 +475,9 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       boolean adaptivePtime = false;
       double maxFramerate;
     };</pre>
-    <h2>Dictionary <code><a>RTCRtpEncodingParameters</a></code> Members</h2>
+    <h2>Dictionary {{RTCRtpEncodingParameters}} Members</h2>
     <dl data-link-for="RTCRtpEncodingParameters" data-dfn-for="RTCRtpEncodingParameters" class="dictionary-members">
-      <dt><dfn data-idl><code>adaptivePtime</code></dfn> of type <span class="idlMemberType">boolean</span>, defaulting to <code>false</code>.</dt>
+      <dt><dfn data-idl>adaptivePtime</dfn> of type <span class="idlMemberType">boolean</span>, defaulting to <code>false</code>.</dt>
       <dd>
         <p>Indicates whether this encoding MAY dynamically change
         the frame length. If the value is <code>true</code>,
@@ -529,33 +485,33 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
         frames, and MAY change this at any time. Valid values are multiples
         of 10ms. If the <code>maxptime</code> attribute (defined in
         [[RFC4566]] Section 6) is specified, that maximum applies.
-        <a href="https://w3c.github.io/webrtc-pc/#dfn-read-only-parameter">Read-only parameter.</a></p>
+        <a data-cite="WEBRTC#dfn-read-only-parameter">Read-only parameter.</a></p>
         <p class="note">Using a longer frame length reduces the
         bandwidth consumption due to overhead, but does so at the cost
         of increased latency. Changing the frame length dynamically allows the
         user agent to adapt its bandwidth allocation strategy based on the
         current network conditions.</p>
-        <p>If <code>adaptivePtime</code> is set to <code>true</code>,
+        <p>If {{adaptivePtime}} is set to <code>true</code>,
         <code>ptime</code> MUST NOT be set; otherwise,
-        <code>InvalidModificationError</code> MUST be thrown.</p>
+        {{InvalidModificationError}} MUST be [=exception/throw=]n.</p>
       </dd>
-      <dt><dfn data-idl><code>maxFramerate</code></dfn> of type <span class=
+      <dt><dfn data-idl>maxFramerate</dfn> of type <span class=
       "idlMemberType">double</span></dt>
       <dd>
         <p>When present, indicates the maximum frame rate that can be used to
         send this encoding, in frames per second. The user agent is free to
         allocate bandwidth between the encodings, as long as the
-        <code>maxFramerate</code> value is not exceeded.</p>
-        <p>When set with <code>addTransceiver</code>, the frame rate is required
-        to be 0.0 or greater. If this is not the case, <a>throw</a> a
-        <code>RangeError</code>.</p>
-        <p>If changed with <code>setParameters</code>, the new frame rate takes
+        {{maxFramerate}} value is not exceeded.</p>
+        <p>When set with {{RTCPeerConnection/addTransceiver()}}, the frame rate is required
+        to be 0.0 or greater. If this is not the case, [=exception/throw=] a
+        {{RangeError}}.</p>
+        <p>If changed with {{RTCRtpSender/setParameters()}}, the new frame rate takes
         effect after the current picture is completed; setting the max frame
         rate to zero thus has the effect of freezing the video on the next
-        frame. Upon setting with <code>setParameters</code>, if the value is
-        less than 0.0, <a>reject</a> with a <code>RangeError</code>.</p>
+        frame. Upon setting with {{RTCRtpSender/setParameters()}}, if the value is
+        less than 0.0, [=reject=] with a {{RangeError}}.</p>
         <div class="issue atrisk">
-          <p><code>maxFramerate</code> was moved from [[WEBRTC]] to this
+          <p>{{maxFramerate}} was moved from [[WEBRTC]] to this
           extension spec due to lack of support from implementers.</p>
         </div>
       </dd>
@@ -563,10 +519,10 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
   </section>
   <section id="rtcicecredentialtype-enum">
     <h3>
-      <dfn>RTCIceCredentialType</dfn> extensions
+      {{RTCIceCredentialType}} extensions
     </h3>
     <p>The following enum values are added to the
-    <code><a href="https://w3c.github.io/webrtc-pc/#dom-rtcicecredentialtype">RTCIceCredentialType</a></code>
+    {{RTCIceCredentialType}}
     enum defined in [[WEBRTC]].</p>
     <div>
         <pre class="idl"
@@ -581,38 +537,36 @@ enum RTCIceCredentialType {
           <th colspan="2">Enumeration description</th>
         </tr>
         <tr>
-          <td><dfn data-idl><code>oauth</code></dfn></td>
+          <td><dfn data-idl>oauth</dfn></td>
           <td><p>An OAuth 2.0 based authentication method, as described
           in [[RFC7635]].
           </p>
-          <p>For OAuth Authentication, the <a>ICE Agent</a> requires three
+          <p>For OAuth Authentication, the <a data-cite="WEBRTC#dfn-ice-agent">ICE Agent</a> requires three
           pieces of credential information. The credential is composed of
-          a <code>kid</code>, which the <a>RTCIceServer</a>
-          <code>username</code> member is used for, and
-          <code>macKey</code> and <code> accessToken</code>, which are
-          placed in the <a>RTCOAuthCredential</a> dictionary.
+          a <code>kid</code>, which the {{RTCIceServer.username}} member is used for, and
+          <code>macKey</code> and <code>accessToken</code>, which are
+          placed in the {{RTCOAuthCredential}} dictionary.
           </p>
           <p class="note">
           This specification does not define how an application (acting
-          as the <a>OAuth Client</a>) obtains the
+          as the [=OAuth Client=]) obtains the
           <code>accessToken</code>, <code>kid</code> and
-          <code>macKey</code> from the <a>Authorization Server</a>, as
-          WebRTC only handles the interaction between the <a>ICE
-          agent</a> and TURN server. For example, the application may use
+          <code>macKey</code> from the [=Authorization Server=], as
+          WebRTC only handles the interaction between the <a data-cite="WEBRTC#dfn-ice-agent">ICE
+          Agent</a> and TURN server. For example, the application may use
           the OAuth 2.0 Implicit Grant type, with PoP (Proof-of-Possession)
           Token type, as described in [[RFC6749]] and
           [[OAUTH-POP-KEY-DISTRIBUTION]]; an example of this is provided
           in [[RFC7635]], Appendix B.</p>
           <p>
           The application, acting as the <a>OAuth Client</a>, is responsible for
-          refreshing the credential information and updating the <a>ICE
+          refreshing the credential information and updating the <a data-cite="WEBRTC#dfn-ice-agent">ICE
           Agent</a> with fresh new credentials before the
           <code>accessToken</code> expires. The <a>OAuth Client</a> can use the
-          <code>RTCPeerConnection.</code><code><a
-          href="https://w3c.github.io/webrtc-pc/#dom-rtcpeerconnection-setconfiguration">setConfiguration</a></code>
+          {{RTCPeerConnection.setConfiguration()}}
           method to periodically refresh the TURN credentials.</p>
           <p>The length of the HMAC key
-          (<code>RTCOAuthCredential.macKey</code>) MAY be any integer
+          ({{RTCOAuthCredential.macKey}}) MAY be any integer
           number of bytes greater than 20 (160 bits).</p>
           <p class="note">According to [[RFC7635]] Section 4.1, the
           HMAC key MUST be a symmetric key, as asymmetric keys would
@@ -623,21 +577,21 @@ enum RTCIceCredentialType {
           defined in [[RFC5389]] Section 15.4, and [[STUN-BIS]]
           Section 14.6.</p>
           <p>When <a
-          href="https://w3c.github.io/webrtc-pc/#set-pc-configuration">setting a
+          data-cite="WEBRTC#set-pc-configuration">setting a
           configuration</a> and evaluating urls, also run the following step:
           <ol>
             <li>
               <p>If <var>scheme name</var> is <code>turn</code> or
               <code>turns</code>, and
-              <code><var>server</var>.credentialType</code> is
+              <code><var>server</var>.{{RTCIceServer/credentialType}}</code> is
               <code>"oauth"</code>, and
-              <code><var>server</var>.credential</code> is not an
-              <a>RTCOAuthCredential</a>, then throw an
-              <code>InvalidAccessError</code>.</p>
+              <code><var>server</var>.{{RTCIceServer/credential}}</code> is not an
+              {{RTCOAuthCredential}}, then [=exception/throw=] an
+              {{InvalidAccessError}}.</p>
             </li>
           </ol>
           <div class="issue atrisk">
-            <p>Support for the <code>oauth</code> value of <code>RTCIceCredentialType</code>
+            <p>Support for the {{RTCIceCredentialType/"oauth"}} value of {{RTCIceCredentialType}}
             is marked as a feature at risk, since there is no clear commitment from implementers.</p>
           </div>
           </td>
@@ -650,14 +604,14 @@ enum RTCIceCredentialType {
     <h3>
       <dfn>RTCOAuthCredential</dfn> Dictionary
     </h3>
-    <p>The <code>RTCOAuthCredential</code> dictionary is used to describe
+    <p>The {{RTCOAuthCredential}} dictionary is used to describe
     the OAuth auth credential information which is used by the STUN/TURN
-    client (inside the <a>ICE Agent</a>) to authenticate against a STUN/TURN
+    client (inside the <a data-cite="WEBRTC#dfn-ice-agent">ICE Agent</a>) to authenticate against a STUN/TURN
     server, as described in [[RFC7635]]. Note that the <code>kid</code>
     parameter is not located in this dictionary, but in
-    <code>RTCIceServer</code>'s <code>username</code> member.</p>
+    {{RTCIceServer.username}} member.</p>
     <div class="issue atrisk">
-      <p>Support for the <code>RTCOAuthCredential</code> dictionary is marked
+      <p>Support for the {{RTCOAuthCredential}} dictionary is marked
       as a feature at risk, since there is no clear commitment from implementers.</p>
     </div>
     <div>
@@ -667,11 +621,11 @@ enum RTCIceCredentialType {
     required DOMString accessToken;
 };</pre>
       <section>
-        <h2>Dictionary <a class="idlType">RTCOAuthCredential</a> Members
+        <h2>Dictionary {{RTCOAuthCredential}} Members
         </h2>
         <dl data-link-for="RTCOAuthCredential" data-dfn-for="RTCOAuthCredential"
         class="dictionary-members">
-          <dt><dfn data-idl><code>macKey</code></dfn> of type <span class=
+          <dt><dfn data-idl>macKey</dfn> of type <span class=
           "idlMemberType">DOMString</span>, required</dt>
           <dd>
             <p>The "mac_key", as described in [[RFC7635]], Section 6.2, in
@@ -684,7 +638,7 @@ enum RTCIceCredentialType {
             parameter value from the JWK, which contains the needed
             base64-encoded "mac_key".</p>
           </dd>
-          <dt><dfn data-idl><code>accessToken</code></dfn> of type <span class=
+          <dt><dfn data-idl>accessToken</dfn> of type <span class=
           "idlMemberType">DOMString</span>, required</dt>
           <dd>
             <p>The "access_token", as described in [[RFC7635]], Section
@@ -713,13 +667,13 @@ enum RTCIceCredentialType {
   </section>
   <section id="rtciceserver-dictionary">
     <h3>
-      <code>RTCIceServer</code> extensions
+      {{RTCIceServer}} extensions
     </h3>
     <p>
-      The <code><a href="https://w3c.github.io/webrtc-pc/#rtciceserver-dictionary">RTCIceServer</a></code>
+      The {{RTCIceServer}}
       dictionary is defined in [[WEBRTC]]. This document extends that
-      dictionary by adding the <code>credential</code> attribute, and adds a
-      paragraph to how to interpret the existing <code>username</code>
+      dictionary by adding the {{RTCIceServer/credential}} attribute, and adds a
+      paragraph to how to interpret the existing {{RTCIceServer/username}}
       attribute.
     </p>
     <pre class="idl"
@@ -729,20 +683,18 @@ enum RTCIceCredentialType {
     DOMString username;
     (DOMString or RTCOAuthCredential) credential;
 };</pre>
-    <h2>Dictionary <a class="idlType">RTCIceServer</a> Members</h2>
+    <h2>Dictionary {{RTCIceServer}} Members</h2>
     <dl data-link-for="RTCIceServer" data-dfn-for="RTCIceServer" class=
     "dictionary-members">
-      <dt><dfn data-idl><code>username</code></dfn> of type <span class=
-      "idlMemberType">DOMString</span></dt>
+      <dt><dfn data-idl>username</dfn> of type {{DOMString}}</dt>
       <dd>
-        <p>How to interpret the <code>username</code> when this
-        <code><a>RTCIceServer</a></code> object represents a TURN server, and
-        <code>credentialType</code> is <code>"password"</code> is specified
-        in <code><a href="https://w3c.github.io/webrtc-pc/#rtciceserver-dictionary">RTCIceServer</a></code>
-        of [[WEBRTC]].</p>
-        <p>If this <code><a>RTCIceServer</a></code> object represents a
-        TURN server, and <code>credentialType</code> is
-        <code>"oauth"</code>, then this attribute specifies the Key ID
+        <p>How to interpret the {{username}} when this
+        {{RTCIceServer}} object represents a TURN server, and
+        {{RTCIceServer/credentialType}} is {{RTCIceCredentialType/"password"}} is specified
+        in {{RTCIceServer}} of [[WEBRTC]].</p>
+        <p>If this {{RTCIceServer}} object represents a
+        TURN server, and {{RTCIceServer/credentialType}} is
+        {{RTCIceCredentialType/"oauth"}}, then this attribute specifies the Key ID
         (<code>kid</code>) of the shared symmetric key, which is shared
         between the TURN server and the Authorization Server, as described
         in [[RFC7635]]. It is an ephemeral and unique key identifier.
@@ -753,23 +705,23 @@ enum RTCIceCredentialType {
         <code>kid</code> value is equal with the OAuth response "kid"
         parameter, as defined in [[RFC7515]] Section 4.1.4.</p>
       </dd>
-      <dt><dfn data-idl><code>credential</code></dfn> of type <span class=
-      "idlMemberType">(DOMString or <a>RTCOAuthCredential</a>)
+      <dt><dfn data-idl>credential</dfn> of type <span class=
+      "idlMemberType">(DOMString or {{RTCOAuthCredential}})
       </span></dt>
       <dd>
-        <p>If this <code><a>RTCIceServer</a></code> object represents a
+        <p>If this {{RTCIceServer}} object represents a
         TURN server, then this attribute specifies the credential to
         use with that TURN server.</p>
-        <p>If <code>credentialType</code> is <code>"password"</code>,
-        <code>credential</code> is a DOMString, and represents a
+        <p>If {{RTCIceServer/credentialType}} is {{RTCIceCredentialType/"password"}},
+        {{credential}} is a DOMString, and represents a
         long-term authentication password, as described in
         [[RFC5389]], Section 10.2.</p>
-        <p>If <code>credentialType</code> is <code>"oauth"</code>,
-        <code>credential</code> is an <a>RTCOAuthCredential</a>, which
+        <p>If {{RTCIceServer/credentialType}} is {{RTCIceCredentialType/"oauth"}},
+        {{credential}} is an {{RTCOAuthCredential}}, which
         contains the OAuth access token and MAC key.</p>
-        <p>If this <code><a>RTCIceServer</a></code> object represents a
-        TURN server, and <code>credentialType</code> is
-        <code>"oauth"</code>, then this attribute specifies the Key ID
+        <p>If this {{RTCIceServer}} object represents a
+        TURN server, and {{RTCIceServer/credentialType}} is
+        {{RTCIceCredentialType/"oauth"}}, then this attribute specifies the Key ID
         (<code>kid</code>) of the shared symmetric key, which is shared
         between the TURN server and the Authorization Server, as described
         in [[RFC7635]]. It is an ephemeral and unique key identifier.
@@ -781,7 +733,7 @@ enum RTCIceCredentialType {
         parameter, as defined in [[RFC7515]] Section 4.1.4.</p>
       </dd>
     </dl>
-    <p>An example array of RTCIceServer objects is:</p>
+    <p>An example array of {{RTCIceServer}} objects is:</p>
     <pre class="example highlight">
 <code>{
   urls: 'turns:turn2.example.net',	
@@ -819,13 +771,13 @@ enum RTCIceCredentialType {
       "last hop".
     </p>
     <p>
-      Despite <a><code>RTCRemoteInboundRtpStreamStats.roundTripTime</code></a>
+      Despite {{RTCRemoteInboundRtpStreamStats.roundTripTime}}
       measurements only accounting for the "last hop", one-way delay from the
-      <a>capture system</a>'s time of capture to the <a>receiver system</a>'s
+      [=capture system=]'s time of capture to the [=receiver system=]'s
       time of playout can be estimated if the
-      <a>RTP Header Extension for Absolute Capture Time</a> is used all hops of
+      [=RTP Header Extension for Absolute Capture Time=] is used all hops of
       the way, where each RTCP-terminating intermediate system appropriately
-      updates the <a>estimated capture clock offset</a>.
+      updates the [=estimated capture clock offset=].
     </p>
     <pre class="idl">partial dictionary RTCRtpContributingSource {
       DOMHighResTimeStamp captureTimestamp;
@@ -833,7 +785,7 @@ enum RTCIceCredentialType {
     };</pre>
     <h2>Dictionary {{RTCRtpContributingSource}} Members</h2>
     <dl data-link-for="RTCRtpContributingSource" data-dfn-for="RTCRtpContributingSource" class="dictionary-members">
-      <dt><dfn data-idl><code>captureTimestamp</code></dfn> of type {{DOMHighResTimeStamp}}.</dt>
+      <dt><dfn data-idl>captureTimestamp</dfn> of type {{DOMHighResTimeStamp}}.</dt>
       <dd>
         <p>
           The {{captureTimestamp}} is the timestamp that, the most recent frame
@@ -872,7 +824,7 @@ enum RTCIceCredentialType {
           are based on the same system's clock.
         </p>
       </dd>
-      <dt><dfn data-idl><code>senderCaptureTimeOffset</code></dfn> of type {{DOMHighResTimeStamp}}.</dt>
+      <dt><dfn data-idl>senderCaptureTimeOffset</dfn> of type {{DOMHighResTimeStamp}}.</dt>
       <dd>
         <p>
           The {{senderCaptureTimeOffset}} is the <a>sender system</a>'s
@@ -906,29 +858,29 @@ enum RTCIceCredentialType {
         <p class="note">
           The time of capture can estimatedly be expressed in the
           <a>sender system</a>'s clock as follows:
-          <dfn>senderCaptureTimestamp</dfn> = {{captureTimestamp}} +
+          <var>senderCaptureTimestamp</var> = {{captureTimestamp}} +
           {{senderCaptureTimeOffset}}.
         </p>
         <p class="note">
           The offset between the <a>sender system</a>'s clock and the
           <a>receiver system</a>'s clock can be estimated as follows:
-          <dfn>senderReceiverTimeOffset</dfn> =
-          <a>RTCRemoteOutboundRtpStreamStats.timestamp</a> -
-          (<a>RTCRemoteOutboundRtpStreamStats.remoteTimestamp</a> +
-          <a>RTCRemoteInboundRtpStreamStats.roundTripTime</a> / 2).
+          <var>senderReceiverTimeOffset</var> =
+          {{RTCRemoteOutboundRtpStreamStats}}.<a class=fixme data-cite="WEBRTC#dom-rtcstats-timestamp">timestamp</a>}} -
+          ({{RTCRemoteOutboundRtpStreamStats.remoteTimestamp}} +
+          {{RTCRemoteInboundRtpStreamStats.roundTripTime}} / 2).
         </p>
         <p class="note">
           The time of capture can estimatedly be expressed in the
           <a>receiver system</a>'s clock as follows:
-          <dfn>receiverCaptureTimestamp</dfn> = <a>senderCaptureTimestamp</a> +
-          <a>senderReceiverTimeOffset</a>.
+          <var>receiverCaptureTimestamp</var> = <var>senderCaptureTimestamp</var> +
+          <var>senderReceiverTimeOffset</var>.
         </p>
         <p class="note">
           The one-way delay between the <a>capture system</a>'s time of capture
           and the <a>receiver system</a>'s time of playout can be estimated as
           follows:
-          <a>RTCRtpContributingSource.timestamp</a> -
-          <a>receiverCaptureTimestamp</a>.
+          {{RTCRtpContributingSource.timestamp}} -
+          <var>receiverCaptureTimestamp</var>.
         </p>
         </p>
       </dd>
