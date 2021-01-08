@@ -178,20 +178,20 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
 };
     </pre>
     <p>
-      Let [[\HeaderExtensionsToOffer]] be an internal slot of the {{RTCRtpTransceiver}},
+      Let <dfn>[[\HeaderExtensionsToOffer]]</dfn> be an internal slot of the {{RTCRtpTransceiver}},
       initialized to the platform-specific list of implemented RTP header extensions.
       The direction
       attribute for all extensions that are mandatory to use MUST be initialized to
-      an appropriate value other than "stopped". The direction attribute for extensions
+      an appropriate value other than "stopped". The {{RTCRtpHeaderExtensionCapability/direction}} attribute for extensions
       that will not be offered by default in an initial offer MUST be initialized to
-      "stopped".
+      {{RTCRtpTransceiverDirection/"stopped"}}.
     </p>
     <p class="note">The list of header extensions that MUST/SHOULD be supported is listed in
       [[RTCWEB-RTP]], section 5.2. The "mid" extension is mandatory to use when
       BUNDLE is in use, per [[BUNDLE]] section 9.1.
     </p>
     <p>
-      Let [[\HeaderExtensionsNegotiated]] be an internal slot of the RTCRtpTransceiver,
+      Let <dfn>[[\HeaderExtensionsNegotiated]]</dfn> be an internal slot of the RTCRtpTransceiver,
       initialized to an empty list.
     </p>
     <section>
@@ -199,26 +199,26 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       <p>
         In the <a data-cite="WEBRTC#set-description">set a session description</a> algorithm, add a step
         right after the step that sets transceiver.[[\Sender]].[[\SendCodecs]],
-        saying "For each transciever, set [[\HeaderExtensionsNegotiated]] to
+        saying "For each transciever, set <a>[[\HeaderExtensionsNegotiated]]</a> to
         an empty list, and then
-        for each "a=hdrext" line, add an appropriate
-        RTCRtpHeaderExtensionCapability to the list.
+        for each <code>"a=hdrext"</code> line, add an appropriate
+        {{RTCRtpHeaderExtensionCapability}} to the list.
       </p>
       <p>
         In the algorithms for generating initial offers in [[RTCWEB-JSEP]] section 5.2.1,
         replace "for each supported RTP header extension, an "a=extmap" line, as specified in
         [[RFC5285]], section 5" " with "For each RTP header extension "e"
-        listed in [[\HeaderExtensionsToOffer]] where direction is not "stopped", an "a=extmap"
-        line, as specified in [[RFC5285]], section 5, with direction taken from "e"'s direction
+        listed in <a>[[\HeaderExtensionsToOffer]]</a> where {{RTCRtpHeaderExtensionCapability/direction}} is not {{RTCRtpTransceiverDirection/"stopped"}}, an "a=extmap"
+        line, as specified in [[RFC5285]], section 5, with direction taken from "e"'s {{RTCRtpHeaderExtensionCapability/direction}}
         attribute."
       </p>
       <p>
         In the algorithm for generating subsequent offers in [[RTCWEB-JSEP]] section 5.2.2, replace "The
         RTP header extensions MUST only include those that are present in the most recent answer"
-        with "For each RTP header extension listed in [[\HeaderExtensionsToOffer]] that is
-        also present in the most recent answer, and where direction is not "stopped", generate
+        with "For each RTP header extension listed in <a>[[\HeaderExtensionsToOffer]]</a> that is
+        also present in the most recent answer, and where {{RTCRtpHeaderExtensionCapability/direction}} is not {{RTCRtpTransceiverDirection/"stopped"}}, generate
         an appropriate "a=extmap" line with "direction" set according to the rules of [[RFC5285]]
-        section 6, considering the direction in [[\HeaderExtensionsToOffer]] to indicate the
+        section 6, considering the {{RTCRtpHeaderExtensionCapability/direction}} in [[\HeaderExtensionsToOffer]] to indicate the
         answerer's desired usage". This preserves the property that the set of extensions
         may not grow with subsequent offers.
       </p>
@@ -226,7 +226,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
         In the algorithm for generating initial answers in [[RTCWEB-JSEP]] section 5.3.1, replace "For
         each supported RTP header extension that is present in the offer" with "For each
         supported RTP header extension that is present in the offer and is also present in
-        [[\HeaderExtensionsToOffer]] with a direction different from "stopped"".
+        <a>[[\HeaderExtensionsToOffer]]</a> with a {{RTCRtpHeaderExtensionCapability/direction}} different from {{ RTCRtpTransceiverDirection/"stopped"}}".
       </p>
       <p class="note">
         Since JSEP does not know about WebRTC internal slots, merging this change requires
@@ -245,25 +245,25 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
               For each extension <var>ext</var> in <var>extlist</var>, do the following:
               <ol>
                 <li>
-                  If <var>ext</var>.{{RTCRtpHeaderExtensionParameters/uri}} value is missing, [=exception/throw=] a {{TypeError}}.
+                  If <var>ext</var>.{{RTCRtpHeaderExtensionCapability/uri}} value is missing, [=exception/throw=] a {{TypeError}}.
                 </li>
-                <li>If <var>ext</var>.{{RTCRtpHeaderExtensionParameters/uri}} value is not present in
+                <li>If <var>ext</var>.{{RTCRtpHeaderExtensionCapability/uri}} value is not present in
                   [[\HeaderExtensionsToOffer]], [=exception/throw=] a {{NotSupportedError}}.
                 </li>
                 <li>
-                  Let <var>entry</var> be the entry with the same {{RTCRtpHeaderExtensionParameters/uri}} value in
+                  Let <var>entry</var> be the entry with the same {{RTCRtpHeaderExtensionCapability/uri}} value in
                   [[\HeaderExtensionsToOffer]].
                 </li>
-                <li>If <var>ext</var>'s  "direction" field is not "sendrecv", and {{RTCRtpHeaderExtensionParameters/uri}}
+                <li>If <var>ext</var>.{{RTCRtpHeaderExtensionCapability/direction}}  is not {{ RTCRtpTransceiverDirection/"sendrecv"}}, and {{RTCRtpHeaderExtensionParameters/uri}}
                   indicates a mandatory-to-use attribute that is required to be both
                   sent and received, [=exception/throw=] an {{InvalidModificationError}}.
                 </li>
-                <li>if <var>ext</var>'s "direction" field is "stopped", and {{RTCRtpHeaderExtensionParameters/uri}} indicates
+                <li>if <var>ext</var>.{{RTCRtpHeaderExtensionCapability/direction}} field is {{RTCRtpTransceiverDirection/"stopped"}}, and {{RTCRtpHeaderExtensionCapability/uri}} indicates
                   a mandatory-to-implement extension, [=exception/throw=] an {{InvalidModificationError}}.
                 </li>
                 <li>
-                  Set the "direction" field of <var>entry</var> to <var>ext</var>'s
-                  "direction" field.
+                  Set the {{RTCRtpHeaderExtensionCapability/direction}} field of <var>entry</var> to <var>ext</var>'s
+                  {{RTCRtpHeaderExtensionCapability/direction}} field.
                 </li>
               </ol>
             </li>
@@ -897,8 +897,7 @@ enum RTCIceCredentialType {
     };</pre>
               <dl data-link-for="RTCRtpSynchronizationSource" data-dfn-for=
             "RTCRtpSynchronizationSource" class="dictionary-members">
-              <dt data-tests=
-              "RTCRtpReceiver-getSynchronizationSources.https.html">
+              <dt>
                 <dfn data-idl="">voiceActivityFlag</dfn> of type <span class=
                 "idlMemberType">boolean</span>
               </dt>
