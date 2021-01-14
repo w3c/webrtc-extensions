@@ -215,10 +215,11 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       <p>
         In the algorithm for generating subsequent offers in [[RTCWEB-JSEP]] section 5.2.2, replace "The
         RTP header extensions MUST only include those that are present in the most recent answer"
-        with "For each RTP header extension listed in [[\HeaderExtensionsToOffer]], and where 
-        direction is not "stopped", generate an appropriate "a=extmap" line with "direction" set
-        according to the rules of [[RFC5285]] section 6, considering the direction in
-        [[\HeaderExtensionsToOffer]] to indicate the answerer's desired usage".
+        with "For each RTP header extension listed in <a>[[\HeaderExtensionsToOffer]]</a>,
+        and where {{RTCRtpHeaderExtensionCapability/direction}} is not {{RTCRtpTransceiverDirection/"stopped"}}, generate
+        an appropriate "a=extmap" line with "direction" set according to the rules of [[RFC5285]]
+        section 6, considering the {{RTCRtpHeaderExtensionCapability/direction}} in [[\HeaderExtensionsToOffer]] to indicate the
+        answerer's desired usage".
       </p>
       <p>
         In the algorithm for generating initial answers in [[RTCWEB-JSEP]] section 5.3.1, replace "For
