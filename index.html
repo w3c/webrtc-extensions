@@ -392,7 +392,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       with an InvalidModificationError.
     </p>
   </section>
-  <section id="recrtpsender-interface">
+  <section id="rtcrtpsender-interface">
     <h3>
       {{RTCRtpSender}} extensions
     </h3>
@@ -427,11 +427,11 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
                 [= chaining =] the following steps to
                     <var>connection</var>'s [= operations chain =].
               </li>
-              <li>If the sender''s 'kind' is not "video", reject <var>p</var>
+              <li>If the sender's 'kind' is not "video", reject <var>p</var>
                 with {{NotAllowedError}}.
               </li>
               <li>
-                If the sender''s track is not set, if the track is ended,
+                If the sender's track is not set, if the track is ended,
                 or if the track is muted, reject <var>p</var> with
                 {{InvalidStateError}}.
               </li>
