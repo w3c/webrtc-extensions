@@ -7,9 +7,8 @@ var respecConfig = {
     "xref": ["webidl", "webrtc", "hr-time", "mediacapture-streams", "webrtc-stats"],
     "shortName": "webrtc-extensions",
     "specStatus": "ED",
-    "subjectPrefix": "[webrtc-extensions]"
-
-       // if there a publicly available Editor's Draft, this is the link
+    "subjectPrefix": "[webrtc-extensions]",
+     // if there a publicly available Editor's Draft, this is the link
     edDraftURI: "https://w3c.github.io/webrtc-extensions/",
     editors:  [
       //              { name: "Your Name", url: "http://example.org/",
