@@ -1,68 +1,56 @@
 <!doctype html>
-<html lang="en">
-
+<html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8">
+  <link href="webrtc.css" rel="stylesheet">
   <title>WebRTC Extensions</title>
-  <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove"></script>
-  <script class='remove'>
-  "use strict";
-  // See https://github.com/w3c/respec/wiki/ for how to configure ReSpec
-  var respecConfig = {
-    "group": "webrtc",
-     github: {
-     repoURL: "https://github.com/w3c/webrtc-extensions/",
-     branch: "master"
-    },
-    "editors": [{
-        name: "Henrik Boström",
-        email: "hbos@google.com",
-        company: "Google Inc.",
-      }
-      // Add additional editors here.
-      // https://github.com/w3c/respec/wiki/editors
-               ],
-    "xref": ["webrtc", "hr-time", "mediacapture-streams", "webrtc-stats"],
-    "shortName": "webrtc-extensions",
-    "specStatus": "ED",
-    "subjectPrefix": "[webrtc-extensions]"
-  };
-  </script>
+  <script class="remove" src="https://www.w3.org/Tools/respec/respec-w3c"</script>
+  <script class="remove" src="ext-respec-config.js" ></script>
 </head>
-
 <body>
   <section id="abstract">
     <p>
-      TODO(henbos): Fill in.
+      This document defines a set of ECMAScript APIs in WebIDL to extend the WebRTC 1.0 API.
     </p>
   </section>
   <section id="sotd">
-    <p>
-      This is an unofficial proposal.
-    </p>
+    <p>The API is based on preliminary work done in the W3C WEBRTC Working Group.</p>
   </section>
-  <section id="introduction">
+  <section class="informative" id="intro">
     <h2>Introduction</h2>
     <p>
-      This document contains proposed extensions to the [[WEBRTC]] specification,
-      where it was thought inappropriate to incorporate them directly into that specification
-      at the point in time when they were written, but they were too small to warrant
-      writing a separate document.
+      This document contains proposed extensions to the [[WEBRTC]] specification.
+      Some of these extensions were originally included within the [[WEBRTC]] specification,
+      but needed to be removed due to lack of implementation experience. Others were not
+      sufficiently mature to be incorporated into that specification when they were developed,
+      but were too small to warrant creation of a separate document.
     </p>
     <p>
-      If, at a later time, it is a good time to add them to the base specification, that
-      will be done. Deciding factors will include maturity of the extension, consensus on
-      adding it, and implementation experience.
+      This document contains some sections extending one specific interface or dictionary in
+      the base specification; in this case the extension is only described in an individual
+      section. Where an extension affects multiple interfaces or dictionaries, a subsection
+      in the "Overviews" section describes the extension as a whole, while normative text
+      is provided in sections relating to the individual interfaces.
     </p>
     <p>
-      This document contains a number of sections that have extensions for one specific
-      interface or dictionary in the base specification. When an extension only affects
-      one interface or dictionary, it will only be described there. If an extension affects
-      multiple interfaces or dictionaries, there will be a subsection in the informative
-      "Overviews" section that describes the extension as a whole, while the normative changes
-      are in the sections for the individual interfaces.
+      As extensions mature and gain implementation experience, they may move from this document
+      to the base specification if WG consensus emerges to do so.
     </p>
-
+  <section id="conformance">
+    <p>This specification defines conformance criteria that apply to a single
+    product: the <dfn>user agent</dfn> that implements the interfaces that it
+    contains.</p>
+    <p>Conformance requirements phrased as algorithms or specific steps may be
+    implemented in any manner, so long as the end result is equivalent. (In
+    particular, the algorithms defined in this specification are intended to be
+    easy to follow, and not intended to be performant.)</p>
+    <p>Implementations that use ECMAScript to implement the APIs defined in
+    this specification MUST implement them in a manner consistent with the
+    ECMAScript Bindings defined in the Web IDL specification [[WEBIDL]], as
+    this specification uses that specification and terminology.</p>
+  </section>
+  <section>
+    <h2>Terminology</h2>
     <p>
       The following terms are defined in
       <!-- TODO: When webrtc.org website is fixed, change links to "http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time" -->
@@ -75,8 +63,6 @@
     </p>
     <p>The <dfn>OAuth Client</dfn> and <dfn>Authorization Server</dfn> roles
       are defined in [[RFC6749]] Section 1.1.</p>
-  </section>
-  <section id="conformance">
   </section>
   <section id="overviews">
     <h2>
