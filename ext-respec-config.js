@@ -18,7 +18,7 @@ var respecConfig = {
       }
     ],
     formerEditors: [
-      { name: "Henrik Boström", company: "Google", w3cid: "96936", retiredDate: "2021-04-01" }
+      { name: "Henrik Boström", company: "Google", w3cid: "96936", retiredDate: "2021-02-01" }
     ],
     authors: [
     ],
