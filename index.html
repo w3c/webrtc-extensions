@@ -905,5 +905,258 @@ enum RTCIceCredentialType {
               </dd>
             </dl>
 </section>
+<section class="informative">
+    <h2>
+      Privacy and Security Considerations
+    </h2>      
+      <p>
+        This section is non-normative; it specifies no new behaviour, but
+        instead summarizes information already present in other parts of the
+        specification. The overall security considerations of the general set
+        of APIs and protocols used in WebRTC are described in
+        [[?RFC8827]].
+      </p>
+      <section>
+        <h2>
+          Impact on same origin policy
+        </h2>
+        <p>
+          This document extends the Web platform with the ability to set up
+          real-time, direct communication between browsers and other devices,
+          including other browsers.
+        </p>
+        <p>
+          This means that data and media can be shared between applications
+          running in different browsers, or between an application running in
+          the same browser and something that is not a browser, something that
+          is an extension to the usual barriers in the Web model against
+          sending data between entities with different origins.
+        </p>
+        <p>
+          The WebRTC specification provides no user prompts or chrome
+          indicators for communication; it assumes that once the Web page has
+          been allowed to access media, it is free to share that media with
+          other entities as it chooses. Peer-to-peer exchanges of data view
+          WebRTC datachannels can thus occur without any user explicit consent
+          or involvement, similarly as a server-mediated exchange (e.g. via Web
+          Sockets) could occur without user involvement.
+        </p>
+      </section>
+      <section>
+        <h2>
+          Revealing IP addresses
+        </h2>
+        <p>
+          Even without WebRTC, the Web server providing a Web application will
+          know the public IP address to which the application is delivered.
+          Setting up communications exposes additional information about the
+          browser’s network context to the web application, and may include the
+          set of (possibly private) IP addresses available to the browser for
+          WebRTC use. Some of this information has to be passed to the
+          corresponding party to enable the establishment of a communication
+          session.
+        </p>
+        <p>
+          Revealing IP addresses can leak location and means of connection;
+          this can be sensitive. Depending on the network environment, it can
+          also increase the fingerprinting surface and create persistent
+          cross-origin state that cannot easily be cleared by the user.
+        </p>
+        <p>
+          A connection will always reveal the IP addresses proposed for
+          communication to the corresponding party. The application can limit
+          this exposure by choosing not to use certain addresses using the
+          settings exposed by the {{RTCIceTransportPolicy}} dictionary, and by
+          using relays (for instance TURN servers) rather than direct
+          connections between participants. One will normally assume that the
+          IP address of TURN servers is not sensitive information. These
+          choices can for instance be made by the application based on whether
+          the user has indicated consent to start a media connection with the
+          other party.
+        </p>
+        <p>
+          Mitigating the exposure of IP addresses to the application itself
+          requires limiting the IP addresses that can be used, which will
+          impact the ability to communicate on the most direct path between
+          endpoints. Browsers are encouraged to provide appropriate controls
+          for deciding which IP addresses are made available to applications,
+          based on the security posture desired by the user. The choice of
+          which addresses to expose is controlled by local policy (see
+          [[RFC8828]] for details).
+        </p>
+      </section>
+      <section>
+        <h2>
+          Impact on local network
+        </h2>
+        <p>
+          Since the browser is an active platform executing in a trusted
+          network environment (inside the firewall), it is important to limit
+          the damage that the browser can do to other elements on the local
+          network, and it is important to protect data from interception,
+          manipulation and modification by untrusted participants.
+        </p>
+        <p>
+          Mitigations include:
+        </p>
+        <ul>
+          <li>A user agent will always request permission from the
+          correspondent user agent to communicate using ICE. This ensures that
+          the user agent can only send to partners who you have shared
+          credentials with.
+          </li>
+          <li>A user agent will always request ongoing permission to continue
+          sending using ICE continued consent. This enables a receiver to
+          withdraw consent to receive.
+          </li>
+          <li>A user agent will always encrypt data, with strong per-session
+          keying (DTLS-SRTP).
+          </li>
+          <li>A user agent will always use congestion control. This ensures
+          that WebRTC cannot be used to flood the network.
+          </li>
+        </ul>
+        <p>
+          These measures are specified in the relevant IETF documents.
+        </p>
+      </section>
+      <section>
+        <h2>
+          Confidentiality of Communications
+        </h2>
+        <p>
+          The fact that communication is taking place cannot be hidden from
+          adversaries that can observe the network, so this has to be regarded
+          as public information.
+        </p>
+        <p>
+          Communication certificates may be opaquely shared using
+          {{MessagePort/postMessage(message, options)}} in anticipation of future needs. User
+          agents are strongly encouraged to isolate the private keying material
+          these objects hold a handle to, from the processes that have access
+          to the {{RTCCertificate}} objects, to reduce memory attack surface.
+        </p>
+      </section>
+      <section>
+        <h2>
+          Persistent information exposed by WebRTC
+        </h2>
+        <p>
+          As described above, the list of IP addresses exposed by the WebRTC
+          API can be used as a persistent cross-origin state.
+        </p>
+        <p>
+          Beyond IP addresses, the WebRTC API exposes information about the
+          underlying media system via the
+          {{RTCRtpSender}}.{{RTCRtpSender/getCapabilities}} and
+          {{RTCRtpReceiver}}.{{RTCRtpReceiver/getCapabilities}} methods,
+          including detailed and ordered information about the codecs that the
+          system is able to produce and consume. A subset of that information
+          is likely to be represented in the SDP session descriptions
+          generated, exposed and transmitted during <a href=
+          "#session-negotiation-model">session negotiation</a>. That
+          information is in most cases persistent across time and origins, and
+          increases the fingerprint surface of a given device.
+        </p>
+        <p>
+          When establishing DTLS connections, the WebRTC API can generate
+          certificates that can be persisted by the application (e.g. in
+          IndexedDB). These certificates are not shared across origins, and get
+          cleared when persistent storage is cleared for the origin.
+        </p>
+      </section>
+      <section>
+        <h2>
+          Setting SDP from remote endpoints
+        </h2>
+        <p>
+          {{RTCPeerConnection/setRemoteDescription}} guards against malformed
+          and invalid SDP by throwing exceptions, but makes no attempt to guard
+          against SDP that might be unexpected by the application. Setting the
+          remote description can cause significant resources to be allocated
+          (including image buffers and network ports), media to start flowing
+          (which may have privacy and bandwidth implications) among other
+          things. An application that does not guard against malicious SDP
+          could be at risk of resource deprivation, unintentionally allowing
+          incoming media or at risk of not having certain events fire like
+          {{RTCPeerConnection/ontrack}} if the other endpoint does not
+          negotiate sending. Applications need to be on guard against
+          malevolent SDP.
+        </p>
+    </section>
+</section>
+<section class="informative">
+      <h2>
+        Accessibility Considerations
+      </h2>
+      <p>
+        The WebRTC 1.0 specification exposes an API to control protocols
+        (defined within the IETF) necessary to establish real-time audio, video
+        and data exchange.
+      </p>
+      <p>
+        The Telecommunications Device for the Deaf (TDD/TTY) enables
+        individuals who are hearing or speech impaired (among others) to
+        communicate over telephone lines. Real-Time Text, defined in
+        [[RFC4103]], utilizes T.140 encapsulated in RTP to enable the
+        transition from TDD/TTY devices to IP-based communications, including
+        emergency communication with <a href=
+        "https://www.ecfr.gov/cgi-bin/text-idx?SID=ada7cebd65433a9e05c35426a2bc76b8&amp;mc=true&amp;node=pt47.3.67&amp;rgn=div5">
+        Public Safety Access Points (PSAP)</a>.
+      </p>
+      <p>
+        Since Real-Time Text requires the ability to send and receive data in
+        near real time, it can be best supported via the WebRTC 1.0 data
+        channel API. As defined by the IETF, the data channel protocol utilizes
+        the SCTP/DTLS/UDP protocol stack, which supports both reliable and
+        unreliable data channels. The IETF chose to standardize SCTP/DTLS/UDP
+        over proposals for an RTP data channel which relied on SRTP key
+        management and were focused on unreliable communications.
+      </p>
+      <p>
+        Since the IETF chose a different approach than the RTP data channel as
+        part of the WebRTC suite of protocols, as of the time of this
+        publication there is no standardized way for the WebRTC APIs to
+        directly support Real-Time Text as defined at IETF and implemented in
+        U.S. (FCC) regulations. The WebRTC working Group will evaluate whether
+        the developing IETF protocols in this space warrant direct exposure in
+        the browser APIs and is looking for input from the relevant user
+        communities on this potential gap.
+      </p>
+      <p>
+        Within the <a href="https://datatracker.ietf.org/wg/mmusic/">IETF MMUSIC
+        Working Group</a>, work is ongoing to enable <a href=
+        "https://datatracker.ietf.org/doc/html/draft-holmberg-mmusic-t140-usage-data-channel">
+        Real-time text to be sent over the WebRTC data channel</a>, allowing
+        gateways to be deployed to translate between the SCTP data channel
+        protocol and RFC 4103 Real-Time Text. This work, once completed, is
+        expected to enable a unified and interoperable approach for integrating
+        real-time text in WebRTC user-agents (including browsers) - through a
+        gateway or otherwise.
+      </p>
+      <p>
+        At the time of this publication, gateways that enable effective RTT
+        support in WebRTC clients can be developed e.g. through a custom WebRTC
+        data channel. This is deemed sufficient until such time as future
+        standardized gateways are enabled via IETF protocols such as the SCTP
+        data channel protocol and RFC 4103 Real-Time Text. This will need to be
+        defined at IETF in conjunction with related work at W3C groups to
+        effectively and consistently standardise RTT support internationally.
+      </p>
+</section>
+<section class="appendix">
+    <h2>Acknowledgements</h2>
+    <p>
+      The editors wish to thank the Working Group chairs and Team Contact,
+      Dominique Hazaël-Massieux, for their support. Substantial text in this
+      specification was provided by many people including
+      Harald Alvestrand, Justin Uberti and Peter Thatcher.
+    </p>
+    <p>
+      The {{RTCRtpSender}} and {{RTCRtpReceiver}} objects were initially
+      described in the <a href="https://www.w3.org/community/ortc/">W3C ORTC
+      CG</a>, and have been adapted for use in this specification.
+    </p>
+</section>
 </body>
 </html>
