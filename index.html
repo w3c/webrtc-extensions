@@ -143,9 +143,15 @@
     <section>
       <h2>Modifications to existing procedures</h2>
 
-      <p>In the <a data-cite="WEBRTC#dom-peerconnection">Constructor</a> algorithm,
-      add a step right before step 2 saying "Run [[WEBAPPSEC-CSP#should-block-rtc-connection]]
-      on the current global object. Throw a {{NotAllowedError}} if it returns `Blocked`."</p>
+      <p>Whenever the <a data-cite="WEBRTC#dom-peerconnection">RTCPeerConnection constructor</a>
+      algorithm is invoked, run the following steps instead:
+        <ol>
+          <li>If [[WEBAPPSEC-CSP#should-block-rtc-connection]] on the current global object returns "Blocked",
+          throw a {{NotAllowedError}}."</li>
+          <li>Return the result of running the original
+          <a data-cite="WEBRTC#dom-peerconnection">RTCPeerConnection constructor</a> algorithm.</li>
+        </ol>
+      </p>
     </section>
   </section>
   <section id="rtcrtptransceiver-interface">
