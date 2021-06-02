@@ -143,13 +143,13 @@
     <section>
       <h2>Modifications to existing procedures</h2>
 
-      <p>Whenever the <a data-cite="WEBRTC#dom-peerconnection">RTCPeerConnection constructor</a>
+      <p>Whenever the <a data-cite="WEBRTC#constructor">RTCPeerConnection constructor</a>
       algorithm is invoked, run the following steps instead:
         <ol>
           <li>If [[WEBAPPSEC-CSP#should-block-rtc-connection]] on the current global object returns "Blocked",
           throw a {{NotAllowedError}}."</li>
           <li>Return the result of running the original
-          <a data-cite="WEBRTC#dom-peerconnection">RTCPeerConnection constructor</a> algorithm.</li>
+          <a data-cite="WEBRTC#constructor">RTCPeerConnection constructor</a> algorithm.</li>
         </ol>
       </p>
     </section>
