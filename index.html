@@ -147,7 +147,7 @@
       algorithm is invoked, run the following steps instead:
         <ol>
           <li>If [[WEBAPPSEC-CSP#should-block-rtc-connection]] on the current global object returns "Blocked",
-          throw a {{NotAllowedError}}."</li>
+          throw a {{SecurityError}}."</li>
           <li>Return the result of running the original
           <a data-cite="WEBRTC#constructor">RTCPeerConnection constructor</a> algorithm.</li>
         </ol>
