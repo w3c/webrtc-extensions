@@ -936,7 +936,7 @@ enum RTCIceCredentialType {
     <h3>
       {{RTCDataChannel}} extensions
     </h3>
-    <p>This document extends {{RTCDataChannel}} by making it transferable.</p>
+    <p>This document extends {{RTCDataChannel}} by making it <a data-cite="!HTML/#transferable-objects">transferable</a>.</p>
       This allows sending and receiving messages outside the context the connection was created, for instance in workers or third-party iframes.</p>
     <div>
       <p>The WebIDL changes are the following:
@@ -946,7 +946,7 @@ partial interface RTCDataChannel {
 };</pre>
     </div>
     <div>
-      <p>At creation of a {{RTCDataChannel}} object, called <var>channel</var>, run the following steps:</p>
+      <p>The <a data-cite="WEBRTC#dfn-create-an-rtcdatachannel">create an RTCDataChannel</a> algorithm is updated by adding the following steps after step 4 of the original algorithm:</p>
       <ol>
         <li><p>Initialize <var>channel</var>.`[[IsTransferable]]` to <code>true</code>.</p></li>
         <li><p>Queue a task to run the following step:</p>
@@ -956,7 +956,7 @@ partial interface RTCDataChannel {
         </li>
       </ol>
     </div>
-    <div>The <a data-cite="WEBRTC#datachannel-send">send() algorithm</a> is modified by adding the following step after step 1 of the algorithm:
+    <div>The <a data-cite="WEBRTC#datachannel-send">send() algorithm</a> is modified by adding the following step after step 1 of the original algorithm:
       <ol>
         <li><p>Set <var>channel</var>.`[[IsTransferable]]` to <code>false</code>.</p></li>
       </ol>
