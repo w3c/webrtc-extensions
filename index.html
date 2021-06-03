@@ -955,6 +955,8 @@ partial interface RTCDataChannel {
           </ol>
         </li>
       </ol>
+      <p>This task needs to run before any task enqueued by the <a data-cite="WEBRTC#dfn-receive-an-rtcdatachannel-message">receiving messages on a data channel</a> algorithm for <var>channel</var>.
+      This ensures that no message is lost during the transfer of a {{RTCDataChannel}}.</p>
     </div>
     <div>The <a data-cite="WEBRTC#datachannel-send">send() algorithm</a> is modified by adding the following step after step 1 of the original algorithm:
       <ol>
