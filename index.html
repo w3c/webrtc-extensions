@@ -968,7 +968,6 @@ partial interface RTCDataChannel {
       <ol>
         <li><p>If <var>value</var>.`[[IsTransferable]]` is <code>false</code>, throw a "DataCloneError" DOMException.</p></li>
         <li><p>Set <var>dataHolder</var>.`[[ReadyState]]` to <var>value</var>.<a href="WEBRTC#dfn-readystate">`[[ReadyState]]`</a>.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[BufferedAmount]]` to <var>value</var>.<a href="WEBRTC#dfn-bufferedamount">`[[BufferedAmount]]`</a>.</p></li>
         <li><p>Set <var>dataHolder</var>.`[[DataChannelLabel]]` to <var>value</var>.<a href="WEBRTC#dfn-datachannellabel">`[[DataChannelLabel]]`</a>.</p></li>
         <li><p>Set <var>dataHolder</var>.`[[Ordered]]` to <var>value</var>.<a href="WEBRTC#dfn-ordered">`[[Ordered]]`</a>.</p></li>
         <li><p>Set <var>dataHolder</var>.`[[MaxPacketLifeTime]]` to <var>value</var>.<a href="WEBRTC#dfn-maxpacketlifetime"></a>.`[[MaxPacketLifeTime]]`</p></li>
@@ -984,7 +983,6 @@ partial interface RTCDataChannel {
     <div><p>The {{RTCDataChannel}} <a data-cite="!HTML/#transfer-receiving-steps">transfer-receiving steps</a>, given <var>dataHolder</var> and <var>channel</var>, are:</p>
       <ol>
         <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-readystate">`[[ReadyState]]`</a> to <var>dataHolder</var>.`[[ReadyState]]`.</p></li>
-        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-bufferedamount">`[[BufferedAmount]]`</a> to <var>dataHolder</var>.`[[BufferedAmount]]`.</p></li>
         <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-datachannellabel">`[[DataChannelLabel]]`</a> to <var>dataHolder</var>.`[[DataChannelLabel]]`.</p></li>
         <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-ordered">`[[Ordered]]`</a> to <var>dataHolder</var>.`[[Ordered]]`.</p></li>
         <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-maxpacketlifetime">`[[MaxPacketLifeTime]]`</a> to <var>dataHolder</var>.`[[MaxPacketLifeTime]]`.</p></li>
@@ -994,6 +992,8 @@ partial interface RTCDataChannel {
         <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-datachannelid">`[[DataChannelId]]`</a> to <var>dataHolder</var>.`[[DataChannelId]]`.</p></li>
         <li><p>Initialize <var>channel</var> <a href="WEBRTC#dfn-data-transport">underlying data transport</a> to <var>dataHolder</var>.`[[underlyingDataTransport]]`.</p></li>
       </ol>
+      <p>The above steps do not need to transfer <a href="WEBRTC#dfn-readystate">`[[BufferedAmount]]`</a> as its value will always be equal to <code>0</code>.
+      The reason is an {{RTCDataChannel}} can be transferred only if its <a data-cite="WEBRTC#datachannel-send">send() algorithm</a> was not called prior the transfer.</p>
       <p>If the <a href="WEBRTC#dfn-data-transport">underlying data transport</a> is closed at the time of the <a data-cite="!HTML/#transfer-receiving-steps">transfer-receiving steps</a>,
       the {{RTCDataChannel}} object will be closed by running the <a href="WEBRTC#announcing-a-data-channel-as-closed">announcing a data channel as closed</a> algorithm immediately after the <a data-cite="!HTML/#transfer-receiving-steps">transfer-receiving steps</a>.</p>
     </div>
