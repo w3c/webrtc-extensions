@@ -546,15 +546,12 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
         frames, and MAY change this at any time. Valid values are multiples
         of 10ms. If the <code>maxptime</code> attribute (defined in
         [[RFC4566]] Section 6) is specified, that maximum applies.
-        <a href="https://w3c.github.io/webrtc-pc/#dfn-read-only-parameter">Read-only parameter.</a></p>
+        If the value is false, the user agent MUST use a fixed frame length.
         <p class="note">Using a longer frame length reduces the
         bandwidth consumption due to overhead, but does so at the cost
         of increased latency. Changing the frame length dynamically allows the
         user agent to adapt its bandwidth allocation strategy based on the
         current network conditions.</p>
-        <p>If <code>adaptivePtime</code> is set to <code>true</code>,
-        <code>ptime</code> MUST NOT be set; otherwise,
-        <code>InvalidModificationError</code> MUST be thrown.</p>
       </dd>
       <dt><dfn data-idl><code>maxFramerate</code></dfn> of type <span class=
       "idlMemberType">double</span></dt>
