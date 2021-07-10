@@ -101,7 +101,8 @@
     <p>
       The {{RTCPeerConnection}}
       interface is defined in [[WEBRTC]]. This document extends that interface
-      by adding an additional static method.
+      by adding an additional static method, and adding a Content-Security-Policy
+      check to the constructor.
     </p>
     <pre class="idl">partial interface RTCPeerConnection {
   static sequence&lt;RTCIceServer&gt; getDefaultIceServers();
@@ -138,6 +139,19 @@
           </div>
         </dd>
       </dl>
+    </section>
+    <section>
+      <h2>Modifications to existing procedures</h2>
+
+      <p>Whenever the <a data-cite="WEBRTC#constructor">RTCPeerConnection constructor</a>
+      algorithm is invoked, run the following steps instead:
+        <ol>
+          <li>If [[WEBAPPSEC-CSP#should-block-rtc-connection]] on the current global object returns "Blocked",
+          throw a {{SecurityError}}."</li>
+          <li>Return the result of running the original
+          <a data-cite="WEBRTC#constructor">RTCPeerConnection constructor</a> algorithm.</li>
+        </ol>
+      </p>
     </section>
   </section>
   <section id="rtcrtptransceiver-interface">
