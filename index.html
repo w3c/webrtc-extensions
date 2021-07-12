@@ -176,7 +176,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       BUNDLE is in use, per [[BUNDLE]] section 9.1.
     </p>
     <p>
-      Let <dfn data-dfn-for=RTCRtpTransceiver>[[\HeaderExtensionsNegotiated]]</dfn> be an internal slot of the {{RTCRtpTransceiver}},
+      Let <dfn data-dfn-for=RTCRtpTransceiver>{{RTCRtpTransceiver/[[HeaderExtensionsNegotiationed]]}}</dfn> be an internal slot of the {{RTCRtpTransceiver}},
       initialized to an empty list.
     </p>
     <section>
@@ -184,33 +184,33 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       <p>
         In the <a data-cite="WEBRTC#set-description">set a session description</a> algorithm, add a step
         right after the step that sets transceiver.[[\Sender]].[[\SendCodecs]],
-        saying "For each transciever, set <a>[[\HeaderExtensionsNegotiated]]</a> to
+        saying "For each transciever, set {{RTCRtpTransceiver/[[HeaderExtensionsNegotiationed]]}} to
         an empty list, and then
         for each <code>"a=hdrext"</code> line, add an appropriate
         {{RTCRtpHeaderExtensionCapability}} to the list.
       </p>
-      <p>
+      <p>\
         In the algorithms for generating initial offers in [[RTCWEB-JSEP]] section 5.2.1,
         replace "for each supported RTP header extension, an "a=extmap" line, as specified in
         [[RFC5285]], section 5" " with "For each RTP header extension "e"
-        listed in <a>[[\HeaderExtensionsToOffer]]</a> where {{RTCRtpHeaderExtensionCapability/direction}} is not {{RTCRtpTransceiverDirection/"stopped"}}, an "a=extmap"
+        listed in {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}} where {{RTCRtpHeaderExtensionCapability/direction}} is not {{RTCRtpTransceiverDirection/"stopped"}}, an "a=extmap"
         line, as specified in [[RFC5285]], section 5, with direction taken from "e"'s {{RTCRtpHeaderExtensionCapability/direction}}
         attribute."
       </p>
       <p>
         In the algorithm for generating subsequent offers in [[RTCWEB-JSEP]] section 5.2.2, replace "The
         RTP header extensions MUST only include those that are present in the most recent answer"
-        with "For each RTP header extension listed in <a>[[\HeaderExtensionsToOffer]]</a>,
+        with "For each RTP header extension listed in {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}},
         and where {{RTCRtpHeaderExtensionCapability/direction}} is not {{RTCRtpTransceiverDirection/"stopped"}}, generate
         an appropriate "a=extmap" line with "direction" set according to the rules of [[RFC5285]]
-        section 6, considering the {{RTCRtpHeaderExtensionCapability/direction}} in [[\HeaderExtensionsToOffer]] to indicate the
+        section 6, considering the {{RTCRtpHeaderExtensionCapability/direction}} in {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}} to indicate the
         answerer's desired usage".
       </p>
       <p>
         In the algorithm for generating initial answers in [[RTCWEB-JSEP]] section 5.3.1, replace "For
         each supported RTP header extension that is present in the offer" with "For each
         supported RTP header extension that is present in the offer and is also present in
-        <a>[[\HeaderExtensionsToOffer]]</a> with a {{RTCRtpHeaderExtensionCapability/direction}} different from {{ RTCRtpTransceiverDirection/"stopped"}}".
+        {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}} with a {{RTCRtpHeaderExtensionCapability/direction}} different from {{ RTCRtpTransceiverDirection/"stopped"}}".
       </p>
       <p class="note">
         Since JSEP does not know about WebRTC internal slots, merging this change requires
@@ -232,11 +232,11 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
                   If <var>ext</var>.{{RTCRtpHeaderExtensionCapability/uri}} value is missing, [=exception/throw=] a {{TypeError}}.
                 </li>
                 <li>If <var>ext</var>.{{RTCRtpHeaderExtensionCapability/uri}} value is not present in
-                  [[\HeaderExtensionsToOffer]], [=exception/throw=] a {{NotSupportedError}}.
+                  {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}}, [=exception/throw=] a {{NotSupportedError}}.
                 </li>
                 <li>
                   Let <var>entry</var> be the entry with the same {{RTCRtpHeaderExtensionCapability/uri}} value in
-                  [[\HeaderExtensionsToOffer]].
+                  {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}}.
                 </li>
                 <li>If <var>ext</var>.{{RTCRtpHeaderExtensionCapability/direction}}  is not {{ RTCRtpTransceiverDirection/"sendrecv"}}, and {{RTCRtpHeaderExtensionParameters/uri}}
                   indicates a mandatory-to-use attribute that is required to be both
@@ -259,9 +259,9 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       <h2>Attributes</h2>
       <dl data-dfn-for=RTCRtpTransceiver>
         <dt><dfn>headerExtensionsToOffer</dfn>, readonly</dt>
-        <dd>Returns the value of the [[\HeaderExtensionsToOffer]] slot.</dd>
+        <dd>Returns the value of the {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}} slot.</dd>
         <dt><dfn>headerExtensionsNegotiated</dfn>, readonly</dt>
-        <dd>Returns the value of the [[\HeaderExtensionsNegotiated]] slot.</dd>
+        <dd>Returns the value of the {{RTCRtpTransceiver/[[HeaderExtensionsNegotiationed]]}} slot.</dd>
       </dl>
     </section>
   </section>
@@ -327,7 +327,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       by adding an additional internal slot and attribute.
     </p>
     <p>
-      Let {{RTCRtpReceiver}} objects have afn-for=RTCRtpReceiver>[[\PlayoutDelay]]</dfn> internal slot initially
+      Let {{RTCRtpReceiver}} objects have a <dfn data-dfn-for=RTCRtpReceiver>[[\PlayoutDelay]]</dfn> internal slot initially
       initialized to <code>null</code>.
     </p>
     <pre class="idl">partial interface RTCRtpReceiver {
@@ -365,10 +365,10 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
             [[\AssociatedRemoteMediaStreams]]</a> internal slot, then it will
             be synchronized with other tracks (for e.g. audio video
             synchronization). This means that even if one of the paired tracks
-            is delayed through [[\PlayoutDelay]] then the User Agent
+            is delayed through {{RTCRtpReceiver/[[PlayoutDelay]]}} then the User Agent
             synchronization mechanism will automatically delay all others
             paired tracks. If multiple such paired tracks are delayed through
-            <a>[[\PlayoutDelay]]</a> by different amounts then the largest
+            {{RTCRtpReceiver/[[PlayoutDelay]]}} by different amounts then the largest
             of those hints will take precedence in synchronization mechanism.
           </p>
           <p class="note">
@@ -377,7 +377,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
             {{RTCInboundRtpStreamStats/jitterBufferEmittedCount}}.
           </p>
           <p>On getting, this attribute MUST return the value of the
-          <a>[[\PlayoutDelay]]</a> internal slot.</p>
+          {{RTCRtpReceiver/[[PlayoutDelay]]}} internal slot.</p>
           <p>On setting, the User Agent MUST run the following steps:</p>
           <ol>
             <li>
@@ -393,7 +393,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
               [=exception/throw=] a {{RangeError}} and abort these steps.</p>
             </li>
             <li>
-              <p>Set the value of <var>receiver</var>'s <a>[[\PlayoutDelay]]</a>
+              <p>Set the value of <var>receiver</var>'s {{RTCRtpReceiver/[[PlayoutDelay]]}}
               internal slot to <var>delay</var>.</p>
             </li>
             <li>
@@ -412,7 +412,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
                     If User Agent chooses delay different from requested one,
                     for e.g. due to network conditions or physical memory
                     constraints, this is not reflected in the
-                    <a>[[\PlayoutDelay]]</a> internal slot.
+                    {{RTCRtpReceiver/[[PlayoutDelay]]}} internal slot.
                   </p>
                 </li>
                 <li>
