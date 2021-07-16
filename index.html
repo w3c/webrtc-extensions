@@ -401,17 +401,17 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       extends that interface by adding an additional method.
     </p>
     <pre class="idl">partial interface RTCRtpSender {
-      Promise&lt;unsigned long> requestKeyFrame();
+      Promise&lt;unsigned long> generateKeyFrame();
       };</pre>
     <section>
       <h2>Methods</h2>
       <p>
         <dl data-link-for="RTCRtpSender" class="methods">
           <dt>
-            <dfn data-idl><code>requestKeyFrame</code></dfn></dt>
+            <dfn data-idl><code>generateKeyFrame</code></dfn></dt>
           <dd>
             <p>
-              Requests a keyframe. When called, the UA MUST perform
+              Generates a keyframe. When called, the UA MUST perform
               the following steps:
             </p>
             <ul>
