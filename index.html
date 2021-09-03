@@ -177,7 +177,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
 };
     </pre>
     <p>
-      Let <dfn>[[\HeaderExtensionsToOffer]]</dfn> be an internal slot of the {{RTCRtpTransceiver}},
+      Let <dfn data-dfn-for=RTCRtpTransceiver>[[\HeaderExtensionsToOffer]]</dfn> be an internal slot of the {{RTCRtpTransceiver}},
       initialized to the platform-specific list of implemented RTP header extensions.
       The direction
       attribute for all extensions that are mandatory to use MUST be initialized to
@@ -190,7 +190,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       BUNDLE is in use, per [[BUNDLE]] section 9.1.
     </p>
     <p>
-      Let <dfn>[[\HeaderExtensionsNegotiated]]</dfn> be an internal slot of the RTCRtpTransceiver,
+      Let <dfn data-dfn-for=RTCRtpTransceiver>{{RTCRtpTransceiver/[[HeaderExtensionsNegotiationed]]}}</dfn> be an internal slot of the {{RTCRtpTransceiver}},
       initialized to an empty list.
     </p>
     <section>
@@ -198,33 +198,33 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       <p>
         In the <a data-cite="WEBRTC#set-description">set a session description</a> algorithm, add a step
         right after the step that sets transceiver.[[\Sender]].[[\SendCodecs]],
-        saying "For each transciever, set <a>[[\HeaderExtensionsNegotiated]]</a> to
+        saying "For each transciever, set {{RTCRtpTransceiver/[[HeaderExtensionsNegotiationed]]}} to
         an empty list, and then
         for each <code>"a=hdrext"</code> line, add an appropriate
         {{RTCRtpHeaderExtensionCapability}} to the list.
       </p>
-      <p>
+      <p>\
         In the algorithms for generating initial offers in [[RTCWEB-JSEP]] section 5.2.1,
         replace "for each supported RTP header extension, an "a=extmap" line, as specified in
         [[RFC5285]], section 5" " with "For each RTP header extension "e"
-        listed in <a>[[\HeaderExtensionsToOffer]]</a> where {{RTCRtpHeaderExtensionCapability/direction}} is not {{RTCRtpTransceiverDirection/"stopped"}}, an "a=extmap"
+        listed in {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}} where {{RTCRtpHeaderExtensionCapability/direction}} is not {{RTCRtpTransceiverDirection/"stopped"}}, an "a=extmap"
         line, as specified in [[RFC5285]], section 5, with direction taken from "e"'s {{RTCRtpHeaderExtensionCapability/direction}}
         attribute."
       </p>
       <p>
         In the algorithm for generating subsequent offers in [[RTCWEB-JSEP]] section 5.2.2, replace "The
         RTP header extensions MUST only include those that are present in the most recent answer"
-        with "For each RTP header extension listed in <a>[[\HeaderExtensionsToOffer]]</a>,
+        with "For each RTP header extension listed in {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}},
         and where {{RTCRtpHeaderExtensionCapability/direction}} is not {{RTCRtpTransceiverDirection/"stopped"}}, generate
         an appropriate "a=extmap" line with "direction" set according to the rules of [[RFC5285]]
-        section 6, considering the {{RTCRtpHeaderExtensionCapability/direction}} in [[\HeaderExtensionsToOffer]] to indicate the
+        section 6, considering the {{RTCRtpHeaderExtensionCapability/direction}} in {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}} to indicate the
         answerer's desired usage".
       </p>
       <p>
         In the algorithm for generating initial answers in [[RTCWEB-JSEP]] section 5.3.1, replace "For
         each supported RTP header extension that is present in the offer" with "For each
         supported RTP header extension that is present in the offer and is also present in
-        <a>[[\HeaderExtensionsToOffer]]</a> with a {{RTCRtpHeaderExtensionCapability/direction}} different from {{ RTCRtpTransceiverDirection/"stopped"}}".
+        {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}} with a {{RTCRtpHeaderExtensionCapability/direction}} different from {{ RTCRtpTransceiverDirection/"stopped"}}".
       </p>
       <p class="note">
         Since JSEP does not know about WebRTC internal slots, merging this change requires
@@ -246,11 +246,11 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
                   If <var>ext</var>.{{RTCRtpHeaderExtensionCapability/uri}} value is missing, [=exception/throw=] a {{TypeError}}.
                 </li>
                 <li>If <var>ext</var>.{{RTCRtpHeaderExtensionCapability/uri}} value is not present in
-                  [[\HeaderExtensionsToOffer]], [=exception/throw=] a {{NotSupportedError}}.
+                  {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}}, [=exception/throw=] a {{NotSupportedError}}.
                 </li>
                 <li>
                   Let <var>entry</var> be the entry with the same {{RTCRtpHeaderExtensionCapability/uri}} value in
-                  [[\HeaderExtensionsToOffer]].
+                  {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}}.
                 </li>
                 <li>If <var>ext</var>.{{RTCRtpHeaderExtensionCapability/direction}}  is not {{ RTCRtpTransceiverDirection/"sendrecv"}}, and {{RTCRtpHeaderExtensionParameters/uri}}
                   indicates a mandatory-to-use attribute that is required to be both
@@ -273,9 +273,9 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       <h2>Attributes</h2>
       <dl data-dfn-for=RTCRtpTransceiver>
         <dt><dfn>headerExtensionsToOffer</dfn>, readonly</dt>
-        <dd>Returns the value of the [[\HeaderExtensionsToOffer]] slot.</dd>
+        <dd>Returns the value of the {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}} slot.</dd>
         <dt><dfn>headerExtensionsNegotiated</dfn>, readonly</dt>
-        <dd>Returns the value of the [[\HeaderExtensionsNegotiated]] slot.</dd>
+        <dd>Returns the value of the {{RTCRtpTransceiver/[[HeaderExtensionsNegotiationed]]}} slot.</dd>
       </dl>
     </section>
   </section>
@@ -341,8 +341,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       by adding an additional internal slot and attribute.
     </p>
     <p>
-      Let {{RTCRtpReceiver}} objects have a
-      <dfn>[[\PlayoutDelay]]</dfn> internal slot initially
+      Let {{RTCRtpReceiver}} objects have a <dfn data-dfn-for=RTCRtpReceiver>[[\PlayoutDelay]]</dfn> internal slot initially
       initialized to <code>null</code>.
     </p>
     <pre class="idl">partial interface RTCRtpReceiver {
@@ -380,10 +379,10 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
             [[\AssociatedRemoteMediaStreams]]</a> internal slot, then it will
             be synchronized with other tracks (for e.g. audio video
             synchronization). This means that even if one of the paired tracks
-            is delayed through [[\PlayoutDelay]] then the User Agent
+            is delayed through {{RTCRtpReceiver/[[PlayoutDelay]]}} then the User Agent
             synchronization mechanism will automatically delay all others
             paired tracks. If multiple such paired tracks are delayed through
-            <a>[[\PlayoutDelay]]</a> by different amounts then the largest
+            {{RTCRtpReceiver/[[PlayoutDelay]]}} by different amounts then the largest
             of those hints will take precedence in synchronization mechanism.
           </p>
           <p class="note">
@@ -392,7 +391,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
             {{RTCInboundRtpStreamStats/jitterBufferEmittedCount}}.
           </p>
           <p>On getting, this attribute MUST return the value of the
-          <a>[[\PlayoutDelay]]</a> internal slot.</p>
+          {{RTCRtpReceiver/[[PlayoutDelay]]}} internal slot.</p>
           <p>On setting, the User Agent MUST run the following steps:</p>
           <ol>
             <li>
@@ -408,7 +407,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
               [=exception/throw=] a {{RangeError}} and abort these steps.</p>
             </li>
             <li>
-              <p>Set the value of <var>receiver</var>'s <a>[[\PlayoutDelay]]</a>
+              <p>Set the value of <var>receiver</var>'s {{RTCRtpReceiver/[[PlayoutDelay]]}}
               internal slot to <var>delay</var>.</p>
             </li>
             <li>
@@ -427,7 +426,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
                     If User Agent chooses delay different from requested one,
                     for e.g. due to network conditions or physical memory
                     constraints, this is not reflected in the
-                    <a>[[\PlayoutDelay]]</a> internal slot.
+                    {{RTCRtpReceiver/[[PlayoutDelay]]}} internal slot.
                   </p>
                 </li>
                 <li>
@@ -919,9 +918,75 @@ enum RTCIceCredentialType {
               </dd>
             </dl>
 </section>
+<section>
+    <h3>
+      {{RTCDataChannel}} extensions
+    </h3>
+    <p>This document extends {{RTCDataChannel}} by making it <a data-cite="!HTML/#transferable-objects">transferable</a>.</p>
+      This allows sending and receiving messages outside the context the connection was created, for instance in workers or third-party iframes.</p>
+    <div>
+      <p>The WebIDL changes are the following:
+      <pre class="idl">
+[Exposed=(Window,Worker), Transferable]
+partial interface RTCDataChannel {
+};</pre>
+    </div>
+    <div>
+      <p>The <a data-cite="WEBRTC#dfn-create-an-rtcdatachannel">create an RTCDataChannel</a> algorithm is updated by adding the following steps after step 4 of the original algorithm:</p>
+      <ol>
+        <li><p>Initialize <var>channel</var>.`[[IsTransferable]]` to <code>true</code>.</p></li>
+        <li><p>Queue a task to run the following step:</p>
+          <ol>
+            <li><p>Set <var>channel</var>.`[[IsTransferable]]` to <code>false</code>.</p></li>
+          </ol>
+        </li>
+      </ol>
+      <p>This task needs to run before any task enqueued by the <a data-cite="WEBRTC#dfn-receive-an-rtcdatachannel-message">receiving messages on a data channel</a> algorithm for <var>channel</var>.
+      This ensures that no message is lost during the transfer of a {{RTCDataChannel}}.</p>
+    </div>
+    <div>The <a data-cite="WEBRTC#datachannel-send">send() algorithm</a> is modified by adding the following step after step 1 of the original algorithm:
+      <ol>
+        <li><p>Set <var>channel</var>.`[[IsTransferable]]` to <code>false</code>.</p></li>
+      </ol>
+    </div>
+    <div>
+      <p>The {{RTCDataChannel}} <a data-cite="!HTML/#transfer-steps">transfer steps</a>, given <var>value</var> and <var>dataHolder</var>, are:</p>
+      <ol>
+        <li><p>If <var>value</var>.`[[IsTransferable]]` is <code>false</code>, throw a "DataCloneError" DOMException.</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[ReadyState]]` to <var>value</var>.<a href="WEBRTC#dfn-readystate">`[[ReadyState]]`</a>.</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[DataChannelLabel]]` to <var>value</var>.<a href="WEBRTC#dfn-datachannellabel">`[[DataChannelLabel]]`</a>.</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[Ordered]]` to <var>value</var>.<a href="WEBRTC#dfn-ordered">`[[Ordered]]`</a>.</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[MaxPacketLifeTime]]` to <var>value</var>.<a href="WEBRTC#dfn-maxpacketlifetime"></a>.`[[MaxPacketLifeTime]]`</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[MaxRetransmits]]` to <var>value</var>.<a href="WEBRTC#dfn-maxretransmits">`[[MaxRetransmits]]`</a>.</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[DataChannelProtocol]]` to <var>value</var>.<a href="WEBRTC#dfn-datachannelprotocol">`[[DataChannelProtocol]]`</a>.</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[Negotiated]]` to <var>value</var>.<a href="WEBRTC#dfn-negotiated">`[[Negotiated]]`</a>.</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[DataChannelId]]` to <var>value</var>.<a href="WEBRTC#dfn-datachannelid">`[[DataChannelId]]`</a>.</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[underlyingDataTransport]]` to <var>value</var> <a href="WEBRTC#dfn-data-transport">underlying data transport</a>.</p></li>
+        <li><p>Set <var>value</var>.`[[IsTransferable]]` to <code>false</code>.</p></li>
+        <li><p>Set <var>value</var>.`[[ReadyState]]` to <a data-cite="WEBRTC/#dom-rtcdatachannelstate-closed">"closed"</a>.</p></li>
+      </ol>
+    </div>
+    <div><p>The {{RTCDataChannel}} <a data-cite="!HTML/#transfer-receiving-steps">transfer-receiving steps</a>, given <var>dataHolder</var> and <var>channel</var>, are:</p>
+      <ol>
+        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-readystate">`[[ReadyState]]`</a> to <var>dataHolder</var>.`[[ReadyState]]`.</p></li>
+        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-datachannellabel">`[[DataChannelLabel]]`</a> to <var>dataHolder</var>.`[[\DataChannelLabel]]`.</p></li>
+        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-ordered">`[[Ordered]]`</a> to <var>dataHolder</var>.`[[Ordered]]`.</p></li>
+        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-maxpacketlifetime">`[[MaxPacketLifeTime]]`</a> to <var>dataHolder</var>.`[[MaxPacketLifeTime]]`.</p></li>
+        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-maxretransmits">`[[MaxRetransmits]]`</a> to <var>dataHolder</var>.`[[MaxRetransmits]]`.</p></li>
+        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-datachannelprotocol">`[[DataChannelProtocol]]`</a> to <var>dataHolder</var>.`[[DataChannelProtocol]]`.</p></li>
+        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-negotiated">`[[Negotiated]]`</a> to <var>dataHolder</var>.`[[Negotiated]]`.</p></li>
+        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-datachannelid">`[[DataChannelId]]`</a> to <var>dataHolder</var>.`[[DataChannelId]]`.</p></li>
+        <li><p>Initialize <var>channel</var> <a href="WEBRTC#dfn-data-transport">underlying data transport</a> to <var>dataHolder</var>.`[[underlyingDataTransport]]`.</p></li>
+      </ol>
+      <p>The above steps do not need to transfer <a href="WEBRTC#dfn-readystate">`[[BufferedAmount]]`</a> as its value will always be equal to <code>0</code>.
+      The reason is an {{RTCDataChannel}} can be transferred only if its <a data-cite="WEBRTC#datachannel-send">send() algorithm</a> was not called prior the transfer.</p>
+      <p>If the <a href="WEBRTC#dfn-data-transport">underlying data transport</a> is closed at the time of the <a data-cite="!HTML/#transfer-receiving-steps">transfer-receiving steps</a>,
+      the {{RTCDataChannel}} object will be closed by running the <a href="WEBRTC#announcing-a-data-channel-as-closed">announcing a data channel as closed</a> algorithm immediately after the <a data-cite="!HTML/#transfer-receiving-steps">transfer-receiving steps</a>.</p>
+    </div>
+</section>
 <section class="informative">
     <h2>
-      Privacy and Security Considerations
+      Security Considerations
     </h2>      
       <p>
         This section is non-normative; it specifies no new behaviour.
@@ -929,16 +994,6 @@ enum RTCIceCredentialType {
         of APIs and protocols used in WebRTC are described in
         [[?RFC8827]].
       </p>
-    <section>
-        <h2>
-          Revealing IP addresses
-        </h2>
-        <p>
-          The extensions defined in this document do not reveal additional
-          information on IP addresses beyond that already described in
-          [[WEBRTC]] Section 13.2. 
-        </p>
-      </section>
       <section>
         <h2>
           Impact on local network
@@ -957,6 +1012,24 @@ enum RTCIceCredentialType {
           This document defines extensions for encryption of RTP Header Extensions which
           improve the confidentiality of communications by encrypting header extension
           IDs, as well as CSRCs. 
+        </p>
+      </section>
+</section>
+<section class="informative">
+    <h2>
+      Privacy Considerations
+    </h2>      
+      <p>
+        This section is non-normative; it specifies no new behaviour.
+      </p>
+      <section>
+        <h2>
+          Revealing IP addresses
+        </h2>
+        <p>
+          The extensions defined in this document do not reveal additional
+          information on IP addresses beyond that already described in
+          [[WEBRTC]] Section 13.2. 
         </p>
       </section>
       <section>
