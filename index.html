@@ -101,8 +101,8 @@
     <p>
       The {{RTCPeerConnection}}
       interface is defined in [[WEBRTC]]. This document extends that interface
-      by adding an additional static method, and adding a Content-Security-Policy
-      check to the constructor.
+      by adding an additional static method, and using Content-Security-Policy
+      for ICE candidate filtering.
     </p>
     <pre class="idl">partial interface RTCPeerConnection {
   static sequence&lt;RTCIceServer&gt; getDefaultIceServers();
@@ -143,15 +143,11 @@
     <section>
       <h2>Modifications to existing procedures</h2>
 
-      <p>Whenever the <a data-cite="WEBRTC#constructor">RTCPeerConnection constructor</a>
-      algorithm is invoked, run the following steps instead:
-        <ol>
-          <li>If [[WEBAPPSEC-CSP#should-block-rtc-connection]] on the current global object returns "Blocked",
-          throw a {{SecurityError}}."</li>
-          <li>Return the result of running the original
-          <a data-cite="WEBRTC#constructor">RTCPeerConnection constructor</a> algorithm.</li>
-        </ol>
-      </p>
+      <p>Append the following paragraph to the description of
+      <a data-cite="WEBRTC#addIceCandidate">RTCPeerConnection.addIceCandidate</a>:</p>
+
+      <p>If [[WEBAPPSEC-CSP#should-block-rtc-connection]] on the current global
+      object returns "Blocked", all candidates MUST be prohibited.</p>
     </section>
   </section>
   <section id="rtcrtptransceiver-interface">
