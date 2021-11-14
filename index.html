@@ -455,11 +455,16 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       by adding an additional boolean flag.
     </p>
     <pre class="idl">partial dictionary RTCRtpEncodingParameters {
+      unsigned long ptime;
       boolean adaptivePtime = false;
       double maxFramerate;
     };</pre>
     <h2>Dictionary {{RTCRtpEncodingParameters}} Members</h2>
     <dl data-link-for="RTCRtpEncodingParameters" data-dfn-for="RTCRtpEncodingParameters" class="dictionary-members">
+      <dt><dfn data-idl>ptime</dfn> of type <span class="idlMemberType">unsigned long</span></dt>
+      <dd>
+        <p>The preferred duration of media represented by a packet in milliseconds.</p>
+      </dd>
       <dt><dfn data-idl>adaptivePtime</dfn> of type <span class="idlMemberType">boolean</span>, defaulting to <code>false</code>.</dt>
       <dd>
         <p>Indicates whether this encoding MAY dynamically change
@@ -474,9 +479,9 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
         of increased latency. Changing the frame length dynamically allows the
         user agent to adapt its bandwidth allocation strategy based on the
         current network conditions.</p>
-        <p>If {{adaptivePtime}} is set to <code>true</code>,
-        <code>ptime</code> MUST NOT be set; otherwise,
-        {{InvalidModificationError}} MUST be [=exception/throw|thrown=].</p>
+        <p>If {{adaptivePtime}} is set to <code>true</code>, {{ptime}}
+        MUST NOT be set; otherwise, {{InvalidModificationError}} MUST be
+        [=exception/throw|thrown=].</p>
       </dd>
       <dt><dfn data-idl>maxFramerate</dfn> of type <span class=
       "idlMemberType">double</span></dt>
