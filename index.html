@@ -401,7 +401,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       extends that interface by adding an additional method.
     </p>
     <pre class="idl">partial interface RTCRtpSender {
-      Promise&lt;unsigned long> generateKeyFrame();
+      Promise&lt;unsigned long> generateKeyFrame(optional sequence &lt;DOMString> rids);
       };</pre>
     <section>
       <h2>Methods</h2>
@@ -425,10 +425,14 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
               <li>
                 Return  <var>p</var>, and let it be the result of
                 [= chaining =] the following steps to
-                    <var>connection</var>'s [= operations chain =].
+                <var>connection</var>'s [= operations chain =].
               </li>
               <li>If the sender's 'kind' is not "video", reject <var>p</var>
                 with {{NotAllowedError}}.
+              </li>
+              <li>If the <code>rids</code> argument is provided, check whether
+                  each of the RID values in the sequence are valid. If any RID
+                  values are invalid, reject <var>p</var> with {{NotAllowedError}}.
               </li>
               <li>
                 If the sender's track is not set, if the track is ended,
@@ -436,15 +440,19 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
                 {{InvalidStateError}}.
               </li>
               <li>
-                Instruct the encoder of the track to produce a keyframe.
+                If the <code>rids</code> argument is provided, instruct the
+                encoder of the track to generate keyframe(s) for each of the
+                simulcast streams represented by <code>rids</code>. If
+                <code>rids</code> is not provided, generate keyframe(s) for
+                every simulcast stream.
               </li>
               <li>
-                If the production of a keyframe fails, reject <var>p</var>
+                If generating keyframe(s) fails, reject <var>p</var>
                 with {{OperationError}}.
               <li>
-                When the encoder has produced a keyframe, and it has been
-                assigned an RTP timestamp, resolve <var>p</var> with this
-                timestamp.
+                When the encoder has generated keyframe(s) and has
+                assigned an RTP timestamp, resolve <var>p</var> with
+                the timestamp.
               </li>
             </ul>
           </dd>
@@ -462,7 +470,6 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       </pre>
     </p>
   </section>
-
   <section id="rtcrtpreceiver-interface">
     <h3>
       {{RTCRtpReceiver}} extensions
