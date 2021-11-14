@@ -452,9 +452,9 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       </p>
     </section>
     <p>
-      This call can be emulated by making the following calls,
-      except that the outgoing RTP timestamp is not recorded, and
-      the encoder may choose to encode an extra black frame:
+      This method can be emulated (imperfectly) with the following
+      calls. However, the outgoing RTP timestamp is not recorded,
+      and the encoder may choose to encode extra black frame(s):
       <pre>
         let track = sender.track;
         await sender.replaceTrack(null);
