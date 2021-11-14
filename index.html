@@ -463,20 +463,18 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       <dt><dfn data-idl>adaptivePtime</dfn> of type <span class="idlMemberType">boolean</span>, defaulting to <code>false</code>.</dt>
       <dd>
         <p>Indicates whether this encoding MAY dynamically change
-        the frame length. If the value is <code>true</code>,
-        the user agent MAY use any valid frame length for any of its
-        frames, and MAY change this at any time. Valid values are multiples
-        of 10ms. If the <code>maxptime</code> attribute (defined in
-        [[RFC4566]] Section 6) is specified, that maximum applies.
-        <a data-cite="WEBRTC#dfn-read-only-parameter">Read-only parameter.</a></p>
+        the frame length. If the value is <code>true</code>, the
+        user agent MAY use any valid frame length for any of its
+        frames, and MAY change this at any time. Valid values are
+        multiples of 10ms. If the <code>maxptime</code> attribute
+        (defined in [[RFC4566]] Section 6) is specified, that maximum
+        applies. If the value is <code>false</code>, the user agent
+        MUST use a fixed frame length.</p>
         <p class="note">Using a longer frame length reduces the
         bandwidth consumption due to overhead, but does so at the cost
         of increased latency. Changing the frame length dynamically allows the
         user agent to adapt its bandwidth allocation strategy based on the
         current network conditions.</p>
-        <p>If {{adaptivePtime}} is set to <code>true</code>,
-        <code>ptime</code> MUST NOT be set; otherwise,
-        {{InvalidModificationError}} MUST be [=exception/throw|thrown=].</p>
       </dd>
       <dt><dfn data-idl>maxFramerate</dfn> of type <span class=
       "idlMemberType">double</span></dt>
