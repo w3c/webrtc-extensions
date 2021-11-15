@@ -472,9 +472,9 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
         MUST use a fixed frame length.</p>
         <p class="note">Using a longer frame length reduces the
         bandwidth consumption due to overhead, but does so at the cost
-        of increased latency. Changing the frame length dynamically allows the
-        user agent to adapt its bandwidth allocation strategy based on the
-        current network conditions.</p>
+        of increased latency. Changing the frame length dynamically
+        allows the user agent to adapt its bandwidth allocation strategy
+        based on the current network conditions.</p>
         <p>If {{adaptivePtime}} is set to <code>true</code>,
         <code>ptime</code> MUST NOT be set; otherwise,
         {{InvalidModificationError}} MUST be [=exception/throw|thrown=].</p>
