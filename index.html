@@ -465,6 +465,10 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       <dt><dfn data-idl>ptime</dfn> of type <span class="idlMemberType">unsigned long</span></dt>
       <dd>
         <p>The preferred duration of media represented by a packet in milliseconds.</p>
+          <div class="issue atrisk">
+            <p>Support for {{RTCRtpEncodingParameters/ptime}} is marked as a feature at risk, since there is no
+              clear commitment from implementers.</p>
+          </div>
       </dd>
       <dt><dfn data-idl>adaptivePtime</dfn> of type <span class="idlMemberType">boolean</span>, defaulting to <code>false</code>.</dt>
       <dd>
