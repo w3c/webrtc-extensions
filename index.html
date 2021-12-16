@@ -456,11 +456,20 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       additional members.
     </p>
     <pre class="idl">partial dictionary RTCRtpEncodingParameters {
+      unsigned long ptime;
       boolean adaptivePtime = false;
       double maxFramerate;
     };</pre>
     <h2>Dictionary {{RTCRtpEncodingParameters}} Members</h2>
     <dl data-link-for="RTCRtpEncodingParameters" data-dfn-for="RTCRtpEncodingParameters" class="dictionary-members">
+      <dt><dfn data-idl>ptime</dfn> of type <span class="idlMemberType">unsigned long</span></dt>
+      <dd>
+        <p>The preferred duration of media represented by a packet in milliseconds.</p>
+          <div class="issue atrisk">
+            <p>Support for {{RTCRtpEncodingParameters/ptime}} is marked as a feature at risk, since there is no
+              clear commitment from implementers.</p>
+          </div>
+      </dd>
       <dt><dfn data-idl>adaptivePtime</dfn> of type <span class="idlMemberType">boolean</span>, defaulting to <code>false</code>.</dt>
       <dd>
         <p>Indicates whether this encoding MAY dynamically change
@@ -471,6 +480,9 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
         (defined in [[RFC4566]] Section 6) is specified, that maximum
         applies. If the value is <code>false</code>, the user agent
         MUST use a fixed frame length.</p>
+        <p>If {{adaptivePtime}} is set to <code>true</code>,
+        {{ptime}} MUST NOT be set; otherwise,
+        {{InvalidModificationError}} MUST be [=exception/throw|thrown=].</p>
         <p class="note">Using a longer frame length reduces the
         bandwidth consumption due to overhead, but does so at the cost
         of increased latency. Changing the frame length dynamically
