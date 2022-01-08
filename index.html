@@ -95,6 +95,43 @@
       </p>
     </section>
   </section>
+  <section id="configuration">
+    <h3>
+      {{RTCConfiguration}} extensions
+    </h3>
+          <p>
+            {{RTCConfiguration/rtpHeaderEncryptionPolicy}} defines the
+            policy for negotiation of RTP header encryption using
+            [[cryptex]].
+          </p>
+          <div>
+            <pre class="idl">partial dictionary RTCConfiguration {
+  RTCRtpHeaderEncryptionPolicy rtpHeaderEncryptionPolicy = "negotiate";
+};</pre>
+            <section>
+              <h2>
+                Dictionary {{RTCConfiguration}} Members
+              </h2>
+              <dl data-link-for="RTCConfiguration" data-dfn-for=
+              "RTCConfiguration" class="dictionary-members">
+              <dt>
+                <dfn data-idl="">rtpHeaderEncryptionPolicy</dfn> of type <span class=
+                "idlMemberType">RTCRtpHeaderEncryptionPolicy</span>
+              </dt>
+              <dd>
+                <p class="needs-test">
+                </p>
+                <div class="issue atrisk">
+                  <p>
+                    {{RTCConfiguration/rtpHeaderEncryptionPolicy}} is marked
+                    as a feature at risk, since there is no clear commitment
+                    from implementers.
+                  </p>
+                </div>
+              </dd>
+            </dl>
+           <section>
+  </section>
   <section id="rtcpeerconnection-interface">
     <h3>
       {{RTCPeerConnection}} extensions
