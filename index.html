@@ -95,6 +95,49 @@
       </p>
     </section>
   </section>
+  <section data-tests="RTCConfiguration-rtpHeaderEncryptionPolicy.html">
+          <h4>
+            <dfn>RTCRtpHeaderEncryptionPolicyy</dfn> Enum
+          </h4>
+          <p>
+            RTP header encryption policy affects whether RTP header encryption is
+            negotiated if the remote endpoint is not cryptex-aware. If the remote
+            endpoint is cryptex-aware, all media streams are sent utilizing RTP
+            header encryption.
+          </p>
+          <div>
+            <pre id="target-rtp-header-encryption-policy" class="idl">enum RTCRtpHeaderEncryptionPolicy {
+  "negotiate",
+  "require"
+};</pre>
+      <table data-link-for="RTCRtpHeaderEncryptionPolicy" data-dfn-for=
+      "RTCRtpHeaderEncryptionPolicy" class="simple">
+        <thead>
+          <tr>
+            <th colspan="2">
+              Enumeration description (non-normative)
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+              <dfn data-idl="">negotiate</dfn>
+            </td>
+            <td>
+              Negotiate RTP header encryption.
+            </td>
+          </tr>
+          <tr>
+              <dfn data-idl="">require</dfn>
+            </td>
+            <td>
+              Require RTP header encryption.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
   <section id="configuration">
     <h3>
       {{RTCConfiguration}} extensions
