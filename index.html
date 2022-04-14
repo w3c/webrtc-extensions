@@ -133,9 +133,11 @@
           information across time and origins which increases the fingerprinting
           surface of a given browser.</p>
           <div class="issue atrisk">
-            <p>{{RTCPeerConnection/getDefaultIceServers()}} was moved from [[WEBRTC]] to
-            this extension spec due to lack of support from implementers and
-            concerns discussed in <a href="https://github.com/w3c/webrtc-pc/issues/2023">webrtc-pc#2023</a>.</p>
+            <p>
+              {{RTCPeerConnection/getDefaultIceServers()}} was moved from [[WEBRTC]] to
+              this extension spec due to lack of support from implementers and concerns
+              discussed in <a href="https://github.com/w3c/webrtc-pc/issues/2023">webrtc-pc#2023</a>.
+            </p>
           </div>
         </dd>
       </dl>
@@ -466,8 +468,11 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       <dd>
         <p>The preferred duration of media represented by a packet in milliseconds.</p>
           <div class="issue atrisk">
-            <p>Support for {{RTCRtpEncodingParameters/ptime}} is marked as a feature at risk, since there is no
-              clear commitment from implementers.</p>
+            <p>
+              {{RTCRtpEncodingParameters/ptime}} was moved from [[WEBRTC]] to
+              this extension spec due to lack of support from implementers. It is                  
+              therefore marked as a feature at risk.
+            </p>
           </div>
       </dd>
       <dt><dfn data-idl>adaptivePtime</dfn> of type <span class="idlMemberType">boolean</span>, defaulting to <code>false</code>.</dt>
@@ -581,8 +586,11 @@ enum RTCIceCredentialType {
             </li>
           </ol>
           <div class="issue atrisk">
-            <p>Support for the {{RTCIceCredentialType/"oauth"}} value of {{RTCIceCredentialType}}
-            is marked as a feature at risk, since there is no clear commitment from implementers.</p>
+            <p>
+              The {{RTCIceCredentialType/"oauth"}} value of {{RTCIceCredentialType}}
+              was moved from [[WEBRTC]] to this extension spec due to lack of support
+              from implementers. It is therefore marked as a feature at risk.
+            </p>
           </div>
           </td>
         </tr>
@@ -601,8 +609,11 @@ enum RTCIceCredentialType {
     parameter is not located in this dictionary, but in
     {{RTCIceServer.username}} member.</p>
     <div class="issue atrisk">
-      <p>Support for the {{RTCOAuthCredential}} dictionary is marked
-      as a feature at risk, since there is no clear commitment from implementers.</p>
+      <p>
+         The {{RTCOAuthCredential}} dictionary was moved from [[WEBRTC]] to
+         this extension spec due to lack of support from implementers. It is                  
+         therefore marked as a feature at risk.
+      </p>
     </div>
     <div>
       <pre class="idl"
@@ -722,6 +733,13 @@ enum RTCIceCredentialType {
         <code>kid</code> value is equal with the OAuth response "kid"
         parameter, as defined in [[RFC7515]] Section 4.1.4.</p>
       </dd>
+       <div class="issue atrisk">
+         <p>
+            The {{RTCIceServer/credential}} attribute was moved from [[WEBRTC]] to
+            this extension spec due to lack of support from implementers. It is
+            therefore marked as a feature at risk.
+         </p>
+       </div>
     </dl>
     <p>An example array of {{RTCIceServer}} objects is:</p>
     <pre class="example highlight">
@@ -903,9 +921,9 @@ enum RTCIceCredentialType {
                 </p>
                 <div class="issue atrisk">
                   <p>
-                    {{RTCRtpSynchronizationSource/voiceActivityFlag}} is marked
-                    as a feature at risk, since there is no clear commitment
-                    from implementers.
+                    {{RTCRtpSynchronizationSource/voiceActivityFlag}} was moved from [[WEBRTC]] to
+                    this extension spec due to lack of support from implementers. It is therefore 
+                    marked as a feature at risk.
                   </p>
                 </div>
               </dd>
