@@ -671,38 +671,7 @@ partial interface RTCDataChannel {
       the {{RTCDataChannel}} object will be closed by running the <a href="WEBRTC#announcing-a-data-channel-as-closed">announcing a data channel as closed</a> algorithm immediately after the <a data-cite="!HTML/#transfer-receiving-steps">transfer-receiving steps</a>.</p>
     </div>
 </section>
-<section class="informative">
-    <h2>
-      Security Considerations
-    </h2>      
-      <p>
-        This section is non-normative; it specifies no new behaviour.
-        The overall security considerations of the general set
-        of APIs and protocols used in WebRTC are described in
-        [[?RFC8827]].
-      </p>
-      <section>
-        <h2>
-          Impact on local network
-        </h2>
-        <p>
-          The extensions defined in this document do not provide
-          additional impact on the local network beyond what is described in
-          [[WEBRTC]] Section 13.3.
-        </p>
-      </section>
-      <section>
-        <h2>
-          Confidentiality of Communications
-        </h2>
-        <p>
-          This document defines extensions for encryption of RTP Header Extensions which
-          improve the confidentiality of communications by encrypting header extension
-          IDs, as well as CSRCs. 
-        </p>
-      </section>
-</section>
-  <section id="removed-features">
+<section id="removed-features">
     <h3>Removed features</h3>
     <p>
       This section documents features that were removed from [[WEBRTC]] due
@@ -1033,6 +1002,37 @@ enum RTCIceCredentialType {
             </dl>
    </section>
   </section>
+<section class="informative">
+    <h2>
+      Security Considerations
+    </h2>      
+      <p>
+        This section is non-normative; it specifies no new behaviour.
+        The overall security considerations of the general set
+        of APIs and protocols used in WebRTC are described in
+        [[?RFC8827]].
+      </p>
+      <section>
+        <h2>
+          Impact on local network
+        </h2>
+        <p>
+          The extensions defined in this document do not provide
+          additional impact on the local network beyond what is described in
+          [[WEBRTC]] Section 13.3.
+        </p>
+      </section>
+      <section>
+        <h2>
+          Confidentiality of Communications
+        </h2>
+        <p>
+          This document defines extensions for encryption of RTP Header Extensions which
+          improve the confidentiality of communications by encrypting header extension
+          IDs, as well as CSRCs. 
+        </p>
+      </section>
+</section>
 <section class="informative">
     <h2>
       Privacy Considerations
