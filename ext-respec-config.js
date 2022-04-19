@@ -1,4 +1,5 @@
 var respecConfig = {
+   lint: { "no-unused-dfns": false },
    "group": "webrtc",
     github: {
       repoURL: "https://github.com/w3c/webrtc-extensions/",
