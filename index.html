@@ -100,47 +100,10 @@
       {{RTCPeerConnection}} extensions
     </h3>
     <p>
-      The {{RTCPeerConnection}}
-      interface is defined in [[WEBRTC]]. This document extends that interface
-      by adding an additional static method, and using Content-Security-Policy
-      for ICE candidate filtering.
+      The {{RTCPeerConnection}} interface is defined in [[WEBRTC]]. This document
+      extends that interface by using Content-Security-Policy for ICE candidate
+      filtering.
     </p>
-    <pre class="idl">partial interface RTCPeerConnection {
-  static sequence&lt;RTCIceServer&gt; getDefaultIceServers();
-};</pre>
-    <section>
-      <h2>Methods</h2>
-      <dl data-link-for="RTCPeerConnection" data-dfn-for=
-      "RTCPeerConnection" class="methods">
-        <dt><dfn data-idl>getDefaultIceServers</dfn></dt>
-        <dd>
-          <p>Returns a list of ICE servers that are configured into the
-          browser. A browser might be configured to use local or private
-          STUN or TURN servers. This method allows an application to learn
-          about these servers and optionally use them.</p>
-          <p class="fingerprint">This list is likely to be persistent and
-          is the same across origins. It thus increases the
-          fingerprinting surface of the browser. In privacy-sensitive
-          contexts, browsers can consider mitigations such as only
-          providing this data to whitelisted origins (or not providing it
-          at all.)</p>
-          <p class="note">Since the use of this information is left to
-          the discretion of application developers, configuring a user
-          agent with these defaults does not per se increase a user's
-          ability to limit the exposure of their IP addresses.</p>
-          <p class="note">If set, the configured default ICE servers exposed by
-          {{RTCPeerConnection/getDefaultIceServers}} on
-          {{RTCPeerConnection}} instances provides persistent
-          information across time and origins which increases the fingerprinting
-          surface of a given browser.</p>
-          <div class="issue atrisk">
-            <p>{{RTCPeerConnection/getDefaultIceServers()}} was moved from [[WEBRTC]] to
-            this extension spec due to lack of support from implementers and
-            concerns discussed in <a href="https://github.com/w3c/webrtc-pc/issues/2023">webrtc-pc#2023</a>.</p>
-          </div>
-        </dd>
-      </dl>
-    </section>
     <section>
       <h2>Modifications to existing procedures</h2>
 
