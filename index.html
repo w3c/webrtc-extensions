@@ -62,6 +62,7 @@
         <li><a href="https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/abs-capture-time/index.md#estimated-capture-clock-offset"><dfn>estimated capture clock offset</dfn></a>
       </ul>
     </p>
+    <p>The process of <dfn>chaining</dfn> an operation to an <dfn>operations chain</dfn> is defined in [[WEBRTC]] Section 4.4.1.2.</p>
     <p>The <dfn>OAuth Client</dfn> and <dfn>Authorization Server</dfn> roles
       are defined in [[RFC6749]] Section 1.1.</p>
   </section>
@@ -167,7 +168,7 @@
 partial dictionary RTCRtpHeaderExtensionCapability {
   RTCRtpTransceiverDirection direction = "sendrecv";
 };
-      
+
 partial interface RTCRtpTransceiver {
   undefined setOfferedRtpHeaderExtensions(
 sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
@@ -355,20 +356,20 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
         <dd>
           <p>This attribute allows the application to specify a target duration
           of time between network reception of media and playout. The
-          User Agent SHOULD NOT playout audio or video that is received unless
-          this amount of time has passed in seconds, allowing the User
-          Agent to perform more or less buffering than it might otherwise do.
+          <a>user agent</a> SHOULD NOT playout audio or video that is received unless
+          this amount of time has passed in seconds, allowing the <a>user agent</a>
+          to perform more or less buffering than it might otherwise do.
           This allows to influence the tradeoffs between having a higher delay
           and the risk that buffers such as the jitter buffer will run out of
           audio or video frames to play due to network jitter.</p>
-          <p>The User Agent may have a <dfn>minimum allowed delay</dfn> and a
-          <dfn>maximum allowed delay</dfn> reflecting what the User Agent is
+          <p>The <a>user agent</a> may have a <dfn>minimum allowed delay</dfn> and a
+          <dfn>maximum allowed delay</dfn> reflecting what the <a>user agent</a> is
           able or willing to provide based on network conditions and memory
           constraints.</p>
           <p class="note">
             The playout delay hint applies even if DTX is used. For example, if
             DTX is used and packets start flowing after silence, the hint can
-            influence the User Agent to buffer these packets rather than playing
+            influence the <a>user agent</a> to buffer these packets rather than playing
             them out.
           </p>
           <p class="note">
@@ -378,7 +379,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
             [[\AssociatedRemoteMediaStreams]]</a> internal slot, then it will
             be synchronized with other tracks (for e.g. audio video
             synchronization). This means that even if one of the paired tracks
-            is delayed through {{RTCRtpReceiver/[[PlayoutDelay]]}} then the User Agent
+            is delayed through {{RTCRtpReceiver/[[PlayoutDelay]]}} then the <a>user agent</a>
             synchronization mechanism will automatically delay all others
             paired tracks. If multiple such paired tracks are delayed through
             {{RTCRtpReceiver/[[PlayoutDelay]]}} by different amounts then the largest
@@ -391,7 +392,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
           </p>
           <p>On getting, this attribute MUST return the value of the
           {{RTCRtpReceiver/[[PlayoutDelay]]}} internal slot.</p>
-          <p>On setting, the User Agent MUST run the following steps:</p>
+          <p>On setting, the <a>user agent</a> MUST run the following steps:</p>
           <ol>
             <li>
               <p>Let <var>receiver</var> be the
@@ -422,9 +423,9 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
                   delay</a> or <a>maximum allowed delay</a> to be as close as
                   possible to the requested one.</p>
                   <p class="note">
-                    If User Agent chooses delay different from requested one,
-                    for e.g. due to network conditions or physical memory
-                    constraints, this is not reflected in the
+                    If the <a>user agent</a> chooses a delay different from the requested
+                    one (e.g. due to network conditions or physical memory
+                    constraints), this is not reflected in the
                     {{RTCRtpReceiver/[[PlayoutDelay]]}} internal slot.
                   </p>
                 </li>
@@ -463,40 +464,53 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       RTCRtpEncodingParameters extensions
     </h3>
     <p>
-      The {{RTCRtpEncodingParameters}}
-      dictionary is defined in [[WEBRTC]]. This document extends that dictionary
-      by adding an additional boolean flag.
+      The {{RTCRtpEncodingParameters}} dictionary is defined in
+      [[WEBRTC]]. This document extends that dictionary with
+      additional members.
     </p>
     <pre class="idl">partial dictionary RTCRtpEncodingParameters {
+      unsigned long ptime;
       boolean adaptivePtime = false;
       double maxFramerate;
     };</pre>
     <h2>Dictionary {{RTCRtpEncodingParameters}} Members</h2>
     <dl data-link-for="RTCRtpEncodingParameters" data-dfn-for="RTCRtpEncodingParameters" class="dictionary-members">
+      <dt><dfn data-idl>ptime</dfn> of type <span class="idlMemberType">unsigned long</span></dt>
+      <dd>
+        <p>The preferred duration of media represented by a packet in milliseconds.</p>
+          <div class="issue atrisk">
+            <p>
+              {{RTCRtpEncodingParameters/ptime}} was moved from [[WEBRTC]] to
+              this specification due to lack of support from implementers. It is
+              therefore marked as a feature at risk.
+            </p>
+          </div>
+      </dd>
       <dt><dfn data-idl>adaptivePtime</dfn> of type <span class="idlMemberType">boolean</span>, defaulting to <code>false</code>.</dt>
       <dd>
         <p>Indicates whether this encoding MAY dynamically change
-        the frame length. If the value is <code>true</code>,
-        the user agent MAY use any valid frame length for any of its
-        frames, and MAY change this at any time. Valid values are multiples
-        of 10ms. If the <code>maxptime</code> attribute (defined in
-        [[RFC4566]] Section 6) is specified, that maximum applies.
-        <a data-cite="WEBRTC#dfn-read-only-parameter">Read-only parameter.</a></p>
+        the frame length. If the value is <code>true</code>, the
+        <a>user agent</a> MAY use any valid frame length for any of its
+        frames, and MAY change this at any time. Valid values are
+        multiples of 10ms. If the <code>maxptime</code> attribute
+        (defined in [[RFC4566]] Section 6) is specified, that maximum
+        applies. If the value is <code>false</code>, the <a>user agent</a>
+        MUST use a fixed frame length.</p>
+        <p>If {{adaptivePtime}} is set to <code>true</code>,
+        {{ptime}} MUST NOT be set; otherwise,
+        {{InvalidModificationError}} MUST be [=exception/throw|thrown=].</p>
         <p class="note">Using a longer frame length reduces the
         bandwidth consumption due to overhead, but does so at the cost
-        of increased latency. Changing the frame length dynamically allows the
-        user agent to adapt its bandwidth allocation strategy based on the
-        current network conditions.</p>
-        <p>If {{adaptivePtime}} is set to <code>true</code>,
-        <code>ptime</code> MUST NOT be set; otherwise,
-        {{InvalidModificationError}} MUST be [=exception/throw|thrown=].</p>
+        of increased latency. Changing the frame length dynamically
+        allows the <a>user agent</a> to adapt its bandwidth allocation strategy
+        based on the current network conditions.</p>
       </dd>
       <dt><dfn data-idl>maxFramerate</dfn> of type <span class=
       "idlMemberType">double</span></dt>
       <dd>
         <p>When present, indicates the maximum frame rate that can be used to
-        send this encoding, in frames per second. The user agent is free to
-        allocate bandwidth between the encodings, as long as the
+        send this encoding, in frames per second. The <a>user agent</a> is free
+        to allocate bandwidth between the encodings, as long as the
         {{maxFramerate}} value is not exceeded.</p>
         <p>When set with {{RTCPeerConnection/addTransceiver()}}, the frame rate is required
         to be 0.0 or greater. If this is not the case, [=exception/throw=] a
@@ -506,12 +520,269 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
         rate to zero thus has the effect of freezing the video on the next
         frame. Upon setting with {{RTCRtpSender/setParameters()}}, if the value is
         less than 0.0, [=reject=] with a {{RangeError}}.</p>
-        <div class="issue atrisk">
-          <p>{{maxFramerate}} was moved from [[WEBRTC]] to this
-          extension spec due to lack of support from implementers.</p>
-        </div>
       </dd>
     </dl>
+  </section>
+  <section id="rtcrtpcontributingsource-dictionary">
+    <h3>
+      {{RTCRtpContributingSource}} extensions
+    </h3>
+    <p>
+      The {{RTCRtpContributingSource}} dictionary is defined in [[WEBRTC]]. This
+      document extends that dictionary by adding two additional members.
+    </p>
+    <p>
+      In this section, the <dfn>capture system</dfn> refers to the system where
+      media is sourced from and the <dfn>sender system</dfn> refers to the
+      system that is sending RTP and RTCP packets to the
+      <dfn>receiver system</dfn> where {{RTCRtpContributingSource}} data is
+      populated.
+    </p>
+    <p>
+      In a direct connection, the <a>capture system</a> is the same as the
+      <a>sender system</a>. But when one or more RTCP-terminating intermediate
+      systems (e.g. mixers) are involved this is not the case. In such cases,
+      media is sourced from the <a>capture system</a>, may be relayed through a
+      number of intermediate systems and is then finally sent from the
+      <a>sender system</a> to the <a>receiver system</a>. The
+      <a>sender system</a>-<a>receiver system</a> path only represents the
+      "last hop".
+    </p>
+    <p>
+      Despite {{RTCRemoteInboundRtpStreamStats.roundTripTime}}
+      measurements only accounting for the "last hop", one-way delay from the
+      [=capture system=]'s time of capture to the [=receiver system=]'s
+      time of playout can be estimated if the
+      [=RTP Header Extension for Absolute Capture Time=] is used all hops of
+      the way, where each RTCP-terminating intermediate system appropriately
+      updates the [=estimated capture clock offset=].
+    </p>
+    <pre class="idl">partial dictionary RTCRtpContributingSource {
+      DOMHighResTimeStamp captureTimestamp;
+      DOMHighResTimeStamp senderCaptureTimeOffset;
+    };</pre>
+    <h2>Dictionary {{RTCRtpContributingSource}} Members</h2>
+    <dl data-link-for="RTCRtpContributingSource" data-dfn-for="RTCRtpContributingSource" class="dictionary-members">
+      <dt><dfn data-idl>captureTimestamp</dfn> of type {{DOMHighResTimeStamp}}.</dt>
+      <dd>
+        <p>
+          The {{captureTimestamp}} is the timestamp that, the most recent frame
+          (from an RTP packet originating from this source) delivered to the
+          {{RTCRtpReceiver}}'s {{MediaStreamTrack}}, was originally captured.
+          Its reference clock is the <a>capture system</a>'s NTP clock (same
+          clock used to generate NTP timestamps for RTCP sender reports on that
+          system).
+        </p>
+        <p>
+          On populating this member, the <a>user agent</a> MUST run the following
+          steps:
+        </p>
+        <ol>
+          <li>
+            <p>If the relevant RTP packet contains the
+            <a>RTP Header Extension for Absolute Capture Time</a>, return the
+            value of the <a>absolute capture timestamp</a> field and abort
+            these steps.</p>
+          </li>
+          <li>
+            <p>Otherwise, if the relevant RTP packet does not contain the
+            <a>RTP Header Extension for Absolute Capture Time</a> but a
+            previous RTP packet did, return the result of calculating the
+            absolute capture timestamp according to
+            <a>timestamp interpolation</a> and abort these steps.</p>
+          </li>
+          <li>
+            Otherwise, return <code>undefined</code>.
+          </li>
+        </ol>
+        <p class="note">
+          If multiple receiving tracks are sourced from the same
+          <a>capture system</a>, two {{captureTimestamp}}s can be used to
+          accurately measure audio-video synchronization since both timestamps
+          are based on the same system's clock.
+        </p>
+      </dd>
+      <dt><dfn data-idl>senderCaptureTimeOffset</dfn> of type {{DOMHighResTimeStamp}}.</dt>
+      <dd>
+        <p>
+          The {{senderCaptureTimeOffset}} is the <a>sender system</a>'s
+          estimate of the offset between its own NTP clock and the
+          <a>capture system</a>'s NTP clock, for the same frame that the
+          {{captureTimestamp}} was originated from.
+        </p>
+        <p>
+          On populating this member, the <a>user agent</a> MUST run the following
+          steps:
+        </p>
+        <ol>
+          <li>
+            <p>If the relevant RTP packet contains the
+            <a>RTP Header Extension for Absolute Capture Time</a> and the
+            <a>estimated capture clock offset</a> field is present, return the
+            value of the <a>estimated capture clock offset</a> field and abort
+            these steps.</p>
+          </li>
+          <li>
+            <p>Otherwise, if the relevant RTP packet does not contain the
+            <a>RTP Header Extension for Absolute Capture Time</a>'s
+            <a>estimated capture clock offset</a> field, but a
+            previous RTP packet did, return the most recent value that was
+            present and abort these steps.</p>
+          </li>
+          <li>
+            Otherwise, return <code>undefined</code>.
+          </li>
+        </ol>
+        <p class="note">
+          The time of capture can estimatedly be expressed in the
+          <a>sender system</a>'s clock as follows:
+          <var>senderCaptureTimestamp</var> = {{captureTimestamp}} +
+          {{senderCaptureTimeOffset}}.
+        </p>
+        <p class="note">
+          The offset between the <a>sender system</a>'s clock and the
+          <a>receiver system</a>'s clock can be estimated as follows:
+          <var>senderReceiverTimeOffset</var> =
+          {{RTCRemoteOutboundRtpStreamStats}}.<a class=fixme data-cite="WEBRTC#dom-rtcstats-timestamp">timestamp</a>}} -
+          ({{RTCRemoteOutboundRtpStreamStats.remoteTimestamp}} +
+          {{RTCRemoteInboundRtpStreamStats.roundTripTime}} / 2).
+        </p>
+        <p class="note">
+          The time of capture can estimatedly be expressed in the
+          <a>receiver system</a>'s clock as follows:
+          <var>receiverCaptureTimestamp</var> = <var>senderCaptureTimestamp</var> +
+          <var>senderReceiverTimeOffset</var>.
+        </p>
+        <p class="note">
+          The one-way delay between the <a>capture system</a>'s time of capture
+          and the <a>receiver system</a>'s time of playout can be estimated as
+          follows:
+          {{RTCRtpContributingSource.timestamp}} -
+          <var>receiverCaptureTimestamp</var>.
+        </p>
+        </p>
+      </dd>
+    </dl>
+</section>
+<section>
+    <h3>
+      {{RTCDataChannel}} extensions
+    </h3>
+    <p>This document extends {{RTCDataChannel}} by making it <a data-cite="!HTML/#transferable-objects">transferable</a>.</p>
+      This allows sending and receiving messages outside the context the connection was created, for instance in workers or third-party iframes.</p>
+    <div>
+      <p>The WebIDL changes are the following:
+      <pre class="idl">
+[Exposed=(Window,Worker), Transferable]
+partial interface RTCDataChannel {
+};</pre>
+    </div>
+    <div>
+      <p>The <a data-cite="WEBRTC#dfn-create-an-rtcdatachannel">create an RTCDataChannel</a> algorithm is updated by adding the following steps after step 4 of the original algorithm:</p>
+      <ol>
+        <li><p>Initialize <var>channel</var>.`[[IsTransferable]]` to <code>true</code>.</p></li>
+        <li><p>Queue a task to run the following step:</p>
+          <ol>
+            <li><p>Set <var>channel</var>.`[[IsTransferable]]` to <code>false</code>.</p></li>
+          </ol>
+        </li>
+      </ol>
+      <p>This task needs to run before any task enqueued by the <a data-cite="WEBRTC#dfn-receive-an-rtcdatachannel-message">receiving messages on a data channel</a> algorithm for <var>channel</var>.
+      This ensures that no message is lost during the transfer of a {{RTCDataChannel}}.</p>
+    </div>
+    <div>The <a data-cite="WEBRTC#datachannel-send">send() algorithm</a> is modified by adding the following step after step 1 of the original algorithm:
+      <ol>
+        <li><p>Set <var>channel</var>.`[[IsTransferable]]` to <code>false</code>.</p></li>
+      </ol>
+    </div>
+    <div>
+      <p>The {{RTCDataChannel}} <a data-cite="!HTML/#transfer-steps">transfer steps</a>, given <var>value</var> and <var>dataHolder</var>, are:</p>
+      <ol>
+        <li><p>If <var>value</var>.`[[IsTransferable]]` is <code>false</code>, throw a "DataCloneError" DOMException.</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[ReadyState]]` to <var>value</var>.<a href="WEBRTC#dfn-readystate">`[[ReadyState]]`</a>.</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[DataChannelLabel]]` to <var>value</var>.<a href="WEBRTC#dfn-datachannellabel">`[[DataChannelLabel]]`</a>.</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[Ordered]]` to <var>value</var>.<a href="WEBRTC#dfn-ordered">`[[Ordered]]`</a>.</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[MaxPacketLifeTime]]` to <var>value</var>.<a href="WEBRTC#dfn-maxpacketlifetime"></a>.`[[MaxPacketLifeTime]]`</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[MaxRetransmits]]` to <var>value</var>.<a href="WEBRTC#dfn-maxretransmits">`[[MaxRetransmits]]`</a>.</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[DataChannelProtocol]]` to <var>value</var>.<a href="WEBRTC#dfn-datachannelprotocol">`[[DataChannelProtocol]]`</a>.</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[Negotiated]]` to <var>value</var>.<a href="WEBRTC#dfn-negotiated">`[[Negotiated]]`</a>.</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[DataChannelId]]` to <var>value</var>.<a href="WEBRTC#dfn-datachannelid">`[[DataChannelId]]`</a>.</p></li>
+        <li><p>Set <var>dataHolder</var>.`[[underlyingDataTransport]]` to <var>value</var> <a href="WEBRTC#dfn-data-transport">underlying data transport</a>.</p></li>
+        <li><p>Set <var>value</var>.`[[IsTransferable]]` to <code>false</code>.</p></li>
+        <li><p>Set <var>value</var>.`[[ReadyState]]` to <a data-cite="WEBRTC/#dom-rtcdatachannelstate-closed">"closed"</a>.</p></li>
+      </ol>
+    </div>
+    <div><p>The {{RTCDataChannel}} <a data-cite="!HTML/#transfer-receiving-steps">transfer-receiving steps</a>, given <var>dataHolder</var> and <var>channel</var>, are:</p>
+      <ol>
+        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-readystate">`[[ReadyState]]`</a> to <var>dataHolder</var>.`[[ReadyState]]`.</p></li>
+        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-datachannellabel">`[[DataChannelLabel]]`</a> to <var>dataHolder</var>.`[[\DataChannelLabel]]`.</p></li>
+        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-ordered">`[[Ordered]]`</a> to <var>dataHolder</var>.`[[Ordered]]`.</p></li>
+        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-maxpacketlifetime">`[[MaxPacketLifeTime]]`</a> to <var>dataHolder</var>.`[[MaxPacketLifeTime]]`.</p></li>
+        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-maxretransmits">`[[MaxRetransmits]]`</a> to <var>dataHolder</var>.`[[MaxRetransmits]]`.</p></li>
+        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-datachannelprotocol">`[[DataChannelProtocol]]`</a> to <var>dataHolder</var>.`[[DataChannelProtocol]]`.</p></li>
+        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-negotiated">`[[Negotiated]]`</a> to <var>dataHolder</var>.`[[Negotiated]]`.</p></li>
+        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-datachannelid">`[[DataChannelId]]`</a> to <var>dataHolder</var>.`[[DataChannelId]]`.</p></li>
+        <li><p>Initialize <var>channel</var> <a href="WEBRTC#dfn-data-transport">underlying data transport</a> to <var>dataHolder</var>.`[[underlyingDataTransport]]`.</p></li>
+      </ol>
+      <p>The above steps do not need to transfer <a href="WEBRTC#dfn-readystate">`[[BufferedAmount]]`</a> as its value will always be equal to <code>0</code>.
+      The reason is an {{RTCDataChannel}} can be transferred only if its <a data-cite="WEBRTC#datachannel-send">send() algorithm</a> was not called prior the transfer.</p>
+      <p>If the <a href="WEBRTC#dfn-data-transport">underlying data transport</a> is closed at the time of the <a data-cite="!HTML/#transfer-receiving-steps">transfer-receiving steps</a>,
+      the {{RTCDataChannel}} object will be closed by running the <a href="WEBRTC#announcing-a-data-channel-as-closed">announcing a data channel as closed</a> algorithm immediately after the <a data-cite="!HTML/#transfer-receiving-steps">transfer-receiving steps</a>.</p>
+    </div>
+</section>
+<section id="removed-features">
+    <h3>Removed features</h3>
+    <p>
+      This section documents features that were moved from [[WEBRTC]] to this extension
+      specification due to lack of support from implementers.
+    </p>
+  <section id="rtcpeerconnection-interface">
+    <h3>
+      {{RTCPeerConnection}} extensions
+    </h3>
+    <p>
+      The {{RTCPeerConnection}}
+      interface is defined in [[WEBRTC]]. This document extends that interface
+      by adding an additional static method.
+    </p>
+    <pre class="idl">partial interface RTCPeerConnection {
+  static sequence&lt;RTCIceServer&gt; getDefaultIceServers();
+};</pre>
+    <section>
+      <h2>Methods</h2>
+      <dl data-link-for="RTCPeerConnection" data-dfn-for=
+      "RTCPeerConnection" class="methods">
+        <dt><dfn data-idl>getDefaultIceServers</dfn></dt>
+        <dd>
+          <p>Returns a list of ICE servers that are configured into the
+          browser. A browser might be configured to use local or private
+          STUN or TURN servers. This method allows an application to learn
+          about these servers and optionally use them.</p>
+          <p class="fingerprint">This list is likely to be persistent and
+          is the same across origins. It thus increases the
+          fingerprinting surface of the browser. In privacy-sensitive
+          contexts, browsers can consider mitigations such as only
+          providing this data to whitelisted origins (or not providing it
+          at all.)</p>
+          <p class="note">Since the use of this information is left to
+          the discretion of application developers, configuring a user
+          agent with these defaults does not per se increase a user's
+          ability to limit the exposure of their IP addresses.</p>
+          <p class="note">If set, the configured default ICE servers exposed by
+          {{RTCPeerConnection/getDefaultIceServers}} on
+          {{RTCPeerConnection}} instances provides persistent
+          information across time and origins which increases the fingerprinting
+          surface of a given browser.</p>
+          <div class="issue atrisk">
+            <p>
+              {{RTCPeerConnection/getDefaultIceServers()}} was moved from [[WEBRTC]] to
+              this specification due to lack of support from implementers and concerns
+              discussed in <a href="https://github.com/w3c/webrtc-pc/issues/2023">webrtc-pc#2023</a>.
+            </p>
+          </div>
+        </dd>
+      </dl>
+    </section>
   </section>
   <section id="rtcicecredentialtype-enum">
     <h3>
@@ -587,8 +858,11 @@ enum RTCIceCredentialType {
             </li>
           </ol>
           <div class="issue atrisk">
-            <p>Support for the {{RTCIceCredentialType/"oauth"}} value of {{RTCIceCredentialType}}
-            is marked as a feature at risk, since there is no clear commitment from implementers.</p>
+            <p>
+              The {{RTCIceCredentialType/"oauth"}} value of {{RTCIceCredentialType}}
+              was moved from [[WEBRTC]] to this specification due to lack of support
+              from implementers. It is therefore marked as a feature at risk.
+            </p>
           </div>
           </td>
         </tr>
@@ -607,8 +881,11 @@ enum RTCIceCredentialType {
     parameter is not located in this dictionary, but in
     {{RTCIceServer.username}} member.</p>
     <div class="issue atrisk">
-      <p>Support for the {{RTCOAuthCredential}} dictionary is marked
-      as a feature at risk, since there is no clear commitment from implementers.</p>
+      <p>
+         The {{RTCOAuthCredential}} dictionary was moved from [[WEBRTC]] to
+         this specification due to lack of support from implementers. It is
+         therefore marked as a feature at risk.
+      </p>
     </div>
     <div>
       <pre class="idl"
@@ -727,162 +1004,28 @@ enum RTCIceCredentialType {
         Authenticated Encryption of the "access_token". The
         <code>kid</code> value is equal with the OAuth response "kid"
         parameter, as defined in [[RFC7515]] Section 4.1.4.</p>
+       <div class="issue atrisk">
+         <p>
+            The {{RTCIceServer/credential}} attribute was moved from [[WEBRTC]] to
+            this specification due to lack of support from implementers. It is
+            therefore marked as a feature at risk.
+         </p>
+       </div>
       </dd>
     </dl>
     <p>An example array of {{RTCIceServer}} objects is:</p>
     <pre class="example highlight">
 <code>{
-  urls: 'turns:turn2.example.net',	
-  username: '22BIjxU93h/IgwEb',	
-  credential: {	
-    macKey: 'WmtzanB3ZW9peFhtdm42NzUzNG0=',	
-    accessToken: 'AAwg3kPHWPfvk9bDFL936wYvkoctMADzQ5VhNDgeMR3+ZlZ35byg972fW8QjpEl7bx91YLBPFsIhsxloWcXPhA=='	
-  },	
+  urls: 'turns:turn2.example.net',
+  username: '22BIjxU93h/IgwEb',
+  credential: {
+    macKey: 'WmtzanB3ZW9peFhtdm42NzUzNG0=',
+    accessToken: 'AAwg3kPHWPfvk9bDFL936wYvkoctMADzQ5VhNDgeMR3+ZlZ35byg972fW8QjpEl7bx91YLBPFsIhsxloWcXPhA=='
+  },
   credentialType: 'oauth'
 }</code></pre>
   </section>
-  <section id="rtcrtpcontributingsource-dictionary">
-    <h3>
-      {{RTCRtpContributingSource}} extensions
-    </h3>
-    <p>
-      The {{RTCRtpContributingSource}} dictionary is defined in [[WEBRTC]]. This
-      document extends that dictionary by adding two additional members.
-    </p>
-    <p>
-      In this section, the <dfn>capture system</dfn> refers to the system where
-      media is sourced from and the <dfn>sender system</dfn> refers to the
-      system that is sending RTP and RTCP packets to the
-      <dfn>receiver system</dfn> where {{RTCRtpContributingSource}} data is
-      populated.
-    </p>
-    <p>
-      In a direct connection, the <a>capture system</a> is the same as the
-      <a>sender system</a>. But when one or more RTCP-terminating intermediate
-      systems (e.g. mixers) are involved this is not the case. In such cases,
-      media is sourced from the <a>capture system</a>, may be relayed through a
-      number of intermediate systems and is then finally sent from the
-      <a>sender system</a> to the <a>receiver system</a>. The
-      <a>sender system</a>-<a>receiver system</a> path only represents the
-      "last hop".
-    </p>
-    <p>
-      Despite {{RTCRemoteInboundRtpStreamStats.roundTripTime}}
-      measurements only accounting for the "last hop", one-way delay from the
-      [=capture system=]'s time of capture to the [=receiver system=]'s
-      time of playout can be estimated if the
-      [=RTP Header Extension for Absolute Capture Time=] is used all hops of
-      the way, where each RTCP-terminating intermediate system appropriately
-      updates the [=estimated capture clock offset=].
-    </p>
-    <pre class="idl">partial dictionary RTCRtpContributingSource {
-      DOMHighResTimeStamp captureTimestamp;
-      DOMHighResTimeStamp senderCaptureTimeOffset;
-    };</pre>
-    <h2>Dictionary {{RTCRtpContributingSource}} Members</h2>
-    <dl data-link-for="RTCRtpContributingSource" data-dfn-for="RTCRtpContributingSource" class="dictionary-members">
-      <dt><dfn data-idl>captureTimestamp</dfn> of type {{DOMHighResTimeStamp}}.</dt>
-      <dd>
-        <p>
-          The {{captureTimestamp}} is the timestamp that, the most recent frame
-          (from an RTP packet originating from this source) delivered to the
-          {{RTCRtpReceiver}}'s {{MediaStreamTrack}}, was originally captured.
-          Its reference clock is the <a>capture system</a>'s NTP clock (same
-          clock used to generate NTP timestamps for RTCP sender reports on that
-          system).
-        </p>
-        <p>
-          On populating this member, the user agent MUST run the following
-          steps:
-        </p>
-        <ol>
-          <li>
-            <p>If the relevant RTP packet contains the
-            <a>RTP Header Extension for Absolute Capture Time</a>, return the
-            value of the <a>absolute capture timestamp</a> field and abort
-            these steps.</p>
-          </li>
-          <li>
-            <p>Otherwise, if the relevant RTP packet does not contain the
-            <a>RTP Header Extension for Absolute Capture Time</a> but a
-            previous RTP packet did, return the result of calculating the
-            absolute capture timestamp according to
-            <a>timestamp interpolation</a> and abort these steps.</p>
-          </li>
-          <li>
-            Otherwise, return <code>undefined</code>.
-          </li>
-        </ol>
-        <p class="note">
-          If multiple receiving tracks are sourced from the same
-          <a>capture system</a>, two {{captureTimestamp}}s can be used to
-          accurately measure audio-video synchronization since both timestamps
-          are based on the same system's clock.
-        </p>
-      </dd>
-      <dt><dfn data-idl>senderCaptureTimeOffset</dfn> of type {{DOMHighResTimeStamp}}.</dt>
-      <dd>
-        <p>
-          The {{senderCaptureTimeOffset}} is the <a>sender system</a>'s
-          estimate of the offset between its own NTP clock and the
-          <a>capture system</a>'s NTP clock, for the same frame that the
-          {{captureTimestamp}} was originated from.
-        </p>
-        <p>
-          On populating this member, the user agent MUST run the following
-          steps:
-        </p>
-        <ol>
-          <li>
-            <p>If the relevant RTP packet contains the
-            <a>RTP Header Extension for Absolute Capture Time</a> and the
-            <a>estimated capture clock offset</a> field is present, return the
-            value of the <a>estimated capture clock offset</a> field and abort
-            these steps.</p>
-          </li>
-          <li>
-            <p>Otherwise, if the relevant RTP packet does not contain the
-            <a>RTP Header Extension for Absolute Capture Time</a>'s
-            <a>estimated capture clock offset</a> field, but a
-            previous RTP packet did, return the most recent value that was
-            present and abort these steps.</p>
-          </li>
-          <li>
-            Otherwise, return <code>undefined</code>.
-          </li>
-        </ol>
-        <p class="note">
-          The time of capture can estimatedly be expressed in the
-          <a>sender system</a>'s clock as follows:
-          <var>senderCaptureTimestamp</var> = {{captureTimestamp}} +
-          {{senderCaptureTimeOffset}}.
-        </p>
-        <p class="note">
-          The offset between the <a>sender system</a>'s clock and the
-          <a>receiver system</a>'s clock can be estimated as follows:
-          <var>senderReceiverTimeOffset</var> =
-          {{RTCRemoteOutboundRtpStreamStats}}.<a class=fixme data-cite="WEBRTC#dom-rtcstats-timestamp">timestamp</a>}} -
-          ({{RTCRemoteOutboundRtpStreamStats.remoteTimestamp}} +
-          {{RTCRemoteInboundRtpStreamStats.roundTripTime}} / 2).
-        </p>
-        <p class="note">
-          The time of capture can estimatedly be expressed in the
-          <a>receiver system</a>'s clock as follows:
-          <var>receiverCaptureTimestamp</var> = <var>senderCaptureTimestamp</var> +
-          <var>senderReceiverTimeOffset</var>.
-        </p>
-        <p class="note">
-          The one-way delay between the <a>capture system</a>'s time of capture
-          and the <a>receiver system</a>'s time of playout can be estimated as
-          follows:
-          {{RTCRtpContributingSource.timestamp}} -
-          <var>receiverCaptureTimestamp</var>.
-        </p>
-        </p>
-      </dd>
-    </dl>
-</section>
-<section>
+    <section>
     <h3>
       {{RTCRtpSynchronizationSource}} extensions
     </h3>
@@ -909,84 +1052,19 @@ enum RTCIceCredentialType {
                 </p>
                 <div class="issue atrisk">
                   <p>
-                    {{RTCRtpSynchronizationSource/voiceActivityFlag}} is marked
-                    as a feature at risk, since there is no clear commitment
-                    from implementers.
+                    {{RTCRtpSynchronizationSource/voiceActivityFlag}} was moved from [[WEBRTC]] to
+                    this specification due to lack of support from implementers. It is therefore
+                    marked as a feature at risk.
                   </p>
                 </div>
               </dd>
             </dl>
-</section>
-<section>
-    <h3>
-      {{RTCDataChannel}} extensions
-    </h3>
-    <p>This document extends {{RTCDataChannel}} by making it <a data-cite="!HTML/#transferable-objects">transferable</a>.</p>
-      This allows sending and receiving messages outside the context the connection was created, for instance in workers or third-party iframes.</p>
-    <div>
-      <p>The WebIDL changes are the following:
-      <pre class="idl">
-[Exposed=(Window,Worker), Transferable]
-partial interface RTCDataChannel {
-};</pre>
-    </div>
-    <div>
-      <p>The <a data-cite="WEBRTC#dfn-create-an-rtcdatachannel">create an RTCDataChannel</a> algorithm is updated by adding the following steps after step 4 of the original algorithm:</p>
-      <ol>
-        <li><p>Initialize <var>channel</var>.`[[IsTransferable]]` to <code>true</code>.</p></li>
-        <li><p>Queue a task to run the following step:</p>
-          <ol>
-            <li><p>Set <var>channel</var>.`[[IsTransferable]]` to <code>false</code>.</p></li>
-          </ol>
-        </li>
-      </ol>
-      <p>This task needs to run before any task enqueued by the <a data-cite="WEBRTC#dfn-receive-an-rtcdatachannel-message">receiving messages on a data channel</a> algorithm for <var>channel</var>.
-      This ensures that no message is lost during the transfer of a {{RTCDataChannel}}.</p>
-    </div>
-    <div>The <a data-cite="WEBRTC#datachannel-send">send() algorithm</a> is modified by adding the following step after step 1 of the original algorithm:
-      <ol>
-        <li><p>Set <var>channel</var>.`[[IsTransferable]]` to <code>false</code>.</p></li>
-      </ol>
-    </div>
-    <div>
-      <p>The {{RTCDataChannel}} <a data-cite="!HTML/#transfer-steps">transfer steps</a>, given <var>value</var> and <var>dataHolder</var>, are:</p>
-      <ol>
-        <li><p>If <var>value</var>.`[[IsTransferable]]` is <code>false</code>, throw a "DataCloneError" DOMException.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[ReadyState]]` to <var>value</var>.<a href="WEBRTC#dfn-readystate">`[[ReadyState]]`</a>.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[DataChannelLabel]]` to <var>value</var>.<a href="WEBRTC#dfn-datachannellabel">`[[DataChannelLabel]]`</a>.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[Ordered]]` to <var>value</var>.<a href="WEBRTC#dfn-ordered">`[[Ordered]]`</a>.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[MaxPacketLifeTime]]` to <var>value</var>.<a href="WEBRTC#dfn-maxpacketlifetime"></a>.`[[MaxPacketLifeTime]]`</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[MaxRetransmits]]` to <var>value</var>.<a href="WEBRTC#dfn-maxretransmits">`[[MaxRetransmits]]`</a>.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[DataChannelProtocol]]` to <var>value</var>.<a href="WEBRTC#dfn-datachannelprotocol">`[[DataChannelProtocol]]`</a>.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[Negotiated]]` to <var>value</var>.<a href="WEBRTC#dfn-negotiated">`[[Negotiated]]`</a>.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[DataChannelId]]` to <var>value</var>.<a href="WEBRTC#dfn-datachannelid">`[[DataChannelId]]`</a>.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[underlyingDataTransport]]` to <var>value</var> <a href="WEBRTC#dfn-data-transport">underlying data transport</a>.</p></li>
-        <li><p>Set <var>value</var>.`[[IsTransferable]]` to <code>false</code>.</p></li>
-        <li><p>Set <var>value</var>.`[[ReadyState]]` to <a data-cite="WEBRTC/#dom-rtcdatachannelstate-closed">"closed"</a>.</p></li>
-      </ol>
-    </div>
-    <div><p>The {{RTCDataChannel}} <a data-cite="!HTML/#transfer-receiving-steps">transfer-receiving steps</a>, given <var>dataHolder</var> and <var>channel</var>, are:</p>
-      <ol>
-        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-readystate">`[[ReadyState]]`</a> to <var>dataHolder</var>.`[[ReadyState]]`.</p></li>
-        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-datachannellabel">`[[DataChannelLabel]]`</a> to <var>dataHolder</var>.`[[\DataChannelLabel]]`.</p></li>
-        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-ordered">`[[Ordered]]`</a> to <var>dataHolder</var>.`[[Ordered]]`.</p></li>
-        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-maxpacketlifetime">`[[MaxPacketLifeTime]]`</a> to <var>dataHolder</var>.`[[MaxPacketLifeTime]]`.</p></li>
-        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-maxretransmits">`[[MaxRetransmits]]`</a> to <var>dataHolder</var>.`[[MaxRetransmits]]`.</p></li>
-        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-datachannelprotocol">`[[DataChannelProtocol]]`</a> to <var>dataHolder</var>.`[[DataChannelProtocol]]`.</p></li>
-        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-negotiated">`[[Negotiated]]`</a> to <var>dataHolder</var>.`[[Negotiated]]`.</p></li>
-        <li><p>Initialize <var>channel</var>.<a href="WEBRTC#dfn-datachannelid">`[[DataChannelId]]`</a> to <var>dataHolder</var>.`[[DataChannelId]]`.</p></li>
-        <li><p>Initialize <var>channel</var> <a href="WEBRTC#dfn-data-transport">underlying data transport</a> to <var>dataHolder</var>.`[[underlyingDataTransport]]`.</p></li>
-      </ol>
-      <p>The above steps do not need to transfer <a href="WEBRTC#dfn-readystate">`[[BufferedAmount]]`</a> as its value will always be equal to <code>0</code>.
-      The reason is an {{RTCDataChannel}} can be transferred only if its <a data-cite="WEBRTC#datachannel-send">send() algorithm</a> was not called prior the transfer.</p>
-      <p>If the <a href="WEBRTC#dfn-data-transport">underlying data transport</a> is closed at the time of the <a data-cite="!HTML/#transfer-receiving-steps">transfer-receiving steps</a>,
-      the {{RTCDataChannel}} object will be closed by running the <a href="WEBRTC#announcing-a-data-channel-as-closed">announcing a data channel as closed</a> algorithm immediately after the <a data-cite="!HTML/#transfer-receiving-steps">transfer-receiving steps</a>.</p>
-    </div>
-</section>
+   </section>
+  </section>
 <section class="informative">
     <h2>
       Security Considerations
-    </h2>      
+    </h2>
       <p>
         This section is non-normative; it specifies no new behaviour.
         The overall security considerations of the general set
@@ -1010,14 +1088,14 @@ partial interface RTCDataChannel {
         <p>
           This document defines extensions for encryption of RTP Header Extensions which
           improve the confidentiality of communications by encrypting header extension
-          IDs, as well as CSRCs. 
+          IDs, as well as CSRCs.
         </p>
       </section>
 </section>
 <section class="informative">
     <h2>
       Privacy Considerations
-    </h2>      
+    </h2>
       <p>
         This section is non-normative; it specifies no new behaviour.
       </p>
@@ -1028,7 +1106,7 @@ partial interface RTCDataChannel {
         <p>
           The extensions defined in this document do not reveal additional
           information on IP addresses beyond that already described in
-          [[WEBRTC]] Section 13.2. 
+          [[WEBRTC]] Section 13.2.
         </p>
       </section>
       <section>

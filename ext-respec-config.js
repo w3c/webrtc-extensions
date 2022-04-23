@@ -1,4 +1,5 @@
 var respecConfig = {
+   lint: { "no-unused-dfns": false },
    "group": "webrtc",
     github: {
       repoURL: "https://github.com/w3c/webrtc-extensions/",
@@ -39,6 +40,17 @@ var respecConfig = {
         "title": "STUN Error Codes",
         "href": "https://www.iana.org/assignments/stun-parameters/stun-parameters.xhtml#stun-parameters-6",
         "publisher": "IANA"
-      }
+      },
+      "CRYPTEX": {
+        "title": "Completely Encrypting RTP Header Extensions and Contributing Sources",
+        "href": "https://datatracker.ietf.org/doc/html/draft-ietf-avtcore-cryptex",
+        "authors": [
+          "J. Uberti",
+          "C. Jennings",
+          "S. G. Murillo"
+        ],
+        "status": "25 October 2021. Internet Draft (work in progress)",
+        "publisher": "IETF"
+    }
     }
 }
