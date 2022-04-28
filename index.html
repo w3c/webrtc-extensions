@@ -678,10 +678,10 @@ partial interface RTCDataChannel {
         <dfn>RTCRtpHeaderEncryptionPolicy</dfn> Enum
      </h3>
      <p>
-       RTP header encryption policy affects whether RTP header encryption is
-       negotiated if the remote endpoint is not cryptex-aware. If the remote
-       endpoint is cryptex-aware, all media streams are sent utilizing RTP
-       header encryption.
+       RTP header extension encryption policy affects whether RTP header extension
+       encryption is negotiated if the remote endpoint does not support [[CRYPTEX]].
+       If the remote endpoint supports [[CRYPTEX]], all media streams are sent
+       utilizing [[CRYPTEX]]. 
      </p>
      <div>
          <pre id="target-rtp-header-encryption-policy" class="idl">enum RTCRtpHeaderEncryptionPolicy {
@@ -696,15 +696,67 @@ partial interface RTCDataChannel {
           </tr>
           <tr>
             <td><dfn data-idl>negotiate</dfn></td>
-            <td>Negotiate RTP header encryption.</td>
+            <td>
+              <p>
+                Negotiate RTP header extension encryption as defined in [[CRYPTEX]].
+                If encryption cannot be negotiated, RTP header extensions are sent in
+                the clear.
+              <p>
+            </td>
           </tr>
           <tr>
             <td><dfn data-idl>require</dfn></td>
-            <td>Require RTP header encryption.</td>
+            <td>
+              <p>
+                Require RTP header extension encryption. In [[WEBRTC]] Section 4.4.1.5, add the
+                following check after Step 4.4.4:
+                If <var>remote</var> is <code>true</code>, the <var>connection</var>'s
+                {{RTCRtpHeaderEncryptionPolicy}} is {{RTCRtpHeaderEncryptionPolicy/require}}
+                and the description does not support [[CRYPTEX]], then [= reject =] <var>p</var>
+                with a newly [= exception/created =] {{InvalidAccessError}} and abort these steps.
+              </p>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
+  </section>
+  <section id="transceiver">
+    <h3>
+      {{RTCRtpTransceiver}} extensions
+    </h3>
+      <p>
+         {{RTCRtpTransceiver/rtpHeaderEncryptionNegotiated}} defines whether
+         the transceiver is sending enrypted RTP header extensions as defined in
+         [[CRYPTEX]].
+      </p>
+      <div>
+ <pre class="idl">
+partial interface RTCRtpTransceiver {
+  readonly attribute boolean rtpHeaderEncryptionNegotiated;
+};</pre>
+    <section>
+       <h2>
+         Attributes
+       </h2>
+       <dl data-link-for="RTCRtpTransceiver" data-dfn-for=
+       "RTCRtpTransceiver" class="attributes">
+       <dt>
+         <dfn id="dom-rtptransceiver-rtpHeaderEncryptionNegotiated">rtpHeaderEncryptionNegotiated</dfn> of type <span class=
+                "idlAttrType">Boolean</span>, readonly, nullable
+        </dt>
+        <dd>
+         <p>
+             The {{rtpHeaderEncryptionNegotiated}} attribute is indicates whether
+             RTP header extension encryption has been negotiated.  On getting, the attribute MUST
+             return the value of the {{RTCRtpTransceiver/[[RtpHeaderEncryptionNegotiated]]}} slot.
+             In [[WEBRTC]] Section 5.4, add the following step to "create an {{RTCRtpTransceiver}}":
+             Let <var>transceiver</var> have a <dfn data-dfn-for="RTCRtpTransceiver">[[\RtpHeaderEncryptionNegotiated]]</dfn>
+             internal slot, initialized to <code>false</code>.
+          </p>
+        </dd>
+       </dl>    
+     </section>
   </section>
   <section id="configuration">
     <h3>
