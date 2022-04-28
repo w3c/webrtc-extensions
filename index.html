@@ -747,8 +747,8 @@ partial interface RTCRtpTransceiver {
         </dt>
         <dd>
          <p>
-             The {{rtpHeaderEncryptionNegotiated}} attribute is indicates whether
-             RTP header extension encryption has been negotiated.  On getting, the attribute MUST
+             The {{rtpHeaderEncryptionNegotiated}} attribute indicates whether [[CRYPTEX]] has been
+             negotiated.  On getting, the attribute MUST
              return the value of the {{RTCRtpTransceiver/[[RtpHeaderEncryptionNegotiated]]}} slot.
              In [[WEBRTC]] Section 5.4, add the following step to "create an {{RTCRtpTransceiver}}":
              Let <var>transceiver</var> have a <dfn data-dfn-for="RTCRtpTransceiver">[[\RtpHeaderEncryptionNegotiated]]</dfn>
