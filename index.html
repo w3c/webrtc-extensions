@@ -671,6 +671,79 @@ partial interface RTCDataChannel {
       the {{RTCDataChannel}} object will be closed by running the <a href="WEBRTC#announcing-a-data-channel-as-closed">announcing a data channel as closed</a> algorithm immediately after the <a data-cite="!HTML/#transfer-receiving-steps">transfer-receiving steps</a>.</p>
     </div>
 </section>
+<section id="rtpHeaderEncryption">
+     <h3>RTP Header Extension Encryption</h3>
+<section id="rtpHeaderEncryptionPolicy">
+     <h3>
+        <dfn>RTCRtpHeaderEncryptionPolicy</dfn> Enum
+     </h3>
+     <p>
+       RTP header encryption policy affects whether RTP header encryption is
+       negotiated if the remote endpoint is not cryptex-aware. If the remote
+       endpoint is cryptex-aware, all media streams are sent utilizing RTP
+       header encryption.
+     </p>
+     <div>
+         <pre id="target-rtp-header-encryption-policy" class="idl">enum RTCRtpHeaderEncryptionPolicy {
+"negotiate",
+"require"
+};</pre>
+      <table data-link-for="RTCRtpHeaderEncryptionPolicy" data-dfn-for=
+      "RTCRtpHeaderEncryptionPolicy" class="simple">
+        <tbody>
+          <tr>
+            <th colspan="2">Enumeration description (non-normative)</th>
+          </tr>
+          <tr>
+            <td><dfn data-idl>negotiate</dfn></td>
+            <td>Negotiate RTP header encryption.</td>
+          </tr>
+          <tr>
+            <td><dfn data-idl>require</dfn></td>
+            <td>Require RTP header encryption.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section id="configuration">
+    <h3>
+      {{RTCConfiguration}} extensions
+    </h3>
+          <p>
+            {{RTCConfiguration/rtpHeaderEncryptionPolicy}} defines the
+            policy for negotiation of RTP header encryption using
+            [[CRYPTEX]].
+          </p>
+          <div>
+            <pre class="idl">partial dictionary RTCConfiguration {
+  RTCRtpHeaderEncryptionPolicy rtpHeaderEncryptionPolicy = "negotiate";
+};</pre>
+      <section>
+              <h2>
+                Dictionary {{RTCConfiguration}} Members
+              </h2>
+              <dl data-link-for="RTCConfiguration" data-dfn-for=
+              "RTCConfiguration" class="dictionary-members">
+              <dt>
+                <dfn data-idl="">rtpHeaderEncryptionPolicy</dfn> of type <span class=
+                "idlMemberType">RTCRtpHeaderEncryptionPolicy</span>
+              </dt>
+              <dd>
+                <p class="needs-test">
+                </p>
+                <div class="issue atrisk">
+                  <p>
+                    {{RTCConfiguration/rtpHeaderEncryptionPolicy}} is marked
+                    as a feature at risk, since there is no clear commitment
+                    from implementers.
+                  </p>
+                </div>
+              </dd>
+            </dl>
+       </section>
+  </section>
+</section>
 <section id="removed-features">
     <h3>Removed features</h3>
     <p>
