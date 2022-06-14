@@ -111,9 +111,11 @@
       <a data-cite="WEBRTC#dfn-administratively-prohibited">administratively prohibited</a>
       algorithm:</p>
 
-      <p>If <a data-cite="WEBAPPSEC-CSP#should-block-rtc-connection">
-        should-block-rtc-connection</a> on the current global object returns
-      "Blocked", all candidates MUST be <a data-cite="WEBRTC#dfn-administratively-prohibited">
+      <p>If <a data-cite="CSP#should-block-rtc-connection">
+        should RTC connections be blocked for global?</a> with the
+      [=relevant global object=] of the {{RTCPeerConnection}} object in question
+      returns `"Blocked"`, then all candidates MUST be <a
+        data-cite="WEBRTC#dfn-administratively-prohibited">
         administratively prohibited</a>.</p>
     </section>
   </section>
