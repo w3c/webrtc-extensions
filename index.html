@@ -95,6 +95,30 @@
       </p>
     </section>
   </section>
+  <section id="rtcpeerconnection-interface">
+    <h3>
+      {{RTCPeerConnection}} extensions
+    </h3>
+    <p>
+      The {{RTCPeerConnection}} interface is defined in [[WEBRTC]]. This document
+      extends that interface by using Content-Security-Policy for ICE candidate
+      filtering.
+    </p>
+    <section>
+      <h2>Modifications to existing procedures</h2>
+
+      <p>Append the following paragraph to the
+      <a data-cite="WEBRTC#dfn-administratively-prohibited">administratively prohibited</a>
+      algorithm:</p>
+
+      <p>If <a data-cite="CSP#should-block-rtc-connection">
+        should RTC connections be blocked for global?</a> with the
+      [=relevant global object=] of the {{RTCPeerConnection}} object in question
+      returns `"Blocked"`, then all candidates MUST be <a
+        data-cite="WEBRTC#dfn-administratively-prohibited">
+        administratively prohibited</a>.</p>
+    </section>
+  </section>
   <section id="rtcrtptransceiver-interface">
     <h3>
       {{RTCRtpTransceiver}} extensions
@@ -109,7 +133,7 @@
 partial dictionary RTCRtpHeaderExtensionCapability {
   RTCRtpTransceiverDirection direction = "sendrecv";
 };
-      
+
 partial interface RTCRtpTransceiver {
   undefined setOfferedRtpHeaderExtensions(
 sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
@@ -422,7 +446,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
           <div class="issue atrisk">
             <p>
               {{RTCRtpEncodingParameters/ptime}} was moved from [[WEBRTC]] to
-              this specification due to lack of support from implementers. It is                  
+              this specification due to lack of support from implementers. It is
               therefore marked as a feature at risk.
             </p>
           </div>
@@ -802,7 +826,7 @@ partial interface RTCRtpTransceiver {
       This section documents features that were moved from [[WEBRTC]] to this extension
       specification due to lack of support from implementers.
     </p>
-  <section id="rtcpeerconnection-interface">
+  <section id="removed-rtcpeerconnection-features">
     <h3>
       {{RTCPeerConnection}} extensions
     </h3>
@@ -949,7 +973,7 @@ enum RTCIceCredentialType {
     <div class="issue atrisk">
       <p>
          The {{RTCOAuthCredential}} dictionary was moved from [[WEBRTC]] to
-         this specification due to lack of support from implementers. It is                  
+         this specification due to lack of support from implementers. It is
          therefore marked as a feature at risk.
       </p>
     </div>
@@ -1082,12 +1106,12 @@ enum RTCIceCredentialType {
     <p>An example array of {{RTCIceServer}} objects is:</p>
     <pre class="example highlight">
 <code>{
-  urls: 'turns:turn2.example.net',	
-  username: '22BIjxU93h/IgwEb',	
-  credential: {	
-    macKey: 'WmtzanB3ZW9peFhtdm42NzUzNG0=',	
-    accessToken: 'AAwg3kPHWPfvk9bDFL936wYvkoctMADzQ5VhNDgeMR3+ZlZ35byg972fW8QjpEl7bx91YLBPFsIhsxloWcXPhA=='	
-  },	
+  urls: 'turns:turn2.example.net',
+  username: '22BIjxU93h/IgwEb',
+  credential: {
+    macKey: 'WmtzanB3ZW9peFhtdm42NzUzNG0=',
+    accessToken: 'AAwg3kPHWPfvk9bDFL936wYvkoctMADzQ5VhNDgeMR3+ZlZ35byg972fW8QjpEl7bx91YLBPFsIhsxloWcXPhA=='
+  },
   credentialType: 'oauth'
 }</code></pre>
   </section>
@@ -1119,7 +1143,7 @@ enum RTCIceCredentialType {
                 <div class="issue atrisk">
                   <p>
                     {{RTCRtpSynchronizationSource/voiceActivityFlag}} was moved from [[WEBRTC]] to
-                    this specification due to lack of support from implementers. It is therefore 
+                    this specification due to lack of support from implementers. It is therefore
                     marked as a feature at risk.
                   </p>
                 </div>
@@ -1130,7 +1154,7 @@ enum RTCIceCredentialType {
 <section class="informative">
     <h2>
       Security Considerations
-    </h2>      
+    </h2>
       <p>
         This section is non-normative; it specifies no new behaviour.
         The overall security considerations of the general set
@@ -1154,14 +1178,14 @@ enum RTCIceCredentialType {
         <p>
           This document defines extensions for encryption of RTP Header Extensions which
           improve the confidentiality of communications by encrypting header extension
-          IDs, as well as CSRCs. 
+          IDs, as well as CSRCs.
         </p>
       </section>
 </section>
 <section class="informative">
     <h2>
       Privacy Considerations
-    </h2>      
+    </h2>
       <p>
         This section is non-normative; it specifies no new behaviour.
       </p>
@@ -1172,7 +1196,7 @@ enum RTCIceCredentialType {
         <p>
           The extensions defined in this document do not reveal additional
           information on IP addresses beyond that already described in
-          [[WEBRTC]] Section 13.2. 
+          [[WEBRTC]] Section 13.2.
         </p>
       </section>
       <section>
