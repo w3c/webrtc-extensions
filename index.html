@@ -71,15 +71,8 @@
     <section id="rtp-header-control">
       <h3>RTP header control</h3>
       <p>
-        The extension for RTP header extension control consists of 2 parts:
-      </p>
-      <ul>
-        <li>An extension to {{RTCRtpTransceiver}}, to set and query the RTP header extensions
-          negotiated in SDP.
-        </li>
-        <li>An extension to {{RTCRtpHeaderExtensionParameters}}, to be used with setParameters()
-          to set the RTP header extensions sent by an {{RTCRtpSender}}.</li>
-      </ul>
+        RTP header extension control is an extension to {{RTCRtpTransceiver}} that allows
+        to set and query the RTP header extensions supported and negotiated in SDP.
       <p>
         The RTP header extension mechanism is defined in [[RFC8285]], with
         the SDP negotiation mechanism defined in section 5. It goes into some
@@ -243,58 +236,6 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
         <dd>Returns the value of the {{RTCRtpTransceiver/[[HeaderExtensionsNegotiationed]]}} slot.</dd>
       </dl>
     </section>
-  </section>
-  <section id="rtcrtpheaderextensionparameters-interface">
-    <h3>
-      {{RTCRtpHeaderExtensionParameters}} extensions
-    </h3>
-    <p>
-      The {{RTCRtpHeaderExtensionParameters}}
-      dictionary is defined in [[WEBRTC]]. This document extends that dictionary
-      by adding an additional member.
-    </p>
-    <pre class="idl">
-      partial dictionary RTCRtpHeaderExtensionParameters {
-        boolean enabled;
-      };
-    </pre>
-    <section>
-      <h2>Attributes</h2>
-      <dl>
-        <dt><dfn data-dfn-for="RTCRtpHeaderExtensionParameters">enabled</dfn>, of type boolean</dt>
-        <dd>
-          <p>When returned from {{RTCRtpSender/getParameters()}} on an {{RTCRtpSender}}, {{RTCRtpHeaderExtensionParameters/enabled}} is <code>true</code>
-            when the RTP sender is
-            configured to send this header extension when appropriate. If the
-            attribute is missing, it means that it is enabled and cannot be disabled.
-          </p>
-          <p>
-            When passed to {{RTCRtpSender/setParameters()}}, setting {{RTCRtpHeaderExtensionParameters/enabled}} to <code>true</code> instructs the
-            RTP sender to send this header extension when appropriate. Setting {{RTCRtpHeaderExtensionParameters/enabled}}
-            to <code>false</code> instructs the RTP sender to never send this extension.
-          </p>
-          <p>
-            When calling {{RTCRtpReceiver/getParameters()}} on an {{RTCRtpReceiver}}, the {{RTCRtpHeaderExtensionParameters/enabled}} member will
-            always be missing.
-          </p>
-        </dd>
-      </dl>
-      <p class="note">
-        The list of extensions returned from {{RTCRtpSender/getParameters()}} on a sender will only include
-        the extensions that have been negotiated for sending.
-      </p>
-    </section>
-    <p>
-      The inclusion of a settable member of {{RTCRtpHeaderExtensionParameters}}
-      means that {{RTCRtpParameters/headerExtensions}} is no longer a read-only member of {{RTCRtpParameters}}.
-      The {{RTCRtpHeaderExtensionParameters/uri}}, {{RTCRtpHeaderExtensionParameters/id}} and {{RTCRtpHeaderExtensionParameters/encrypted}} members of
-      {{RTCRtpHeaderExtensionParameters}} remain read-only.
-    </p>
-    <p>
-      Changing the
-      list, apart from setting the {{RTCRtpHeaderExtensionParameters/enabled}} member, MUST cause {{RTCRtpSender/setParameters()}} to reject
-      with an {{InvalidModificationError}}.
-    </p>
   </section>
   <section id="rtcrtpreceiver-interface">
     <h3>
@@ -705,7 +646,7 @@ partial interface RTCDataChannel {
        RTP header extension encryption policy affects whether RTP header extension
        encryption is negotiated if the remote endpoint does not support [[CRYPTEX]].
        If the remote endpoint supports [[CRYPTEX]], all media streams are sent
-       utilizing [[CRYPTEX]]. 
+       utilizing [[CRYPTEX]].
      </p>
      <div>
          <pre id="target-rtp-header-encryption-policy" class="idl">enum RTCRtpHeaderEncryptionPolicy {
@@ -779,7 +720,7 @@ partial interface RTCRtpTransceiver {
              internal slot, initialized to <code>false</code>.
           </p>
         </dd>
-       </dl>    
+       </dl>
      </section>
   </section>
   <section id="configuration">
