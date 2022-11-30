@@ -29,9 +29,9 @@ The solution proposed in this document is based on a new RTP header extension, a
  * an absolute capture timestamp, which is stamped by the original capturer, and is supposed to be received untouched by the end receivers.
  * an estimated clock offset with respect to the capturer's clock, which is supposed to be read and updated by every intermediate sender.
 
-With the absolute capture timestamps, end receivers can accurately measure how synchronized the audio and video tracks are. With the `estimated clock offset`, which gets updated at each intermediate hop, end receivers can estimate their clock offset with respect to the capturer's clock, and then, together with the absolute capture timestamp, measure the end-to-end delay. 
+With the absolute capture timestamps, end receivers can accurately measure how synchronized the audio and video tracks are. With the `estimated clock offset`, which gets updated at each intermediate hop, end receivers can estimate their clock offset with respect to the capturer's clock, and then, together with the absolute capture timestamp, measure the end-to-end delay.
 
-The absolute capture time RTP header extension is defined [here](https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/abs-capture-time/index.md).
+The absolute capture time RTP header extension is defined [here](https://webrtc.org/experiments/rtp-hdrext/abs-capture-time).
 
 The two new data fields in RTCRtpContributingSource are to surface the two data fields in the absolute capture time RTP header extension.
 
@@ -66,16 +66,16 @@ An example code to use captureTimestamp and senderCaptureTimeOffset to calculate
     latestCaptureTimestamp = csrc.captureTimeStamp;
     latestSenderCaptureTimeOffset = csrc.SenderCaptureTimeOffset;
     receiverTimestamp = csrc.timestamp;
-    
+
     // Calculates sender-receiver clock offset from stats.
     stats = peerconnection.getStats();
     remoteOutboundRtpStats = getRequiredStats(stats, "remote-outbound-rtp");
     remoteInboundRtpStats = getRequiredStats(stats, "remote-inbound-rtp")
     senderReceiverTimeOffset = remoteOutboundRtpStats.timestamp - (remoteOutboundRtpStats.remoteTimestamp + remoteInboundRtpStats.roundTripTime / 2);
-    
+
     // Calcuates sender-capturer clock offset.
     captureReceiverTimeOffset = senderReceiverTimeOffset + latestSenderCaptureTimeOffset;
-    
+
     receiverCaptureTimestamp = latestCaptureTimestamp + captureReceiverTimeOffset;
     endToEndDelay = receiverTimestamp - receiverCaptureTimestamp.
 
@@ -97,7 +97,7 @@ However, without the original capture timestamp, this method may fail if the int
 
 ##### [Alternative 2] Audio Timing Header Extension
 
-In WebRTC, [video-timing](https://github.com/webrtc/webrtc-org/blob/gh-pages/experiments/rtp-hdrext/video-timing/index.md) has been proposed as an experimental RTP header extension. We rejected the idea of reusing it for audio or adding an audio version of it, since it has a duration-based design that requires its header extension to be sent with every frame, hence consuming significantly more bandwidth than our timestamp-based design.
+In WebRTC, [video-timing](https://webrtc.org/experiments/rtp-hdrext/video-timing/) has been proposed as an experimental RTP header extension. We rejected the idea of reusing it for audio or adding an audio version of it, since it has a duration-based design that requires its header extension to be sent with every frame, hence consuming significantly more bandwidth than our timestamp-based design.
 
 ##### [Alternative 3] [RFC5484]: SMPTE Time-Code
 
@@ -135,7 +135,7 @@ Participate
 https://www.chromestatus.com/feature/5752004691361792
 https://github.com/w3c/webrtc-pc/issues/2300
 https://github.com/w3c/webrtc-pc/issues/2309
- 
+
 #### Abstract
 This document provides an API for enabling/disabling a sender in a real-time audio-video call to adapt its audio packet rate to better utilize the network connection between the sender and other participants.
 
