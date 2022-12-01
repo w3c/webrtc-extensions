@@ -147,7 +147,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       BUNDLE is in use, per [[BUNDLE]] section 9.1.
     </p>
     <p>
-      Let <dfn data-dfn-for=RTCRtpTransceiver>{{RTCRtpTransceiver/[[HeaderExtensionsNegotiationed]]}}</dfn> be an internal slot of the {{RTCRtpTransceiver}},
+      Let <dfn data-dfn-for=RTCRtpTransceiver>{{RTCRtpTransceiver/[[HeaderExtensionsNegotiated]]}}</dfn> be an internal slot of the {{RTCRtpTransceiver}},
       initialized to an empty list.
     </p>
     <section>
@@ -155,12 +155,12 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       <p>
         In the <a data-cite="WEBRTC#set-description">set a session description</a> algorithm, add a step
         right after the step that sets transceiver.[[\Sender]].[[\SendCodecs]],
-        saying "For each transciever, set {{RTCRtpTransceiver/[[HeaderExtensionsNegotiationed]]}} to
+        saying "For each transciever, set {{RTCRtpTransceiver/[[HeaderExtensionsNegotiated]]}} to
         an empty list, and then
         for each <code>"a=hdrext"</code> line, add an appropriate
         {{RTCRtpHeaderExtensionCapability}} to the list.
       </p>
-      <p>\
+      <p>
         In the algorithms for generating initial offers in [[RTCWEB-JSEP]] section 5.2.1,
         replace "for each supported RTP header extension, an "a=extmap" line, as specified in
         [[RFC5285]], section 5" " with "For each RTP header extension "e"
@@ -232,7 +232,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
         <dt><dfn>headerExtensionsToOffer</dfn>, readonly</dt>
         <dd>Returns the value of the {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}} slot.</dd>
         <dt><dfn>headerExtensionsNegotiated</dfn>, readonly</dt>
-        <dd>Returns the value of the {{RTCRtpTransceiver/[[HeaderExtensionsNegotiationed]]}} slot.</dd>
+        <dd>Returns the value of the {{RTCRtpTransceiver/[[HeaderExtensionsNegotiated]]}} slot.</dd>
       </dl>
     </section>
   </section>
