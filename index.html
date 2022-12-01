@@ -820,12 +820,16 @@ partial interface RTCRtpTransceiver {
   <p>
     In the <a data-cite="WEBRTC#set-description">set a session description</a> algorithm, add a step
     right after the step that sets transceiver.[[\Receiver]].[[\ReceiveCodecs]],
-    saying "If the RTCRtpReceiver's {{RTCRtpReceiver/[[HardwareDisabled]]}} slot is <code>true</code>, remove any codec from transceiver.[[\Receiver]].[[\ReceiveCodecs]] for which the underlying encoder is hardware-accelerated.
+    saying "If the RTCRtpReceiver's {{RTCRtpReceiver/[[HardwareDisabled]]}} slot is <code>true</code>,
+    remove any codec from transceiver.[[\Receiver]].[[\ReceiveCodecs]] for which the underlying decoder
+    is hardware-accelerated.
   </p>
   <p>
     In the <a data-cite="WEBRTC#set-description">set a session description</a> algorithm, add a step
     right after the step that sets transceiver.[[\Sender]].[[\SendCodecs]],
-    saying "If the RTCRtpSender's {{RTCRtpSender/[[HardwareDisabled]]}} slot is <code>true</code>, remove any codec from transceiver.[[\Sender]].[[\SendCodecs]] for which the underlying encoder is hardware-accelerated.
+    saying "If the RTCRtpSender's {{RTCRtpSender/[[HardwareDisabled]]}} slot is <code>true</code>,
+    remove any codec from transceiver.[[\Sender]].[[\SendCodecs]] for which the underlying encoder
+    is hardware-accelerated.
   </p>
 </section>
 <section id="removed-features">
