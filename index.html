@@ -783,10 +783,10 @@ partial interface RTCRtpTransceiver {
     <dfn data-dfn-for=RTCRtpReceiver>{{RTCRtpReceiver/[[HardwareDisabled]]}}</dfn> initialized to <code>false</code>.
   </p>
   <pre class="idl">partial interface RTCRtpReceiver {
-    static undefined disableHardwareEncoding();
+    static undefined disableHardwareDecoding();
 };
 </pre>
-  <p>When the {{RTCRtpReceiver}}'s disableHardwareEncoding method is called, the user agent MUST run the following steps:</p>
+  <p>When the {{RTCRtpReceiver}}'s disableHardwareDecoding method is called, the user agent MUST run the following steps:</p>
   <ol>
     <li>
       <p>When the <code>RTCPeerConnection.constructor()</code> has been invoked abort these steps.</p>
