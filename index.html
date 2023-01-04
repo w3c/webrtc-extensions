@@ -155,7 +155,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
       <p>
         In the <a data-cite="WEBRTC#set-description">set a session description</a> algorithm, add a step
         right after the step that sets transceiver.[[\Sender]].[[\SendCodecs]],
-        saying "For each transciever, set {{RTCRtpTransceiver/[[HeaderExtensionsNegotiated]]}} to
+        saying "For each transceiver, set {{RTCRtpTransceiver/[[HeaderExtensionsNegotiated]]}} to
         an empty list, and then
         for each <code>"a=extmap"</code> line, add an appropriate
         {{RTCRtpHeaderExtensionCapability}} to the list.
@@ -759,6 +759,78 @@ partial interface RTCRtpTransceiver {
             </dl>
        </section>
   </section>
+</section>
+<section id="disable-hardware">
+  <h2>Disabling hardware acceleration</h2>
+  <p>
+    While hardware acceleration of video encoding and decoding is generally desirable, it has proven to be
+    operationally challenging to achieve in the environment of a browser with no detailed information about
+    the underlying hardware. In some cases, falling back to software encoding yields better results.
+  <p>
+  <p class="note">
+    The methods specified in this section should be used sparingly and not for extended amounts of time.
+   </p>
+  <p class="note">
+    In privacy-sensitive contexts, browsers may disable hardware acceleration by default to
+    reduce the fingerprinting surface.
+  </p>
+  <h3>
+    {{RTCRtpReceiver}} extensions
+  </h3>
+  <p>
+    The {{RTCRtpReceiver}} interface is defined in [[WEBRTC]]. This document extends this interface
+    by adding a static method and internal slot
+    <dfn data-dfn-for=RTCRtpReceiver>{{RTCRtpReceiver/[[HardwareDisabled]]}}</dfn> initialized to <code>false</code>.
+  </p>
+  <pre class="idl">partial interface RTCRtpReceiver {
+    static undefined disableHardwareDecoding();
+};
+</pre>
+  <p>When the {{RTCRtpReceiver}}'s disableHardwareDecoding method is called, the user agent MUST run the following steps:</p>
+  <ol>
+    <li>
+      <p>When the <code>RTCPeerConnection.constructor()</code> has been invoked abort these steps.</p>
+    </li>
+    <li>
+      <p>Set the RTCRtpReceiver's {{RTCRtpReceiver/[[HardwareDisabled]]}} slot to <code>true</code>.</p>
+    </li>
+  </ol>
+  <h3>
+    {{RTCRtpSender}} extensions
+  </h3>
+  <p>
+    The {{RTCRtpSender}} interface is defined in [[WEBRTC]]. This document extends this interface
+    by adding a static method and internal slot
+    <dfn data-dfn-for=RTCRtpSender>{{RTCRtpSender/[[HardwareDisabled]]}}</dfn> initialized to <code>false</code>.
+  </p>
+  <pre class="idl">partial interface RTCRtpSender {
+    static undefined disableHardwareEncoding();
+};
+</pre>
+  <p>When the {{RTCRtpSender}}'s disableHardwareEncoding method is called, the user agent MUST run the following steps:</p>
+  <ol>
+    <li>
+      <p>When the <code>RTCPeerConnection.constructor()</code> has been invoked abort these steps.</p>
+    </li>
+    <li>
+      <p>Set the RTCRtpSender's {{RTCRtpSender/[[HardwareDisabled]]}} slot to <code>true</code>.</p>
+    </li>
+  </ol>
+  <h3>Modifications to existing procedures</h3>
+  <p>
+    In the <a data-cite="WEBRTC#set-description">set a session description</a> algorithm, add a step
+    right after the step that sets transceiver.[[\Receiver]].[[\ReceiveCodecs]],
+    saying "If the RTCRtpReceiver's {{RTCRtpReceiver/[[HardwareDisabled]]}} slot is <code>true</code>,
+    remove any codec from transceiver.[[\Receiver]].[[\ReceiveCodecs]] for which the underlying decoder
+    is hardware-accelerated".
+  </p>
+  <p>
+    In the <a data-cite="WEBRTC#set-description">set a session description</a> algorithm, add a step
+    right after the step that sets transceiver.[[\Sender]].[[\SendCodecs]],
+    saying "If the RTCRtpSender's {{RTCRtpSender/[[HardwareDisabled]]}} slot is <code>true</code>,
+    remove any codec from transceiver.[[\Sender]].[[\SendCodecs]] for which the underlying encoder
+    is hardware-accelerated".
+  </p>
 </section>
 <section id="removed-features">
     <h3>Removed features</h3>
