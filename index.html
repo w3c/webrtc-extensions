@@ -376,7 +376,6 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
     <pre class="idl">partial dictionary RTCRtpEncodingParameters {
       unsigned long ptime;
       boolean adaptivePtime = false;
-      double maxFramerate;
     };</pre>
     <h2>Dictionary {{RTCRtpEncodingParameters}} Members</h2>
     <dl data-link-for="RTCRtpEncodingParameters" data-dfn-for="RTCRtpEncodingParameters" class="dictionary-members">
@@ -409,22 +408,6 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
         of increased latency. Changing the frame length dynamically
         allows the <a>user agent</a> to adapt its bandwidth allocation strategy
         based on the current network conditions.</p>
-      </dd>
-      <dt><dfn data-idl>maxFramerate</dfn> of type <span class=
-      "idlMemberType">double</span></dt>
-      <dd>
-        <p>When present, indicates the maximum frame rate that can be used to
-        send this encoding, in frames per second. The <a>user agent</a> is free
-        to allocate bandwidth between the encodings, as long as the
-        {{maxFramerate}} value is not exceeded.</p>
-        <p>When set with {{RTCPeerConnection/addTransceiver()}}, the frame rate is required
-        to be 0.0 or greater. If this is not the case, [=exception/throw=] a
-        {{RangeError}}.</p>
-        <p>If changed with {{RTCRtpSender/setParameters()}}, the new frame rate takes
-        effect after the current picture is completed; setting the max frame
-        rate to zero thus has the effect of freezing the video on the next
-        frame. Upon setting with {{RTCRtpSender/setParameters()}}, if the value is
-        less than 0.0, [=reject=] with a {{RangeError}}.</p>
       </dd>
     </dl>
   </section>
