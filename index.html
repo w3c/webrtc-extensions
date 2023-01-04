@@ -376,6 +376,7 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
     <pre class="idl">partial dictionary RTCRtpEncodingParameters {
       unsigned long ptime;
       boolean adaptivePtime = false;
+      RTCRtpCodecCapability codec;
     };</pre>
     <h2>Dictionary {{RTCRtpEncodingParameters}} Members</h2>
     <dl data-link-for="RTCRtpEncodingParameters" data-dfn-for="RTCRtpEncodingParameters" class="dictionary-members">
@@ -408,6 +409,11 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
         of increased latency. Changing the frame length dynamically
         allows the <a>user agent</a> to adapt its bandwidth allocation strategy
         based on the current network conditions.</p>
+      </dd>
+      <dt><dfn data-idl>codec</dfn> of type <span class="idlMemberType">RTCRtpCodecCapability</span></dt>
+      <dd>
+        <p>Indicates the codec for this encoding. The {{RTCRtpCodecCapability}} dictionary is
+        defined in [[WEBRTC]].</p>
       </dd>
     </dl>
   </section>
