@@ -127,61 +127,150 @@ partial dictionary RTCRtpHeaderExtensionCapability {
 };
 
 partial interface RTCRtpTransceiver {
-  undefined setOfferedRtpHeaderExtensions(
-sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
-  readonly attribute FrozenArray&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer;
-  readonly attribute FrozenArray&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsNegotiated;
+  sequence&lt;RTCRtpHeaderExtensionCapability&gt; getHeaderExtensionsToNegotiate();
+  undefined setHeaderExtensionsToNegotiate(
+      sequence&lt;RTCRtpHeaderExtensionCapability&gt; extensions);
+  sequence&lt;RTCRtpHeaderExtensionCapability&gt; getNegotiatedHeaderExtensions();
 };
     </pre>
     <p>
-      Let <dfn data-dfn-for=RTCRtpTransceiver>[[\HeaderExtensionsToOffer]]</dfn> be an internal slot of the {{RTCRtpTransceiver}},
-      initialized to the platform-specific list of implemented RTP header extensions.
-      The direction
-      attribute for all extensions that are mandatory to use MUST be initialized to
-      an appropriate value other than "stopped". The {{RTCRtpHeaderExtensionCapability/direction}} attribute for extensions
-      that will not be offered by default in an initial offer MUST be initialized to
-      {{RTCRtpTransceiverDirection/"stopped"}}.
+      Let
+      <dfn data-dfn-for=RTCRtpTransceiver>{{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}}</dfn>
+      and
+      <dfn data-dfn-for=RTCRtpTransceiver>{{RTCRtpTransceiver/[[NegotiatedHeaderExtensions]]}}</dfn>
+      be internal slots of the {{RTCRtpTransceiver}}, initialized as follows:
     </p>
-    <p class="note">The list of header extensions that MUST/SHOULD be supported is listed in
-      [[RTCWEB-RTP]], section 5.2. The "mid" extension is mandatory to use when
-      BUNDLE is in use, per [[BUNDLE]] section 9.1.
-    </p>
-    <p>
-      Let <dfn data-dfn-for=RTCRtpTransceiver>{{RTCRtpTransceiver/[[HeaderExtensionsNegotiated]]}}</dfn> be an internal slot of the {{RTCRtpTransceiver}},
-      initialized to an empty list.
-    </p>
+    <ol>
+      <li>
+        <p>Set {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}} to the
+        platform-specific list of implemented RTP header extensions. The
+        {{RTCRtpHeaderExtensionCapability/direction}} attribute for all
+        extensions that are mandatory to use MUST be initialized to an
+        appropriate value other than {{RTCRtpTransceiverDirection/"stopped"}}.
+        The {{RTCRtpHeaderExtensionCapability/direction}} attribute for
+        extensions that will not be offered by default in an initial offer MUST
+        be initialized to {{RTCRtpTransceiverDirection/"stopped"}}.</p>
+        <p class="note">The list of header extensions that MUST/SHOULD be
+        supported is listed in [[RTCWEB-RTP]], section 5.2. The "mid" extension
+        is mandatory to use when BUNDLE is in use, per [[BUNDLE]] section
+        9.1.</p>
+      </li>
+      <li>
+        <p>Set {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}} to an empty
+        list.</p>
+      </li>
+    </ol>
     <section>
       <h2>Modifications to existing procedures</h2>
       <p>
-        In the <a data-cite="WEBRTC#set-description">set a session description</a> algorithm, add a step
-        right after the step that sets transceiver.[[\Sender]].[[\SendCodecs]],
-        saying "For each transceiver, set {{RTCRtpTransceiver/[[HeaderExtensionsNegotiated]]}} to
-        an empty list, and then
-        for each <code>"a=extmap"</code> line, add an appropriate
-        {{RTCRtpHeaderExtensionCapability}} to the list.
+        Make the following modifications to the
+        <a data-cite="WEBRTC#set-description">set a session description</a>
+        algorithm:
       </p>
+      <ul>
+        <li>
+          <p>In the steps for processing each <var>media description</var> of a
+          remote <var>description</var> (<var>remote</var> is
+          <code>true</code>), after <var>transceiver</var> has been found or
+          created, insert the following steps:</p>
+          <ol>
+            <li>
+              <p>If <var>description</var> is of type {{RTCSdpType/"offer"}},
+              then for each <var>extension</var> in
+              <var>transciever.</var>{{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}},
+              run the following steps:</p>
+              <ol>
+                <li>
+                  <p>Let <var>offeredDirection</var> be the direction attribute
+                  of the "a=extmap" line in the remote offer's
+                  <var>media description</var> that correspond to this
+                  <var>extension</var> if one exists, otherwise set
+                  <var>offeredDirection</var> to
+                  {{RTCRtpTransceiverDirection/"stopped"}}.</p>
+                </li>
+                <li>
+                  <p>Reverse <var>offeredDirection</var> to represent the peer's
+                  point if view.</p>
+                </li>
+                <li>
+                  <p>If necessary, downgrade <var>offeredDirection</var> as to
+                  not exceed the user agent's capabilities.</p>
+                </li>
+                <li>
+                  <p>Set
+                  <var>extension</var>.{{RTCRtpHeaderExtensionCapability/direction}}
+                  to <var>offeredDirection</var>.</p>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </li>
+        <li>
+          <p>In the later steps for processing a <var>description</var> of type
+          {{RTCSdpType/"answer"}} that runs for both local and remote
+          descriptions, insert the following steps:</p>
+          <ol>
+            <li>
+              <p>For each <var>media description</var> and corresponding
+              <var>transceiver</var>, let <var>negotiatedExtensions</var> be the
+              value of
+              <var>transceiver</var>.{{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}}.</p>
+            </li>
+            <li>
+              <p>For each <var>extension</var> in
+              <var>negotiatedExtensions</var>, run the following steps:</p>
+              <ol>
+                <li>
+                  <p>Let <var>answeredDirection</var> be the direction attribute
+                  of the "a=extmap" line in the answer's
+                  <var>media description</var> that correspond to this
+                  <var>extension</var> if one exists, otherwise set
+                  <var>answeredDirection</var> to
+                  {{RTCRtpTransceiverDirection/"stopped"}}.</p>
+                </li>
+                <li>
+                  <p>If <var>description</var> is a remote description, reverse
+                  <var>answeredDirection</var> to represent the peer's point of
+                  view.</p>
+                </li>
+                <li>
+                  <p>Set
+                  <var>extension</var>.{{RTCRtpHeaderExtensionCapability/direction}}
+                  to <var>answeredDirection</var>.</p>
+                </li>
+              </ol>
+            </li>
+            <li>
+              <p>Set
+              <var>transceiver</var>.{{RTCRtpTransceiver/[[NegotiatedHeaderExtensions]]}}
+              to <var>negotiatedExtensions</var>.</p>
+            </li>
+          </ol>
+        </li>
+      </ul>
       <p>
         In the algorithms for generating initial offers in [[RTCWEB-JSEP]] section 5.2.1,
         replace "for each supported RTP header extension, an "a=extmap" line, as specified in
         [[RFC5285]], section 5" " with "For each RTP header extension "e"
-        listed in {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}} where {{RTCRtpHeaderExtensionCapability/direction}} is not {{RTCRtpTransceiverDirection/"stopped"}}, an "a=extmap"
+        listed in {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}} where {{RTCRtpHeaderExtensionCapability/direction}} is not {{RTCRtpTransceiverDirection/"stopped"}}, an "a=extmap"
         line, as specified in [[RFC5285]], section 5, with direction taken from "e"'s {{RTCRtpHeaderExtensionCapability/direction}}
         attribute."
       </p>
       <p>
         In the algorithm for generating subsequent offers in [[RTCWEB-JSEP]] section 5.2.2, replace "The
         RTP header extensions MUST only include those that are present in the most recent answer"
-        with "For each RTP header extension listed in {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}},
+        with "For each RTP header extension listed in {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}},
         and where {{RTCRtpHeaderExtensionCapability/direction}} is not {{RTCRtpTransceiverDirection/"stopped"}}, generate
         an appropriate "a=extmap" line with "direction" set according to the rules of [[RFC5285]]
-        section 6, considering the {{RTCRtpHeaderExtensionCapability/direction}} in {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}} to indicate the
+        section 6, considering the {{RTCRtpHeaderExtensionCapability/direction}} in {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}} to indicate the
         answerer's desired usage".
       </p>
       <p>
         In the algorithm for generating initial answers in [[RTCWEB-JSEP]] section 5.3.1, replace "For
         each supported RTP header extension that is present in the offer" with "For each
         supported RTP header extension that is present in the offer and is also present in
-        {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}} with a {{RTCRtpHeaderExtensionCapability/direction}} different from {{ RTCRtpTransceiverDirection/"stopped"}}".
+        {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}} with a {{RTCRtpHeaderExtensionCapability/direction}} different from {{RTCRtpTransceiverDirection/"stopped"}},
+        set the appropriate direction based on {{RTCRtpHeaderExtensionCapability/direction}} that does not exceed the direction in the offer".
       </p>
       <p class="note">
         Since JSEP does not know about WebRTC internal slots, merging this change requires
@@ -191,48 +280,116 @@ sequence&lt;RTCRtpHeaderExtensionCapability&gt; headerExtensionsToOffer);
     <section>
       <h2>Methods</h2>
       <dl>
-        <dt><dfn data-dfn-for=RTCRtpTransceiver>setOfferedRtpHeaderExtensions</dfn></dt>
+        <dt><dfn data-dfn-for=RTCRtpTransceiver>getHeaderExtensionsToNegotiate</dfn></dt>
         <dd>
-          Execute the following steps:
+          <p>Execute the following steps:</p>
           <ol>
-            <li>Let <var>extlist</var> be the list of extensions in the argument.</li>
             <li>
-              For each extension <var>ext</var> in <var>extlist</var>, do the following:
-              <ol>
-                <li>
-                  If <var>ext</var>.{{RTCRtpHeaderExtensionCapability/uri}} value is missing, [=exception/throw=] a {{TypeError}}.
-                </li>
-                <li>If <var>ext</var>.{{RTCRtpHeaderExtensionCapability/uri}} value is not present in
-                  {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}}, [=exception/throw=] a {{NotSupportedError}}.
-                </li>
-                <li>
-                  Let <var>entry</var> be the entry with the same {{RTCRtpHeaderExtensionCapability/uri}} value in
-                  {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}}.
-                </li>
-                <li>If <var>ext</var>.{{RTCRtpHeaderExtensionCapability/direction}}  is not {{ RTCRtpTransceiverDirection/"sendrecv"}}, and {{RTCRtpHeaderExtensionParameters/uri}}
-                  indicates a mandatory-to-use attribute that is required to be both
-                  sent and received, [=exception/throw=] an {{InvalidModificationError}}.
-                </li>
-                <li>if <var>ext</var>.{{RTCRtpHeaderExtensionCapability/direction}} field is {{RTCRtpTransceiverDirection/"stopped"}}, and {{RTCRtpHeaderExtensionCapability/uri}} indicates
-                  a mandatory-to-implement extension, [=exception/throw=] an {{InvalidModificationError}}.
-                </li>
-                <li>
-                  Set the {{RTCRtpHeaderExtensionCapability/direction}} field of <var>entry</var> to <var>ext</var>'s
-                  {{RTCRtpHeaderExtensionCapability/direction}} field.
-                </li>
-              </ol>
+              <p>Let <var>transceiver</var> be the {{RTCRtpTransceiver}} that
+              this method was invoked on.</p>
+            </li>
+            <li>
+              <p>Return
+              <var>transceiver</var>.{{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}}.</p>
             </li>
           </ol>
         </dd>
       </dl>
-    </section>
-    <section>
-      <h2>Attributes</h2>
-      <dl data-dfn-for=RTCRtpTransceiver>
-        <dt><dfn>headerExtensionsToOffer</dfn>, readonly</dt>
-        <dd>Returns the value of the {{RTCRtpTransceiver/[[HeaderExtensionsToOffer]]}} slot.</dd>
-        <dt><dfn>headerExtensionsNegotiated</dfn>, readonly</dt>
-        <dd>Returns the value of the {{RTCRtpTransceiver/[[HeaderExtensionsNegotiated]]}} slot.</dd>
+      <dl>
+        <dt><dfn data-dfn-for=RTCRtpTransceiver>setHeaderExtensionsToNegotiate</dfn></dt>
+        <dd>
+          <p>Execute the following steps:</p>
+          <ol>
+            <li>
+              <p>Let <var>transceiver</var> be the {{RTCRtpTransceiver}} that
+              this method was invoked on.</p>
+            </li>
+            <li>
+              <p>Let <var>extensions</var> be the first argument of this
+              method.</p>
+            </li>
+            <li>
+              <p>If the size of <var>extensions</var> does not match the size of
+              <var>transceiver</var>.{{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}}
+              [=exception/throw=] an {{InvalidModificationError}} and return
+              <code>undefined</code>.
+              </p>
+            </li>
+            <li>
+              <p>For each index <var>i</var> of <var>extensions</var>, run the
+              following steps:</p>
+              <ol>
+                <li>
+                  <p>Let <var>extension</var> be the <var>i</var>-th element of
+                  <var>extensions</var>.</p>
+                </li>
+                <li>
+                  <p>If
+                  <var>extension</var>.{{RTCRtpHeaderExtensionCapability/uri}}
+                  or
+                  <var>extension</var>.{{RTCRtpHeaderExtensionCapability/direction}}
+                  is missing, [=exception/throw=] a {{TypeError}} and return
+                  <code>undefined</code>.</p>
+                </li>
+                <li>
+                  <p>If
+                  <var>extension</var>.{{RTCRtpHeaderExtensionCapability/uri}}
+                  is not equal to the {{RTCRtpHeaderExtensionCapability/uri}} of
+                  the <var>i</var>-th element of
+                  <var>transceiver</var>.{{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}},
+                  [=exception/throw=] an {{InvalidModificationError}} and return
+                  <code>undefined</code>.</p>
+                </li>
+                <li>
+                  <p>If
+                  <var>extension</var>.{{RTCRtpHeaderExtensionCapability/direction}}
+                  is not {{RTCRtpTransceiverDirection/"sendrecv"}} and
+                  {{RTCRtpHeaderExtensionParameters/uri}} indicates a
+                  mandatory-to-use attribute that is required to be both sent
+                  and received, [=exception/throw=] an
+                  {{InvalidModificationError}} and return
+                  <code>undefined</code>.</p>
+                </li>
+                <li>
+                  <p>If
+                  <var>extension</var>.{{RTCRtpHeaderExtensionCapability/direction}}
+                  is {{RTCRtpTransceiverDirection/"stopped"}} and
+                  {{RTCRtpHeaderExtensionCapability/uri}} indicates a
+                  mandatory-to-implement extension, [=exception/throw=] an
+                  {{InvalidModificationError}} and return
+                  <code>undefined</code>.</p>
+                </li>
+                <li>
+                  <p>If necessary, downgrade
+                  <var>extension</var>.{{RTCRtpHeaderExtensionCapability/direction}}
+                  as to not exceed the user agent's capabilities for this
+                  extension.</p>
+                </li>
+              </ol>
+            </li>
+            <li>
+              <p>Set
+              <var>transceiver</var>.{{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}}
+              to <var>extensions</var>.</p>
+            </li>
+          </ol>
+        </dd>
+      </dl>
+      <dl>
+        <dt><dfn data-dfn-for=RTCRtpTransceiver>getNegotiatedHeaderExtensions</dfn></dt>
+        <dd>
+          <p>Execute the following steps:</p>
+          <ol>
+            <li>
+              <p>Let <var>transceiver</var> be the {{RTCRtpTransceiver}} that
+              this method was invoked on.</p>
+            </li>
+            <li>
+              <p>Return
+              <var>transceiver</var>.{{RTCRtpTransceiver/[[NegotiatedHeaderExtensions]]}}.</p>
+            </li>
+          </ol>
+        </dd>
       </dl>
     </section>
   </section>
