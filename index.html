@@ -193,8 +193,9 @@ partial interface RTCRtpTransceiver {
                   point if view.</p>
                 </li>
                 <li>
-                  <p>If necessary, downgrade <var>offeredDirection</var> as to
-                  not exceed the user agent's capabilities.</p>
+                  <p>If necessary, restrict <var>offeredDirection</var> as to
+                  not exceed the user agent's capabilities for this
+                  extension.</p>
                 </li>
                 <li>
                   <p>Set
@@ -360,7 +361,7 @@ partial interface RTCRtpTransceiver {
                   <code>undefined</code>.</p>
                 </li>
                 <li>
-                  <p>If necessary, downgrade
+                  <p>If necessary, restrict
                   <var>extension</var>.{{RTCRtpHeaderExtensionCapability/direction}}
                   as to not exceed the user agent's capabilities for this
                   extension.</p>
