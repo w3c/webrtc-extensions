@@ -312,8 +312,7 @@ partial interface RTCRtpTransceiver {
             <li>
               <p>If the size of <var>extensions</var> does not match the size of
               <var>transceiver</var>.{{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}}
-              [=exception/throw=] an {{InvalidModificationError}} and return
-              <code>undefined</code>.
+              [=exception/throw=] an {{InvalidModificationError}}.
               </p>
             </li>
             <li>
@@ -329,8 +328,7 @@ partial interface RTCRtpTransceiver {
                   <var>extension</var>.{{RTCRtpHeaderExtensionCapability/uri}}
                   or
                   <var>extension</var>.{{RTCRtpHeaderExtensionCapability/direction}}
-                  is missing, [=exception/throw=] a {{TypeError}} and return
-                  <code>undefined</code>.</p>
+                  is missing, [=exception/throw=] a {{TypeError}}.</p>
                 </li>
                 <li>
                   <p>If
@@ -338,8 +336,7 @@ partial interface RTCRtpTransceiver {
                   is not equal to the {{RTCRtpHeaderExtensionCapability/uri}} of
                   the <var>i</var>-th element of
                   <var>transceiver</var>.{{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}},
-                  [=exception/throw=] an {{InvalidModificationError}} and return
-                  <code>undefined</code>.</p>
+                  [=exception/throw=] an {{InvalidModificationError}}.</p>
                 </li>
                 <li>
                   <p>If
@@ -348,8 +345,7 @@ partial interface RTCRtpTransceiver {
                   {{RTCRtpHeaderExtensionParameters/uri}} indicates a
                   mandatory-to-use attribute that is required to be both sent
                   and received, [=exception/throw=] an
-                  {{InvalidModificationError}} and return
-                  <code>undefined</code>.</p>
+                  {{InvalidModificationError}}.</p>
                 </li>
                 <li>
                   <p>If
@@ -357,8 +353,7 @@ partial interface RTCRtpTransceiver {
                   is {{RTCRtpTransceiverDirection/"stopped"}} and
                   {{RTCRtpHeaderExtensionCapability/uri}} indicates a
                   mandatory-to-implement extension, [=exception/throw=] an
-                  {{InvalidModificationError}} and return
-                  <code>undefined</code>.</p>
+                  {{InvalidModificationError}}.</p>
                 </li>
                 <li>
                   <p>If necessary, restrict
