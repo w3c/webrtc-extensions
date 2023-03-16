@@ -523,6 +523,7 @@ partial interface RTCRtpTransceiver {
     <pre class="idl">partial dictionary RTCRtpEncodingParameters {
   unsigned long ptime;
   boolean adaptivePtime = false;
+  RTCRtpCodec codec;
 };</pre>
     <section id="rtcrtpencodingparameters-attributes">
       <h2>Dictionary {{RTCRtpEncodingParameters}} Members</h2>
@@ -562,7 +563,79 @@ partial interface RTCRtpTransceiver {
           allows the <a>user agent</a> to adapt its bandwidth allocation strategy
           based on the current network conditions.</p>
         </dd>
+        <dt>
+          <dfn data-idl>codec</dfn> of type <span class="idlMemberType">RTCRtpCodec</span>
+        </dt>
+        <dd>
+          <p>Optional value selecting which codec is used for this encoding's
+            RTP stream. The {{RTCRtpCodec}} dictionary is defined in [[WEBRTC]].
+            If absent, the user agent can chose to use any negotiated codec.</p>
+        </dd>
       </dl>
+    </section>
+    <section id="rtcrtpencodingparameters-modifications">
+      <h2>Modifications to existing procedures</h2>
+      <h3>setParameters()</h3>
+      <p>Add the following steps to the [=RTCRtpSender/setParameters validation steps=]:</p>
+      <ol>
+        <li>
+          <p>Let <var>choosableCodecs</var> be parameters.{{RTCRtpParameters/codecs}}.</p>
+        </li>
+        <li>
+          <p>If <var>choosableCodecs</var> is an empty list, set <var>choosableCodecs</var>
+            to transceiver.{{RTCRtpTransceiver/[[PreferredCodecs]]}}.</p>
+        </li>
+        <li>
+            <p>If <var>choosableCodecs</var> is still an empty list, set <var>choosableCodecs</var>
+              to the [=RTCRtpSender/list of implemented send codecs=] for transceiver's kind.</p>
+        </li>
+        <li>
+          <p>If any <var>encoding</var> in encodings [=map/exists|contains=] a codec
+            [= codec match | not found =] in <var>choosableCodecs</var>, return a promise
+            [= rejected =] with a newly [= exception/created =] {{InvalidModificationError}}.</p>
+        </li>
+        <li>
+          <p>If the user agent does not support setting the codec for any encoding or mixing
+            different codec values on the different encodings, return a promise [= rejected =]
+            with a newly [= exception/created =] {{OperationError}}.
+          </p>
+        </li>
+      </ol>
+      <h3>addTransceiver()</h3>
+      <p>Add the following steps to the [=RTCPeerConnection/addTransceiver sendEncodings validation steps=]:</p>
+      <ol>
+        <li>
+          <p>If any <var>codec</var> parameter in <var>sendEncodings</var> does [= codec match | not match =] any codec in
+          {{RTCRtpSender.getCapabilities(kind)}}.<code>codecs</code>,
+          [= exception/throw =] an {{OperationError}}.</p>
+        </li>
+        <li>
+          <p>If the user agent does not support changing codecs without negotiation or
+            does not support setting codecs for individual encodings, return a promise
+            [= rejected =] with a newly [= exception/created =] {{OperationError}}.</p>
+        </li>
+      </ol>
+      <h3>Set the session description</h3>
+      <p>Append the following steps to the <a data-cite="WEBRTC#set-description">set the session description</a> algorithm:</p>
+      <ol>
+        <li>
+          <p>For each <var>transceiver</var> in <var>connection</var>'s [= set of transceivers =]:</p>
+          <ol>
+            <li>
+              <p>Let <var>codecs</var> be <var>transceiver</var>.{{RTCRtpTransceiver/[[Sender]]}}.{{RTCRtpSender/[[SendCodecs]]}}.</p>
+            </li>
+            <li>
+              <p>If <var>codecs</var> is not an empty list:</p>
+              <ol>
+                <li>
+                  <p>Remove any <var>codec</var> value in <var>transceiver</var>.{{RTCRtpTransceiver/[[Sender]]}}.{{RTCRtpSender/[[SendEncodings]]}}
+                    that does not [= codec match | match =] any entry in <var>codecs</var>.</p>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </li>
+      </ol>
     </section>
   </section>
   <section id="rtcrtpcontributingsource-extensions">
