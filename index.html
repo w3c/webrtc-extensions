@@ -122,9 +122,7 @@
       RTP header extensions.
     </p>
     <pre class="idl">
-// This definition replaces that of webrtc-pc, making `uri` required.
-dictionary RTCRtpHeaderExtensionCapability {
-  required DOMString uri;
+partial dictionary RTCRtpHeaderExtensionCapability {
   required RTCRtpTransceiverDirection direction;
 };
 
