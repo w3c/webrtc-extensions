@@ -123,7 +123,7 @@
     </p>
     <pre class="idl">
 partial dictionary RTCRtpHeaderExtensionCapability {
-  RTCRtpTransceiverDirection direction = "sendrecv";
+  required RTCRtpTransceiverDirection direction;
 };
 
 partial interface RTCRtpTransceiver {
@@ -322,13 +322,6 @@ partial interface RTCRtpTransceiver {
                 <li>
                   <p>Let <var>extension</var> be the <var>i</var>-th element of
                   <var>extensions</var>.</p>
-                </li>
-                <li>
-                  <p>If
-                  <var>extension</var>.{{RTCRtpHeaderExtensionCapability/uri}}
-                  or
-                  <var>extension</var>.{{RTCRtpHeaderExtensionCapability/direction}}
-                  is missing, [=exception/throw=] a {{TypeError}}.</p>
                 </li>
                 <li>
                   <p>If
