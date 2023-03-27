@@ -42,15 +42,7 @@ var respecConfig = {
         "publisher": "IANA"
       },
       "CRYPTEX": {
-        "title": "Completely Encrypting RTP Header Extensions and Contributing Sources",
-        "href": "https://datatracker.ietf.org/doc/html/draft-ietf-avtcore-cryptex",
-        "authors": [
-          "J. Uberti",
-          "C. Jennings",
-          "S. G. Murillo"
-        ],
-        "status": "07 March 2022. Internet Draft (work in progress)",
-        "publisher": "IETF"
+	"aliasOf": "RFC9335"
     }
     }
 }
