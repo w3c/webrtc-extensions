@@ -703,12 +703,16 @@ partial interface RTCRtpTransceiver {
       </dl>
     </section>
   </section>
-  <section id="rtcdatachannel-transferable">
+  <section id="rtcdatachannel-extensions">
     <h3>
-      Transferable Data Channels
+      Data Channel Extensions
     </h3>
-    <p>This document extends {{RTCDataChannel}} by making it <a data-cite="!HTML/#transferable-objects">transferable</a>.</p>
-    This allows sending and receiving messages outside the context the connection was created, for instance in workers or third-party iframes.</p>
+   <section id="rtcdatachannel-transferable">
+     <h3>
+       Transferable Data Channels
+     </h3>
+     <p>This section extends {{RTCDataChannel}} by making it <a data-cite="!HTML/#transferable-objects">transferable</a>.</p>
+      This allows sending and receiving messages outside the context the connection was created, for instance in workers or third-party iframes.</p>
       <div>
       <p>The WebIDL changes are the following:
       <pre class="idl">
@@ -769,6 +773,7 @@ partial interface RTCRtpTransceiver {
       the {{RTCDataChannel}} object will be closed by running the <a href="WEBRTC#announcing-a-data-channel-as-closed">announcing a data channel as closed</a> algorithm immediately after the <a data-cite="!HTML/#transfer-receiving-steps">transfer-receiving steps</a>.</p>
     </div>
   </section>
+</section>
   <section id="rtp-header-extension-encryption">
     <h3>RTP Header Extension Encryption</h3>
     <section id="rtp-header-extension-encryption-policy">
