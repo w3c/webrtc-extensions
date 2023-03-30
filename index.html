@@ -511,23 +511,25 @@ partial interface RTCRtpTransceiver {
       </dl>
     </section>
   </section>
-  <section id="rtcrtpencodingparameters-extension">
+  <section id="rtcrtpencodingparameters-audio-packetization">
     <h3>
-      RTCRtpEncodingParameters extensions
+      RTCRtpEncodingParameters extensions for audio packetization
     </h3>
     <p>
       The {{RTCRtpEncodingParameters}} dictionary is defined in
       [[WEBRTC]]. This document extends that dictionary with
-      additional members.
+      additional members to control audio packetization.
     </p>
     <pre class="idl">partial dictionary RTCRtpEncodingParameters {
   unsigned long ptime;
   boolean adaptivePtime = false;
 };</pre>
-    <section id="rtcrtpencodingparameters-attributes">
+    <section id="rtcrtpencodingparameters-audio-packetization-attributes">
       <h2>Dictionary {{RTCRtpEncodingParameters}} Members</h2>
       <dl data-link-for="RTCRtpEncodingParameters" data-dfn-for="RTCRtpEncodingParameters" class="dictionary-members">
-        <dt><dfn data-idl>ptime</dfn> of type <span class="idlMemberType">unsigned long</span></dt>
+        <dt>
+          <dfn data-idl>ptime</dfn> of type <span class="idlMemberType">unsigned long</span>
+        </dt>
         <dd>
           <p>The preferred duration of media represented by a packet in milliseconds.</p>
             <div class="issue atrisk">
@@ -538,7 +540,10 @@ partial interface RTCRtpTransceiver {
               </p>
             </div>
         </dd>
-        <dt><dfn data-idl>adaptivePtime</dfn> of type <span class="idlMemberType">boolean</span>, defaulting to <code>false</code>.</dt>
+        <dt>
+          <dfn data-idl>adaptivePtime</dfn> of type <span class="idlMemberType">boolean</span>,
+          defaulting to <code>false</code>.
+        </dt>
         <dd>
           <p>Indicates whether this encoding MAY dynamically change
           the frame length. If the value is <code>true</code>, the
