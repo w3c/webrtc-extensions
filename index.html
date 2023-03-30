@@ -164,45 +164,7 @@ partial interface RTCRtpTransceiver {
       </p>
       <ul>
         <li>
-          <p>In the steps for processing each <var>media description</var> of a
-          remote <var>description</var> (<var>remote</var> is
-          <code>true</code>), after <var>transceiver</var> has been found or
-          created, insert the following steps:</p>
-          <ol>
-            <li>
-              <p>If <var>description</var> is of type {{RTCSdpType/"offer"}},
-              then for each <var>extension</var> in
-              <var>transceiver.</var>{{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}},
-              run the following steps:</p>
-              <ol>
-                <li>
-                  <p>Let <var>offeredDirection</var> be the direction attribute
-                  of the "a=extmap" line in the remote offer's
-                  <var>media description</var> that correspond to this
-                  <var>extension</var> if one exists, otherwise set
-                  <var>offeredDirection</var> to
-                  {{RTCRtpTransceiverDirection/"stopped"}}.</p>
-                </li>
-                <li>
-                  <p>Reverse <var>offeredDirection</var> to represent the peer's
-                  point if view.</p>
-                </li>
-                <li>
-                  <p>If necessary, restrict <var>offeredDirection</var> as to
-                  not exceed the user agent's capabilities for this
-                  extension.</p>
-                </li>
-                <li>
-                  <p>Set
-                  <var>extension</var>.{{RTCRtpHeaderExtensionCapability/direction}}
-                  to <var>offeredDirection</var>.</p>
-                </li>
-              </ol>
-            </li>
-          </ol>
-        </li>
-        <li>
-          <p>In the later steps for processing a <var>description</var> of type
+          <p>In the step for processing a <var>description</var> of type
           {{RTCSdpType/"answer"}} that runs for both local and remote
           descriptions, insert the following steps:</p>
           <ol>
