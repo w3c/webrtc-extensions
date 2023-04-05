@@ -527,6 +527,37 @@ partial interface RTCRtpTransceiver {
       </dl>
     </section>
   </section>
+  <section id="rtcrtpencodingparameters-video-keyframe">
+    <h3>
+      RTCRtpEncodingParameters extensions for requesting the generation of a key frame.
+    </h3>
+    <p>
+      The {{RTCRtpEncodingParameters}} dictionary is defined in
+      [[WEBRTC]]. This document extends that dictionary with
+      additional members to request generation of a key frame by the encoder.
+    </p>
+    <pre class="idl">partial dictionary RTCRtpEncodingParameters {
+  boolean requestKeyframe = false;
+};</pre>
+    <section id="rtcrtpencodingparameters-video-keyframe-attributes">
+      <h2>Dictionary {{RTCRtpEncodingParameters}} Members</h2>
+      <dl data-link-for="RTCRtpEncodingParameters" data-dfn-for="RTCRtpEncodingParameters" class="dictionary-members"></dl>
+        <dt>
+          <dfn data-idl>requestKeyframe</dfn> of type <span class="idlMemberType">boolean</span>, defaulting to <code>false</code>.
+        </dt>
+        <dd>
+          <p>
+            When set to true, request that RTCRtpSender's encoder generates a keyframe for the encoding.
+            The semantics of flag is similar to the RTCP FIR message described in [RFC5104], section 3.5.1.
+          </p>
+          <p>
+            In the steps to call the {{setParameters}} method modify the step to validate parameters and
+            remove {{requestKeyframe}} if [= transceiver kind =] is `"audio"`.
+          </p>
+        </dd>
+      </dl>
+    </section>
+  </section>
   <section id="rtcrtpcontributingsource-extensions">
     <h3>
       {{RTCRtpContributingSource}} extensions
