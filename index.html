@@ -415,11 +415,6 @@ partial interface RTCRtpTransceiver {
               to <var>depth</var>.</p>
             </li>
             <li>
-              <p>If <var>depth</var> is below <a>minimum allowed
-              depth</a> or above <a>maximum allowed depth</a> then clamp
-              <var>depth</var> to <a>minimum allowed
-              depth</a> or <a>maximum allowed depth</a> to be as close as
-              possible to the original value.</p>
             </li>
             <li>
               <p>Let <var>track</var> be <var>receiver</var>'s
@@ -439,6 +434,12 @@ partial interface RTCRtpTransceiver {
                   <a data-cite="RFC5888#section-7">audio/video synchronization</a>,
                   then the <a>user agent</a> SHOULD use the larger of the two receivers'
                   {{RTCRtpReceiver/[[JitterBufferDepth]]}} for both receivers.
+                </p>
+                <p>
+                  When the underlying system is applying a jitter buffer depth, it will
+                  continuously make sure that the actual jitter buffer depth is clamped
+                  within the <a>minimum allowed depth</a> and <a>maximum allowed
+                  depth</a>.
                   <p class="note">
                     If the <a>user agent</a> chooses a depth different from the requested
                     one (e.g. due to network conditions or physical memory
