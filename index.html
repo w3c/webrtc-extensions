@@ -359,7 +359,7 @@ partial interface RTCRtpTransceiver {
     <section id="rtcrtpreceiver-jitterbuffertarget-rtcrtpreceiver-interface">
       <h2>{{RTCRtpReceiver}} interface extensions</h2>
       <pre class="idl">partial interface RTCRtpReceiver {
-  attribute DOMHighResTimestamp? jitterBufferTarget;
+  attribute DOMHighResTimeStamp? jitterBufferTarget;
 };</pre>
     </section>
     <section id="rtcrtpreceiver-jitterbuffertarget-attributes">
@@ -367,7 +367,7 @@ partial interface RTCRtpTransceiver {
       <dl data-link-for="RTCRtpReceiver" data-dfn-for="RTCRtpReceiver"
       class="attributes">
         <dt><dfn>jitterBufferTarget</dfn> of type <span
-          class="idlAttrType">DOMHighResTimestamp</span>, nullable</dt>
+          class="idlAttrType">DOMHighResTimeStamp</span>, nullable</dt>
         <dd>
           <p>This attribute allows the application to specify a target duration
           of time in milliseconds of media for the {{RTCRtpReceiver}}'s jitter
