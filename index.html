@@ -372,9 +372,10 @@ partial interface RTCRtpTransceiver {
           <p>This attribute allows the application to specify a target duration
           of time in milliseconds of media for the {{RTCRtpReceiver}}'s jitter
           buffer to hold. This influences the amount of buffering done by the
-          <a>user agent</a>, and allows applications to control the tradeoff between
-          playout delay and the risk of running out of audio or video frames due to
-          network jitter.
+          <a>user agent</a>, which in turn affects retransmissions and packet loss
+          recovery. Altering the target value allows applications to control the
+          tradeoff between playout delay and the risk of running out of audio or
+          video frames due to network jitter.
 
           <p>The <a>user agent</a> MUST have a <dfn>minimum allowed target</dfn> and a
           <dfn>maximum allowed target</dfn> reflecting what the <a>user agent</a> is
