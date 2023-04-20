@@ -339,63 +339,73 @@ partial interface RTCRtpTransceiver {
       </dl>
     </section>
   </section>
-  <section id="rtcrtpreceiver-jitterbuffertarget">
+  <section id="rtcrtpreceiver-playoutdelay">
     <h3>
-      Adjusting the receiver's jitter buffer
+      Controlling the received playout delay
     </h3>
     <p>
       The {{RTCRtpReceiver}}
       interface is defined in [[WEBRTC]]. This document extends that interface
-      by adding an additional attribute to adjust the receiver's jitter buffer.
+      by adding an additional internal slot and attribute for the playoutDelay.
     </p>
-    <section id="rtcrtpreceiver-jitterbuffertarget-modifications">
+    <section id="rtcrtpreceiver-playoutdelay-modifications">
       <h2>Modification to existing procedures</h2>
       <p>
-        Let {{RTCRtpReceiver}} objects have a <dfn data-dfn-for=RTCRtpReceiver>[[\JitterBufferTarget]]</dfn> internal slot initially
+        Let {{RTCRtpReceiver}} objects have a <dfn data-dfn-for=RTCRtpReceiver>[[\PlayoutDelay]]</dfn> internal slot initially
         initialized to <code>null</code>.
       </p>
     </section>
-    <section id="rtcrtpreceiver-jitterbuffertarget-rtcrtpreceiver-interface">
+    <section id="rtcrtpreceiver-playoutdelay-rtcrtpreceiver-interface">
       <h2>{{RTCRtpReceiver}} interface extensions</h2>
       <pre class="idl">partial interface RTCRtpReceiver {
-  attribute DOMHighResTimeStamp? jitterBufferTarget;
+  attribute double? playoutDelay;
 };</pre>
     </section>
-    <section id="rtcrtpreceiver-jitterbuffertarget-attributes">
+    <section id="rtcrtpreceiver-playoutdelay-attributes">
       <h2>Attributes</h2>
       <dl data-link-for="RTCRtpReceiver" data-dfn-for="RTCRtpReceiver"
       class="attributes">
-        <dt><dfn>jitterBufferTarget</dfn> of type <span
-          class="idlAttrType">DOMHighResTimeStamp</span>, nullable</dt>
+        <dt><dfn>playoutDelay</dfn> of type <span
+          class="idlAttrType">double</span>, nullable</dt>
         <dd>
           <p>This attribute allows the application to specify a target duration
-          of time in milliseconds of media for the {{RTCRtpReceiver}}'s jitter
-          buffer to hold. This influences the amount of buffering done by the
-          <a>user agent</a>, which in turn affects retransmissions and packet loss
-          recovery. Altering the target value allows applications to control the
-          tradeoff between playout delay and the risk of running out of audio or
-          video frames due to network jitter.
-
-          <p>The <a>user agent</a> MUST have a <dfn>minimum allowed target</dfn> and a
-          <dfn>maximum allowed target</dfn> reflecting what the <a>user agent</a> is
+          of time between network reception of media and playout. The
+          <a>user agent</a> SHOULD NOT playout audio or video that is received unless
+          this amount of time has passed in seconds, allowing the <a>user agent</a>
+          to perform more or less buffering than it might otherwise do.
+          This allows to influence the tradeoffs between having a higher delay
+          and the risk that buffers such as the jitter buffer will run out of
+          audio or video frames to play due to network jitter.</p>
+          <p>The <a>user agent</a> may have a <dfn>minimum allowed delay</dfn> and a
+          <dfn>maximum allowed delay</dfn> reflecting what the <a>user agent</a> is
           able or willing to provide based on network conditions and memory
-          constraints, which can change at any time.</p>
-          <div class="note">
-            <p>This is a target value. The resulting change in delay can be gradually
-            observed over time. The receiver's average jitter buffer delay can be
-            measured as the delta
+          constraints.</p>
+          <p class="note">
+            The playout delay hint applies even if DTX is used. For example, if
+            DTX is used and packets start flowing after silence, the hint can
+            influence the <a>user agent</a> to buffer these packets rather than playing
+            them out.
+          </p>
+          <p class="note">
+            If the track is paired with other tracks through
+            {{RTCRtpReceiver}}
+            <a data-cite="WEBRTC#dfn-associatedremotemediastreams">
+            [[\AssociatedRemoteMediaStreams]]</a> internal slot, then it will
+            be synchronized with other tracks (for e.g. audio video
+            synchronization). This means that even if one of the paired tracks
+            is delayed through {{RTCRtpReceiver/[[PlayoutDelay]]}} then the <a>user agent</a>
+            synchronization mechanism will automatically delay all others
+            paired tracks. If multiple such paired tracks are delayed through
+            {{RTCRtpReceiver/[[PlayoutDelay]]}} by different amounts then the largest
+            of those hints will take precedence in synchronization mechanism.
+          </p>
+          <p class="note">
+            The receiver's average delay can be measured as the delta
             {{RTCInboundRtpStreamStats/jitterBufferDelay}} divided by the delta
             {{RTCInboundRtpStreamStats/jitterBufferEmittedCount}}.
-            </p>
-            <p>
-            An average delay is expected even if DTX is used. For example, if
-            DTX is used and packets start flowing after silence, larger targets can
-            influence the <a>user agent</a> to buffer these packets rather than
-            playing them out.
-            </p>
-          </div>
+          </p>
           <p>On getting, this attribute MUST return the value of the
-          {{RTCRtpReceiver/[[JitterBufferTarget]]}} internal slot.</p>
+          {{RTCRtpReceiver/[[PlayoutDelay]]}} internal slot.</p>
           <p>On setting, the <a>user agent</a> MUST run the following steps:</p>
           <ol>
             <li>
@@ -404,52 +414,38 @@ partial interface RTCRtpTransceiver {
               invoked.</p>
             </li>
             <li>
-              <p>Let <var>target</var> be the argument to the setter.</p>
+              <p>Let <var>delay</var> be the argument to the setter.</p>
             </li>
             <li>
-              <p>If <var>target</var> is negative or larger than 4000 milliseconds, then
-              [=exception/throw=] a {{RangeError}}.</p>
+              <p>If <var>delay</var> is negative or larger than 4 seconds then,
+              [=exception/throw=] a {{RangeError}} and abort these steps.</p>
             </li>
             <li>
-              <p>Set <var>receiver</var>'s {{RTCRtpReceiver/[[JitterBufferTarget]]}}
-              to <var>target</var>.</p>
-            </li>
-            <li>
-            </li>
-            <li>
-              <p>Let <var>track</var> be <var>receiver</var>'s
-              {{RTCRtpReceiver/[[ReceiverTrack]]}}.</p>
+              <p>Set the value of <var>receiver</var>'s {{RTCRtpReceiver/[[PlayoutDelay]]}}
+              internal slot to <var>delay</var>.</p>
             </li>
             <li>
               <p>In parallel, begin executing the following steps:</p>
               <ol>
                 <li>
-                  <p>Update the underlying system about the new <var>target</var>,
-                  or that there is no application preference if <var>target</var> is
+                  <p>Update the underlying system about the new delay request,
+                  or that there is no hint if <var>delay</var> is
                   <code>null</code>.</p>
-                </li>
-                <p>
-                  If <var>track</var> is synchronized with another
-                  {{RTCRtpReceiver}}'s track for
-                  <a data-cite="RFC5888#section-7">audio/video synchronization</a>,
-                  then the <a>user agent</a> SHOULD use the larger of the two receivers'
-                  {{RTCRtpReceiver/[[JitterBufferTarget]]}} for both receivers.
-                </p>
-                <p>
-                  When the underlying system is applying a jitter buffer target, it will
-                  continuously make sure that the actual jitter buffer target is clamped
-                  within the <a>minimum allowed target</a> and <a>maximum allowed
-                  target</a>.
+                  <p>If the given delay value is below <a>minimum allowed
+                  delay</a> or above <a>maximum allowed delay</a> then the
+                  value used MUST be clamped to <a>minimum allowed
+                  delay</a> or <a>maximum allowed delay</a> to be as close as
+                  possible to the requested one.</p>
                   <p class="note">
-                    If the <a>user agent</a> ends up using a target different from the
-                    requested one (e.g. due to network conditions or physical memory
+                    If the <a>user agent</a> chooses a delay different from the requested
+                    one (e.g. due to network conditions or physical memory
                     constraints), this is not reflected in the
-                    {{RTCRtpReceiver/[[JitterBufferTarget]]}} internal slot.
+                    {{RTCRtpReceiver/[[PlayoutDelay]]}} internal slot.
                   </p>
-                </p>
+                </li>
                 <li>
-                  <p>Modifying the jitter buffer target of the underlying system SHOULD
-                  affect the internal audio or video buffering gradually in order not
+                  <p>Modifying the delay of the underlying system SHOULD affect
+                  the internal audio or video buffering gradually in order not
                   to hurt user experience. Audio samples or video frames SHOULD
                   be accelerated or decelerated before playout, similarly to how
                   it is done for
