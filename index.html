@@ -340,7 +340,7 @@ partial interface RTCRtpTransceiver {
       </dl>
     </section>
   </section>
-  <section id="rtcrtpreceiver-jitterbufferdepth">
+  <section id="rtcrtpreceiver-jitterbuffertarget">
     <h3>
       Adjusting the receiver's jitter buffer
     </h3>
@@ -349,24 +349,24 @@ partial interface RTCRtpTransceiver {
       interface is defined in [[WEBRTC]]. This document extends that interface
       by adding an additional attribute to adjust the receiver's jitter buffer.
     </p>
-    <section id="rtcrtpreceiver-jitterbufferdepth-modifications">
+    <section id="rtcrtpreceiver-jitterbuffertarget-modifications">
       <h2>Modification to existing procedures</h2>
       <p>
-        Let {{RTCRtpReceiver}} objects have a <dfn data-dfn-for=RTCRtpReceiver>[[\JitterBufferDepth]]</dfn> internal slot initially
+        Let {{RTCRtpReceiver}} objects have a <dfn data-dfn-for=RTCRtpReceiver>[[\JitterBufferTarget]]</dfn> internal slot initially
         initialized to <code>null</code>.
       </p>
     </section>
-    <section id="rtcrtpreceiver-jitterbufferdepth-rtcrtpreceiver-interface">
+    <section id="rtcrtpreceiver-jitterbuffertarget-rtcrtpreceiver-interface">
       <h2>{{RTCRtpReceiver}} interface extensions</h2>
       <pre class="idl">partial interface RTCRtpReceiver {
-  attribute DOMHighResTimestamp? jitterBufferDepth;
+  attribute DOMHighResTimestamp? jitterBufferTarget;
 };</pre>
     </section>
-    <section id="rtcrtpreceiver-jitterbufferdepth-attributes">
+    <section id="rtcrtpreceiver-jitterbuffertarget-attributes">
       <h2>Attributes</h2>
       <dl data-link-for="RTCRtpReceiver" data-dfn-for="RTCRtpReceiver"
       class="attributes">
-        <dt><dfn>jitterBufferDepth</dfn> of type <span
+        <dt><dfn>jitterBufferTarget</dfn> of type <span
           class="idlAttrType">double</span>, nullable</dt>
         <dd>
           <p>This attribute allows the application to specify a target duration
@@ -376,8 +376,8 @@ partial interface RTCRtpTransceiver {
           playout delay and the risk of running out of audio or video frames due to
           network jitter.
 
-          <p>The <a>user agent</a> MUST have a <dfn>minimum allowed depth</dfn> and a
-          <dfn>maximum allowed depth</dfn> reflecting what the <a>user agent</a> is
+          <p>The <a>user agent</a> MUST have a <dfn>minimum allowed target</dfn> and a
+          <dfn>maximum allowed target</dfn> reflecting what the <a>user agent</a> is
           able or willing to provide based on network conditions and memory
           constraints, which can change at any time.</p>
           <div class="note">
@@ -389,13 +389,13 @@ partial interface RTCRtpTransceiver {
             </p>
             <p>
             An average delay is expected even if DTX is used. For example, if
-            DTX is used and packets start flowing after silence, larger depths can
+            DTX is used and packets start flowing after silence, larger targets can
             influence the <a>user agent</a> to buffer these packets rather than
             playing them out.
             </p>
           </div>
           <p>On getting, this attribute MUST return the value of the
-          {{RTCRtpReceiver/[[JitterBufferDepth]]}} internal slot.</p>
+          {{RTCRtpReceiver/[[JitterBufferTarget]]}} internal slot.</p>
           <p>On setting, the <a>user agent</a> MUST run the following steps:</p>
           <ol>
             <li>
@@ -404,15 +404,15 @@ partial interface RTCRtpTransceiver {
               invoked.</p>
             </li>
             <li>
-              <p>Let <var>depth</var> be the argument to the setter.</p>
+              <p>Let <var>target</var> be the argument to the setter.</p>
             </li>
             <li>
-              <p>If <var>depth</var> is negative or larger than 4000 milliseconds, then
+              <p>If <var>target</var> is negative or larger than 4000 milliseconds, then
               [=exception/throw=] a {{RangeError}}.</p>
             </li>
             <li>
-              <p>Set <var>receiver</var>'s {{RTCRtpReceiver/[[JitterBufferDepth]]}}
-              to <var>depth</var>.</p>
+              <p>Set <var>receiver</var>'s {{RTCRtpReceiver/[[JitterBufferTarget]]}}
+              to <var>target</var>.</p>
             </li>
             <li>
             </li>
@@ -424,8 +424,8 @@ partial interface RTCRtpTransceiver {
               <p>In parallel, begin executing the following steps:</p>
               <ol>
                 <li>
-                  <p>Update the underlying system about the new <var>depth</var>,
-                  or that there is no application preference if <var>depth</var> is
+                  <p>Update the underlying system about the new <var>target</var>,
+                  or that there is no application preference if <var>target</var> is
                   <code>null</code>.</p>
                 </li>
                 <p>
@@ -433,23 +433,23 @@ partial interface RTCRtpTransceiver {
                   {{RTCRtpReceiver}}'s track for
                   <a data-cite="RFC5888#section-7">audio/video synchronization</a>,
                   then the <a>user agent</a> SHOULD use the larger of the two receivers'
-                  {{RTCRtpReceiver/[[JitterBufferDepth]]}} for both receivers.
+                  {{RTCRtpReceiver/[[JitterBufferTarget]]}} for both receivers.
                 </p>
                 <p>
-                  When the underlying system is applying a jitter buffer depth, it will
-                  continuously make sure that the actual jitter buffer depth is clamped
-                  within the <a>minimum allowed depth</a> and <a>maximum allowed
-                  depth</a>.
+                  When the underlying system is applying a jitter buffer target, it will
+                  continuously make sure that the actual jitter buffer target is clamped
+                  within the <a>minimum allowed target</a> and <a>maximum allowed
+                  target</a>.
                   <p class="note">
-                    If the <a>user agent</a> chooses a depth different from the requested
-                    one (e.g. due to network conditions or physical memory
+                    If the <a>user agent</a> ends up using a target different from the
+                    requested one (e.g. due to network conditions or physical memory
                     constraints), this is not reflected in the
-                    {{RTCRtpReceiver/[[JitterBufferDepth]]}} internal slot.
+                    {{RTCRtpReceiver/[[JitterBufferTarget]]}} internal slot.
                   </p>
                 </p>
                 <li>
-                  <p>Modifying the jitter buffer depth of the underlying system SHOULD affect
-                  the internal audio or video buffering gradually in order not
+                  <p>Modifying the jitter buffer target of the underlying system SHOULD
+                  affect the internal audio or video buffering gradually in order not
                   to hurt user experience. Audio samples or video frames SHOULD
                   be accelerated or decelerated before playout, similarly to how
                   it is done for
