@@ -206,34 +206,6 @@ partial interface RTCRtpTransceiver {
           </ol>
         </li>
       </ul>
-      <p>
-        In the algorithms for generating initial offers in [[RTCWEB-JSEP]] section 5.2.1,
-        replace "for each supported RTP header extension, an "a=extmap" line, as specified in
-        [[RFC5285]], section 5" " with "For each RTP header extension "e"
-        listed in {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}} where {{RTCRtpHeaderExtensionCapability/direction}} is not {{RTCRtpTransceiverDirection/"stopped"}}, an "a=extmap"
-        line, as specified in [[RFC5285]], section 5, with direction taken from "e"'s {{RTCRtpHeaderExtensionCapability/direction}}
-        attribute."
-      </p>
-      <p>
-        In the algorithm for generating subsequent offers in [[RTCWEB-JSEP]] section 5.2.2, replace "The
-        RTP header extensions MUST only include those that are present in the most recent answer"
-        with "For each RTP header extension listed in {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}},
-        and where {{RTCRtpHeaderExtensionCapability/direction}} is not {{RTCRtpTransceiverDirection/"stopped"}}, generate
-        an appropriate "a=extmap" line with "direction" set according to the rules of [[RFC5285]]
-        section 6, considering the {{RTCRtpHeaderExtensionCapability/direction}} in {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}} to indicate the
-        answerer's desired usage".
-      </p>
-      <p>
-        In the algorithm for generating initial answers in [[RTCWEB-JSEP]] section 5.3.1, replace "For
-        each supported RTP header extension that is present in the offer" with "For each
-        supported RTP header extension that is present in the offer and is also present in
-        {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}} with a {{RTCRtpHeaderExtensionCapability/direction}} different from {{RTCRtpTransceiverDirection/"stopped"}},
-        set the appropriate direction based on {{RTCRtpHeaderExtensionCapability/direction}} that does not exceed the direction in the offer".
-      </p>
-      <p class="note">
-        Since JSEP does not know about WebRTC internal slots, merging this change requires
-        more work on a JSEP revision.
-      </p>
     </section>
     <section id="rtp-header-extension-control-transceiver-methods">
       <h3>Methods</h3>
