@@ -206,6 +206,11 @@ partial interface RTCRtpTransceiver {
           </ol>
         </li>
       </ul>
+    <p>
+      In [[JSEPbis]] Sections 5.2.1 and 5.2.2 an RTP header extension "e" is considered "enabled" if it is
+      listed in {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}} where {{RTCRtpHeaderExtensionCapability/direction}} is not 
+      {{RTCRtpTransceiverDirection/"stopped"}}.
+    </p>
     </section>
     <section id="rtp-header-extension-control-transceiver-methods">
       <h3>Methods</h3>
