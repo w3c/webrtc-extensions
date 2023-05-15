@@ -551,7 +551,7 @@ partial interface RTCRtpTransceiver {
             The semantics of flag is similar to the RTCP FIR message described in [RFC5104], section 3.5.1.
           </p>
           <p>
-            In the steps to call the {{setParameters}} method modify the step to validate parameters and
+            In the steps to call the {{RTCRtpSender/setParameters()}} method modify the step to validate parameters and
             remove {{requestKeyframe}} if [= transceiver kind =] is `"audio"`.
           </p>
         </dd>
