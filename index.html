@@ -62,6 +62,18 @@
       <li><a href="https://webrtc.org/experiments/rtp-hdrext/abs-capture-time#estimated-capture-clock-offset"><dfn>estimated capture clock offset</dfn></a>
     </ul>
     <p>The process of <dfn>chaining</dfn> an operation to an <dfn>operations chain</dfn> is defined in [[WEBRTC]] Section 4.4.1.2.</p>
+    <p>
+      The {{EventHandler}} interface, representing a callback used for event handlers, is defined in [[!HTML]].
+    </p>
+    <p>
+      The concepts [= queue a task =] and [= networking task source =] are defined in [[!HTML]].
+    </p>
+    <p>
+      The concept [= fire an event =] is defined in [[!DOM]].
+    </p>
+    <p>
+      The terms [= event =], [= event handlers =] and [= event handler event types =] are defined in [[!HTML]].
+    </p>
   </section>
   <section id="ice-csp">
     <h3>
@@ -684,6 +696,153 @@ dictionary RTCEncodingOptions {
       </p>
     </section>
   </section>
+  <section id="rtcicetransport">
+    <h3>
+      {{RTCIceTransport}} extensions
+    </h3>
+    <p>
+      The {{RTCIceTransport}} interface is defined in [[WEBRTC]]. This document extends that interface to allow an
+      application to observe and affect certain actions that an <dfn>ICE agent</dfn> [[RFC5245]] performs.
+    </p>
+    <p>
+      Add the following internal slots to the {{RTCIceTransport}} object:
+    </p>
+    <ul>
+      <li>
+        <dfn class=export data-dfn-for="RTCIceTransport">[[\ProposalPending]]</dfn> initialized to <code>false</code>.
+      </li>
+    </ul>
+    <p>
+      When the [= ICE agent =] has selected a candidate pair to prune, the [= user agent =] MUST [= queue a task =] to <dfn id="rtcicetransport-propose-prune">propose a candidate pair pruning</dfn>:
+    </p>
+    <ol class="algorithm">
+      <li>
+        <p>
+          Let |connection:RTCPeerConnection| be the {{RTCPeerConnection}} object associated with this [= ICE agent =].
+        </p>
+      </li>
+      <li>
+        <p>
+          If <var>connection</var>.{{RTCPeerConnection/[[IsClosed]]}} is
+          <code>true</code>, abort these steps.
+        </p>
+      </li>
+      <li>
+        <p>
+          Let |transport:RTCIceTransport| be the {{RTCIceTransport}} object associated with this candidate pair.
+        </p>
+      </li>
+      <li>
+        <p>
+          Let |candidatePair:RTCIceCandidatePair| be the candidate pair which is being proposed for pruning.
+        </p>
+      </li>
+      <li>
+        <p>
+          Set |transport|.{{RTCIceTransport/[[ProposalPending]]}} to <code>true</code>.
+        </p>
+      </li>
+      <li>
+        <p>
+          Let |accepted:boolean| be the result of [= fire an event | firing an event =] named
+          {{RTCIceTransport/candidatepairpruneproposed}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
+          {{Event/cancelable}} attribute initialized to <code>true</code>, and the {{RTCIceCandidatePairEvent/candidatePair}}
+          attribute initialized to |candidatePair|.
+        </p>
+      </li>
+      <li>
+        <p>
+          Set |transport|.{{RTCIceTransport/[[ProposalPending]]}} to <code>false</code>.
+        </p>
+      </li>
+      <li>
+        <p>
+          If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not prune the candidate pair indicated by |candidatePair|, and instead continue to send and respond to ICE connectivity checks on the candidate pair as before.
+        </p>
+      </li>
+      <li>
+        <p>
+          Otherwise, instruct the [= ICE agent =] to prune the candidate pair indicated by |candidatePair|.
+        </p>
+      </li>
+    </ol>
+    <pre class="idl">
+      partial interface RTCIceTransport {
+        attribute EventHandler oncandidatepairpruneproposed;
+      };</pre>
+    <section>
+      <h2>Attributes</h2>
+      <dl data-link-for="RTCIceTransport" data-dfn-for="RTCIceTransport" class="attributes">
+        <dt>
+          <dfn>oncandidatepairpruneproposed</dfn> of type <span class="idlAttrType">{{EventHandler}}</span>
+        </dt>
+        <dd>
+          <p>
+            The event type of this event handler is {{candidatepairpruneproposed}}.
+          </p>
+          <p>
+            When the [= ICE agent =] has selected a candidate pair to prune, but before the pruning has actually occurred,
+            the [= user agent =] MUST [= propose a candidate pair pruning =].
+          </p>
+        </dd>
+      </dl>
+    </section>
+    <section>
+      <h2>
+        <dfn>RTCIceCandidatePairEvent</dfn>
+      </h2>
+      <p>
+        The {{RTCIceTransport/candidatepairpruneproposed}} event uses the {{RTCIceCandidatePairEvent}} interface.
+      </p>
+      <div>
+        <pre class="idl">[Exposed=Window]
+interface RTCIceCandidatePairEvent : Event {
+  constructor(DOMString type, RTCIceCandidatePairEventInit eventInitDict);
+  readonly attribute RTCIceCandidatePair candidatePair;
+};</pre>
+        <section>
+          <h4>Constructors</h4>
+          <dl data-link-for="RTCIceCandidatePairEvent" data-dfn-for="RTCIceCandidatePairEvent" class="constructors">
+            <dt><dfn>RTCIceCandidatePairEvent.constructor()</dfn></dt>
+            <dd></dd>
+          </dl>
+        </section>
+        <section>
+          <h4>Attributes</h4>
+          <dl data-link-for="RTCIceCandidatePairEvent" data-dfn-for="RTCIceCandidatePairEvent" class="attributes">
+            <dt>
+              <dfn>candidatePair</dfn> of type <span class="idlAttrType">{{RTCIceCandidatePair}}</span>, readonly
+            </dt>
+            <dd>
+              <p>
+                The {{candidatePair}} attribute represents the {{RTCIceCandidatePair}} object associated with the event.
+              </p>
+            </dd>
+          </dl>
+        </section>
+      </div>
+      <div>
+        <pre class="idl">
+dictionary RTCIceCandidatePairEventInit : EventInit {
+  required RTCIceCandidatePair candidatePair;
+};</pre>
+        <section id="rtcicecandidatepaireventinit">
+          <h4>Dictionary <dfn>RTCIceCandidatePairEventInit</dfn> Members</h4>
+          <dl data-link-for="RTCIceCandidatePairEventInit" data-dfn-for="RTCIceCandidatePairEventInit"
+            class="dictionary-members">
+            <dt>
+              <dfn>candidatePair</dfn> of type <span class="idlAttrType">{{RTCIceCandidatePair}}</span>, required
+            </dt>
+            <dd>
+              <p>
+                The {{RTCIceCandidatePair}} object announced by the event.
+              </p>
+            </dd>
+          </dl>
+        </section>
+      </div>
+    </section>
+  </section>
   <section id="rtcrtpcontributingsource-extensions">
     <h3>
       {{RTCRtpContributingSource}} extensions
@@ -1095,6 +1254,29 @@ partial interface RTCRtpTransceiver {
         is hardware-accelerated".
       </p>
     </section>
+  </section>
+  <section class="informative">
+    <h2>Event summary</h2>
+    <p>
+      The following events fire on {{RTCIceTransport}} objects:</p>
+    <table class="simple">
+      <thead>
+        <tr>
+          <th>Event name</th>
+          <th>Interface</th>
+          <th>Fired when...</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope=row><dfn data-dfn-for="RTCIceTransport" data-dfn-type=event>candidatepairpruneproposed</dfn></th>
+          <td>{{RTCIceCandidatePairEvent}}</td>
+          <td>
+            The [= ICE agent =] has selected a candidate pair to prune, but the pruning has not yet occurred.
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </section>
   <section class="informative" id="security-considerations">
     <h2>
