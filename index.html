@@ -705,14 +705,6 @@ dictionary RTCEncodingOptions {
       application to observe and affect certain actions that an <dfn>ICE agent</dfn> [[RFC5245]] performs.
     </p>
     <p>
-      Add the following internal slots to the {{RTCIceTransport}} object:
-    </p>
-    <ul>
-      <li>
-        <dfn class=export data-dfn-for="RTCIceTransport">[[\ProposalPending]]</dfn> initialized to <code>false</code>.
-      </li>
-    </ul>
-    <p>
       When the [= ICE agent =] has selected a candidate pair to prune, the [= user agent =] MUST [= queue a task =] to <dfn id="rtcicetransport-propose-prune">propose a candidate pair pruning</dfn>:
     </p>
     <ol class="algorithm">
@@ -739,20 +731,10 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Set |transport|.{{RTCIceTransport/[[ProposalPending]]}} to <code>true</code>.
-        </p>
-      </li>
-      <li>
-        <p>
           Let |accepted:boolean| be the result of [= fire an event | firing an event =] named
           {{RTCIceTransport/candidatepairpruneproposed}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
           {{Event/cancelable}} attribute initialized to <code>true</code>, and the {{RTCIceCandidatePairEvent/candidatePair}}
           attribute initialized to |candidatePair|.
-        </p>
-      </li>
-      <li>
-        <p>
-          Set |transport|.{{RTCIceTransport/[[ProposalPending]]}} to <code>false</code>.
         </p>
       </li>
       <li>
