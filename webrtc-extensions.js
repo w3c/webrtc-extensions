@@ -43,6 +43,11 @@ var respecConfig = {
       },
       "CRYPTEX": {
 	"aliasOf": "RFC9335"
-    }
+      },
+      "JSEPbis": {
+	"title": "JavaScript Session Establishment Protocol (JSEP) - bis",
+	"href": "https://www.ietf.org/archive/id/draft-uberti-rtcweb-rfc8829bis-04.html",
+	"publisher": "IETF"
+      }
     }
 }
