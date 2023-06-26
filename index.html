@@ -750,22 +750,22 @@ dictionary RTCEncodingOptions {
     </ol>
     <pre class="idl">
       partial interface RTCIceTransport {
-        attribute EventHandler oncandidatepairadded;
+        attribute EventHandler onicecandidatepair;
         attribute EventHandler onicecandidatepairprune;
       };</pre>
     <section>
       <h2>Attributes</h2>
       <dl data-link-for="RTCIceTransport" data-dfn-for="RTCIceTransport" class="attributes">
         <dt>
-          <dfn>oncandidatepairadded</dfn> of type <span class="idlAttrType">{{EventHandler}}</span>
+          <dfn>onicecandidatepair</dfn> of type <span class="idlAttrType">{{EventHandler}}</span>
         </dt>
         <dd>
           <p>
-            The event type of this event handler is {{candidatepairadded}}.
+            The event type of this event handler is {{icecandidatepair}}.
           </p>
           <p>
             When the [= ICE agent =] has formed a candidate pair, the [= user agent =] MUST queue a task to [= fire an
-            event =] named {{candidatepairadded}} using the {{RTCIceCandidatePairEvent}} interface with the
+            event =] named {{icecandidatepair}} using the {{RTCIceCandidatePairEvent}} interface with the
             {{RTCIceCandidatePairEvent/candidatePair}} attribute set to the formed candidate pair.
           </p>
         </dd>
@@ -788,7 +788,7 @@ dictionary RTCEncodingOptions {
         <dfn>RTCIceCandidatePairEvent</dfn>
       </h2>
       <p>
-        The {{RTCIceTransport/candidatepairadded}} and {{RTCIceTransport/icecandidatepairprune}} events use the {{RTCIceCandidatePairEvent}} interface.
+        The {{RTCIceTransport/icecandidatepair}} and {{RTCIceTransport/icecandidatepairprune}} events use the {{RTCIceCandidatePairEvent}} interface.
       </p>
       <div>
         <pre class="idl">[Exposed=Window]
@@ -1265,7 +1265,7 @@ partial interface RTCRtpTransceiver {
       </thead>
       <tbody>
         <tr>
-          <th scope=row><dfn data-dfn-for="RTCIceTransport" data-dfn-type=event>candidatepairadded</dfn></th>
+          <th scope=row><dfn data-dfn-for="RTCIceTransport" data-dfn-type=event>icecandidatepair</dfn></th>
           <td>{{RTCIceCandidatePairEvent}}</td>
           <td>
             The [= ICE agent =] has formed a candidate pair and is making it available to the script.
