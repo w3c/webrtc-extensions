@@ -733,8 +733,7 @@ dictionary RTCEncodingOptions {
         <p>
           Let |accepted:boolean| be the result of [= fire an event | firing an event =] named
           {{RTCIceTransport/icecandidatepairprune}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
-          {{Event/cancelable}} attribute initialized to <code>true</code>, and the {{RTCIceCandidatePairEvent/candidatePair}}
-          attribute initialized to |candidatePair|.
+          {{Event/cancelable}} attribute initialized to <code>true</code>, and the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively, of |candidatePair|.
         </p>
       </li>
       <li>
@@ -765,8 +764,8 @@ dictionary RTCEncodingOptions {
           </p>
           <p>
             When the [= ICE agent =] has formed a candidate pair, the [= user agent =] MUST queue a task to [= fire an
-            event =] named {{icecandidatepair}} using the {{RTCIceCandidatePairEvent}} interface with the
-            {{RTCIceCandidatePairEvent/candidatePair}} attribute set to the formed candidate pair.
+            event =] named {{icecandidatepair}} using the {{RTCIceCandidatePairEvent}} interface, with the
+            {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes set to the local and remote candidates, respectively, of the formed candidate pair.
           </p>
         </dd>
         <dt>
@@ -794,7 +793,8 @@ dictionary RTCEncodingOptions {
         <pre class="idl">[Exposed=Window]
 interface RTCIceCandidatePairEvent : Event {
   constructor(DOMString type, RTCIceCandidatePairEventInit eventInitDict);
-  readonly attribute RTCIceCandidatePair candidatePair;
+  readonly attribute RTCIceCandidate local;
+  readonly attribute RTCIceCandidate remote;
 };</pre>
         <section>
           <h4>Constructors</h4>
@@ -807,11 +807,19 @@ interface RTCIceCandidatePairEvent : Event {
           <h4>Attributes</h4>
           <dl data-link-for="RTCIceCandidatePairEvent" data-dfn-for="RTCIceCandidatePairEvent" class="attributes">
             <dt>
-              <dfn>candidatePair</dfn> of type <span class="idlAttrType">{{RTCIceCandidatePair}}</span>, readonly
+              <dfn>local</dfn> of type <span class="idlAttrType">{{RTCIceCandidate}}</span>, readonly
             </dt>
             <dd>
               <p>
-                The {{candidatePair}} attribute represents the {{RTCIceCandidatePair}} object associated with the event.
+                The {{local}} attribute represents the local {{RTCIceCandidate}} of the candidate pair associated with the event.
+              </p>
+            </dd>
+            <dt>
+              <dfn>remote</dfn> of type <span class="idlAttrType">{{RTCIceCandidate}}</span>, readonly
+            </dt>
+            <dd>
+              <p>
+                The {{remote}} attribute represents the remote {{RTCIceCandidate}} of the candidate pair associated with the event.
               </p>
             </dd>
           </dl>
@@ -820,18 +828,27 @@ interface RTCIceCandidatePairEvent : Event {
       <div>
         <pre class="idl">
 dictionary RTCIceCandidatePairEventInit : EventInit {
-  required RTCIceCandidatePair candidatePair;
+  required RTCIceCandidate local;
+  required RTCIceCandidate remote;
 };</pre>
         <section id="rtcicecandidatepaireventinit">
           <h4>Dictionary <dfn>RTCIceCandidatePairEventInit</dfn> Members</h4>
           <dl data-link-for="RTCIceCandidatePairEventInit" data-dfn-for="RTCIceCandidatePairEventInit"
             class="dictionary-members">
             <dt>
-              <dfn>candidatePair</dfn> of type <span class="idlAttrType">{{RTCIceCandidatePair}}</span>, required
+              <dfn>local</dfn> of type <span class="idlAttrType">{{RTCIceCandidate}}</span>, required
             </dt>
             <dd>
               <p>
-                The {{RTCIceCandidatePair}} object announced by the event.
+                The local {{RTCIceCandidate}} of the candidate pair announced by the event.
+              </p>
+            </dd>
+            <dt>
+              <dfn>remote</dfn> of type <span class="idlAttrType">{{RTCIceCandidate}}</span>, required
+            </dt>
+            <dd>
+              <p>
+                The remote {{RTCIceCandidate}} of the candidate pair announced by the event.
               </p>
             </dd>
           </dl>
