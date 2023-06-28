@@ -527,35 +527,69 @@ partial interface RTCRtpTransceiver {
       </dl>
     </section>
   </section>
-  <section id="rtcrtpencodingparameters-video-keyframe">
+  <section id="rtcrtpsender-setparameters-keyframe">
     <h3>
-      RTCRtpEncodingParameters extensions for requesting the generation of a key frame.
+      {{RTCRtpSender}} {{RTCRtpSender/setParameters()}} extensions for requesting the generation of a key frame.
     </h3>
     <p>
-      The {{RTCRtpEncodingParameters}} dictionary is defined in
-      [[WEBRTC]]. This document extends that dictionary with
-      additional members to request generation of a key frame by the encoder.
+      The {{RTCRtpSender}}'s {{RTCRtpSender/setParameters()}} method is defined in
+      [[WEBRTC]]. This document extends it with an optional second argument
+      to request generation of a key frame by the encoder.
     </p>
-    <pre class="idl">partial dictionary RTCRtpEncodingParameters {
-  boolean requestKeyframe = false;
+    <pre class="idl">dictionary RTCEncodeOptions {
+  boolean keyFrame = false;
 };</pre>
-    <section id="rtcrtpencodingparameters-video-keyframe-attributes">
-      <h2>Dictionary {{RTCRtpEncodingParameters}} Members</h2>
-      <dl data-link-for="RTCRtpEncodingParameters" data-dfn-for="RTCRtpEncodingParameters" class="dictionary-members"></dl>
+    <section id="rtcrtpsender-setparameters-keyframe-idl">
+      <h2>Dictionary {{RTCEncodeOptions}} Members</h2>
+      <p>
+        RTCEncodeOptions is the WebRTC equivalent of {{VideoEncoderEncodeOptions}} in [[WebCodecs]].
+      </p>
+      <dl data-link-for="RTCEncodeOptions" data-dfn-for="RTCEncodeOptions" class="dictionary-members"></dl>
         <dt>
-          <dfn data-idl>requestKeyframe</dfn> of type <span class="idlMemberType">boolean</span>, defaulting to <code>false</code>.
+          <dfn data-idl>keyFrame</dfn> of type <span class="idlMemberType">boolean</span>, defaulting to <code>false</code>.
         </dt>
         <dd>
           <p>
             When set to true, request that RTCRtpSender's encoder generates a keyframe for the encoding.
             The semantics of flag is similar to the RTCP FIR message described in [RFC5104], section 3.5.1.
           </p>
-          <p>
-            In the steps to call the {{RTCRtpSender/setParameters()}} method modify the step to validate parameters and
-            remove {{requestKeyframe}} if [= transceiver kind =] is `"audio"`.
-          </p>
         </dd>
       </dl>
+    </section>
+    <section id="rtcrtpsender-setparameters-keyframe-interface-extensions">
+      <h2>{{RTCRtpSender}} {{RTCRtpSender/setParameters()}} extensions</h2>
+      <pre class="idl" data-tests="idlharness.https.window.js">[Exposed=Window]
+partial interface RTCRtpSender {
+    Promise&lt;undefined&gt; setParameters(RTCRtpSendParameters parameters,
+        optional sequence&lt;RTCEncodeOptions&gt; encodeOptions = []);
+};</pre>
+      <p>
+        In the steps to call the {{RTCRtpSender/setParameters()}} method,
+        let <var>parameters</var> be the method's first argument and let <var>encodeOptions</var>
+        be the method's second argument.
+      </p>
+      <p>
+        If the [=RTCRtpTransceiver/transceiver kind=] of the associated kind is `"audio"`, set
+        <var>encodeOptions</var> to the empty list.
+      </p>
+      <p>
+        Append the following step after the steps to validate the <var>parameters</var>:
+        <ul>
+          <li>If <var>encodeOptions</var> is not empty and <code><var>encodeOptions</var>.length</code>
+            is different from <code><var>parameters</var>.encodings.length</code>,
+            return a promise [= rejected =] with a newly [= exception/created =] {{InvalidModificationError}}.</li>
+        </ul>
+      </p>
+      <p>
+        In the steps to configure the media stack to use <var>parameters</var>, append the following step:
+        <ul>
+          <li>For the <var>encodeOption</var> at index <var>i</var>, request that the encoder associated with
+            <code><var>parameters</var>.encodings[i]</code> generates a key frame.</li>
+        </ul>
+      </p>
+      <p class="note">
+        The request to generate does not wait for a key frame to be produced by the encoder.
+      </p>
     </section>
   </section>
   <section id="rtcrtpcontributingsource-extensions">
