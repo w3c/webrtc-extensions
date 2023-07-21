@@ -55,12 +55,12 @@
     <p>
       The following terms are defined in
       <a href="https://webrtc.org/experiments/rtp-hdrext/abs-capture-time"><dfn>RTP Header Extension for Absolute Capture Time</dfn></a>:
-      <ul>
-        <li><a href="https://webrtc.org/experiments/rtp-hdrext/abs-capture-time#absolute-capture-timestamp"><dfn>absolute capture timestamp</dfn></a>
-        <li><a href="https://webrtc.org/experiments/rtp-hdrext/abs-capture-time#timestamp-interpolation"><dfn>timestamp interpolation</dfn></a>
-        <li><a href="https://webrtc.org/experiments/rtp-hdrext/abs-capture-time#estimated-capture-clock-offset"><dfn>estimated capture clock offset</dfn></a>
-      </ul>
     </p>
+    <ul>
+      <li><a href="https://webrtc.org/experiments/rtp-hdrext/abs-capture-time#absolute-capture-timestamp"><dfn>absolute capture timestamp</dfn></a>
+      <li><a href="https://webrtc.org/experiments/rtp-hdrext/abs-capture-time#timestamp-interpolation"><dfn>timestamp interpolation</dfn></a>
+      <li><a href="https://webrtc.org/experiments/rtp-hdrext/abs-capture-time#estimated-capture-clock-offset"><dfn>estimated capture clock offset</dfn></a>
+    </ul>
     <p>The process of <dfn>chaining</dfn> an operation to an <dfn>operations chain</dfn> is defined in [[WEBRTC]] Section 4.4.1.2.</p>
   </section>
   <section id="ice-csp">
@@ -824,7 +824,6 @@ dictionary RTCEncodingOptions {
             {{RTCRtpContributingSource.timestamp}} -
             <var>receiverCaptureTimestamp</var>.
           </p>
-          </p>
         </dd>
       </dl>
     </section>
@@ -838,7 +837,7 @@ dictionary RTCEncodingOptions {
        Transferable Data Channels
      </h3>
      <p>This section extends {{RTCDataChannel}} by making it <a data-cite="!HTML/#transferable-objects">transferable</a>.</p>
-      This allows sending and receiving messages outside the context the connection was created, for instance in workers or third-party iframes.</p>
+     <p>This allows sending and receiving messages outside the context the connection was created, for instance in workers or third-party iframes.</p>
       <div>
       <p>The WebIDL changes are the following:
       <pre class="idl">
@@ -959,23 +958,22 @@ dictionary RTCEncodingOptions {
           the transceiver is sending enrypted RTP header extensions as defined in
           [[CRYPTEX]].
         </p>
-        <div>
-  <pre class="idl">
-  partial interface RTCRtpTransceiver {
-    readonly attribute boolean rtpHeaderEncryptionNegotiated;
-  };</pre>
+        <pre class="idl">
+partial interface RTCRtpTransceiver {
+  readonly attribute boolean rtpHeaderEncryptionNegotiated;
+};</pre>
       <section>
         <h2>
           Attributes
         </h2>
         <dl data-link-for="RTCRtpTransceiver" data-dfn-for=
         "RTCRtpTransceiver" class="attributes">
-        <dt>
-          <dfn id="dom-rtptransceiver-rtpHeaderEncryptionNegotiated">rtpHeaderEncryptionNegotiated</dfn> of type <span class=
+          <dt>
+            <dfn id="dom-rtptransceiver-rtpHeaderEncryptionNegotiated">rtpHeaderEncryptionNegotiated</dfn> of type <span class=
                   "idlAttrType">Boolean</span>, readonly, nullable
           </dt>
           <dd>
-          <p>
+            <p>
               The {{rtpHeaderEncryptionNegotiated}} attribute indicates whether [[CRYPTEX]] has been
               negotiated.  On getting, the attribute MUST
               return the value of the {{RTCRtpTransceiver/[[RtpHeaderEncryptionNegotiated]]}} slot.
