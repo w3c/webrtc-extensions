@@ -577,33 +577,32 @@ dictionary RTCEncodeOptions {
       </dl>
     </section>
     <section id="rtcrtpsender-setparameters-keyframe-interface-extensions">
-      <h2>{{RTCRtpSender}} {{RTCRtpSender/setParameters()}} extensions</h2>
+      <h2>{{RTCRtpSender}} {{RTCRtpSender/setParameters()}} modifications to existing procedures</h2>
       <p>
         In the steps to call the {{RTCRtpSender/setParameters()}} method,
         let <var>parameters</var> be the method's first argument and let
         <var>setParameterOptions</var> be the method's second argument.
       </p>
-      <p>
-        If the [=RTCRtpTransceiver/transceiver kind=] of the associated kind is `"audio"`, set
-        <var>setParameterOptions.encodeOptions</var> to the empty list.
-      </p>
-      <p>
-        Append the following step after the steps to validate the <var>parameters</var>:
-        <ul>
-          <li>If <var>setParameterOptions.encodeOptions</var> is not empty and
-            <code><var>setParameterOptions.encodeOptions</var>.length</code> is
-            different from <code><var>parameters</var>.encodings.length</code>,
-            return a promise [= rejected =] with a newly [= exception/created =] {{InvalidModificationError}}.</li>
-        </ul>
-      </p>
-      <p>
-        In the steps to configure the media stack to use <var>parameters</var>, append the following step:
-        <ul>
-          <li>For each <var>setParameterOptions.encodeOptions</var> indexed by <var>i</var>,
-            if the <code><var>setParameterOptions.encodeOptions</var>[i].keyFrame</code> flag is set to <var>true</var>,
-            request that the encoder associated with <code><var>parameters</var>.encodings[i]</code> generates a key frame.</li>
-        </ul>
-      </p>
+      <p>Append the following step after the steps to validate the <var>parameters</var>:</p>
+      <ul>
+        <li>
+          <p>If the [=RTCRtpTransceiver/transceiver kind=] of the associated kind is `"audio"`, set
+          <var>setParameterOptions.encodeOptions</var> to the empty list.</p>
+        </li>
+        <li>
+          <p>If <var>setParameterOptions.encodeOptions</var> is not empty and
+          <code><var>setParameterOptions.encodeOptions</var>.length</code> is
+          different from <code><var>parameters</var>.encodings.length</code>,
+          return a promise [= rejected =] with a newly [= exception/created =] {{InvalidModificationError}}.</p>
+        </li>
+      </ul>
+      <p>In the steps to configure the media stack to use <var>parameters</var>, append the following step:</p>
+      <ul>
+        <li><p>For each <var>setParameterOptions.encodeOptions</var> indexed by <var>i</var>,
+          if the <code><var>setParameterOptions.encodeOptions</var>[i].keyFrame</code> flag is set to <var>true</var>,
+          request that the encoder associated with <code><var>parameters</var>.encodings[i]</code> generates a key frame.</p>
+        </li>
+      </ul>
       <p class="note">
         setParameters to generate does not wait for a key frame to be produced by the encoder.
       </p>
