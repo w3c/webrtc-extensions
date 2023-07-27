@@ -604,6 +604,88 @@ partial interface RTCRtpTransceiver {
       </ol>
     </section>
   </section>
+  <section id="rtcrtpsender-setparameters-keyframe">
+    <h3>
+      {{RTCRtpSender}} {{RTCRtpSender/setParameters()}} extensions for requesting the generation of a key frame.
+    </h3>
+    <p>
+      The {{RTCRtpSender}}'s {{RTCRtpSender/setParameters()}} method is defined in
+      [[WEBRTC]]. This document extends the optional second argument to request
+      generation of a key frame by the encoder.
+    </p>
+    <pre class="idl">partial dictionary RTCSetParameterOptions {
+  sequence&lt;RTCEncodingOptions&gt; encodingOptions = [];
+};
+
+dictionary RTCEncodingOptions {
+  boolean keyFrame = false;
+};</pre>
+    <section id="rtcrtpsender-setparameters-keyframe-setparameteroptions-idl">
+      <h2>Dictionary {{RTCSetParameterOptions}} Members</h2>
+      <p>
+        The {{RTCSetParameterOptions}} are extended by a sequence of {{RTCEncodingOptions}}, one for each encoding.
+      </p>
+      <dl data-link-for="RTCSetParameterOptions" data-dfn-for="RTCSetParameterOptions" class="dictionary-members">
+        <dt>
+          <dfn data-idl>encodingOptions</dfn> of type <span class="idlMemberType">sequence&lt;{{RTCEncodingOptions}}&gt;</span>, defaulting to <code>[]</code>.
+        </dt>
+        <dd>
+          <p>
+            A sequence containing encoding options for each RTP encoding.
+          </p>
+        </dd>
+      </dl>
+    </section>
+    <section id="rtcrtpsender-setparameters-keyframe-encodingoptions-idl">
+      <h2>Dictionary {{RTCEncodingOptions}} Members</h2>
+      <p>
+        {{RTCEncodingOptions}} is the WebRTC equivalent of {{VideoEncoderEncodeOptions}} in [[WebCodecs]].
+      </p>
+      <dl data-link-for="RTCEncodingOptions" data-dfn-for="RTCEncodingOptions" class="dictionary-members">
+        <dt>
+          <dfn data-idl>keyFrame</dfn> of type <span class="idlMemberType">boolean</span>, defaulting to <code>false</code>.
+        </dt>
+        <dd>
+          <p>
+            When set to true, request that RTCRtpSender's encoder generates a keyframe for the encoding.
+            The semantic of this boolean is similar to the RTCP FIR message described in [RFC5104], section 3.5.1.
+          </p>
+        </dd>
+      </dl>
+    </section>
+    <section id="rtcrtpsender-setparameters-keyframe-interface-extensions">
+      <h2>{{RTCRtpSender}} {{RTCRtpSender/setParameters()}} modifications to existing procedures</h2>
+      <p>
+        In the steps to call the {{RTCRtpSender/setParameters()}} method,
+        let <var>parameters</var> be the method's first argument and let
+        <var>setParameterOptions</var> be the method's second argument.
+      </p>
+      <p>Append the following steps after the steps to validate the <var>parameters</var>:</p>
+      <ul>
+        <li>
+          <p>If the [=RTCRtpTransceiver/transceiver kind=] of the associated kind is `"audio"`, set
+          <var>setParameterOptions.encodingOptions</var> to the empty list.</p>
+        </li>
+        <li>
+          <p>If <var>setParameterOptions.encodingOptions</var> is not empty and
+          <code><var>setParameterOptions.encodingOptions</var>.length</code> is
+          different from <code><var>parameters</var>.encodings.length</code>,
+          return a promise [= rejected =] with a newly [= exception/created =] {{InvalidModificationError}}.</p>
+        </li>
+      </ul>
+      <p>In the steps to configure the media stack to use <var>parameters</var>, append the following step:</p>
+      <ul>
+        <li>
+          <p>For each <var>setParameterOptions.encodingOptions</var> indexed by <var>i</var>,
+          if <code><var>setParameterOptions.encodingOptions</var>[i].keyFrame</code> is set to <var>true</var>,
+          request that the encoder associated with <code><var>parameters</var>.encodings[i]</code> generates a key frame.</p>
+        </li>
+      </ul>
+      <p class="note">
+        {{RTCRtpSender/setParameters()}} does not wait for a key frame to be produced by the encoder.
+      </p>
+    </section>
+  </section>
   <section id="rtcrtpcontributingsource-extensions">
     <h3>
       {{RTCRtpContributingSource}} extensions
