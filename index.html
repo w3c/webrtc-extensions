@@ -587,11 +587,11 @@ dictionary RTCEncodingOptions {
       <ul>
         <li>
           <p>If the [=RTCRtpTransceiver/transceiver kind=] of the associated kind is `"audio"`, set
-          <var>setParameterOptions.encodeOptions</var> to the empty list.</p>
+          <var>setParameterOptions.encodingOptions</var> to the empty list.</p>
         </li>
         <li>
-          <p>If <var>setParameterOptions.encodeOptions</var> is not empty and
-          <code><var>setParameterOptions.encodeOptions</var>.length</code> is
+          <p>If <var>setParameterOptions.encodingOptions</var> is not empty and
+          <code><var>setParameterOptions.encodingOptions</var>.length</code> is
           different from <code><var>parameters</var>.encodings.length</code>,
           return a promise [= rejected =] with a newly [= exception/created =] {{InvalidModificationError}}.</p>
         </li>
@@ -599,8 +599,8 @@ dictionary RTCEncodingOptions {
       <p>In the steps to configure the media stack to use <var>parameters</var>, append the following step:</p>
       <ul>
         <li>
-          <p>For each <var>setParameterOptions.encodeOptions</var> indexed by <var>i</var>,
-          if <code><var>setParameterOptions.encodeOptions</var>[i].keyFrame</code> is set to <var>true</var>,
+          <p>For each <var>setParameterOptions.encodingOptions</var> indexed by <var>i</var>,
+          if <code><var>setParameterOptions.encodingOptions</var>[i].keyFrame</code> is set to <var>true</var>,
           request that the encoder associated with <code><var>parameters</var>.encodings[i]</code> generates a key frame.</p>
         </li>
       </ul>
