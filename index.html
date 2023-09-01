@@ -705,7 +705,7 @@ dictionary RTCEncodingOptions {
       application to observe and affect certain actions that an <dfn>ICE agent</dfn> [[RFC5245]] performs.
     </p>
     <p>
-      When the [= ICE agent =] has selected a candidate pair to prune, the [= user agent =] MUST [= queue a task =] to <dfn id="rtcicetransport-prune">prune a candidate pair</dfn>:
+      When the [= ICE agent =] has picked a candidate pair to remove, the [= user agent =] MUST [= queue a task =] to <dfn id="rtcicetransport-remove">remove a candidate pair</dfn>:
     </p>
     <ol class="algorithm">
       <li>
@@ -726,58 +726,63 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Let |candidatePair:RTCIceCandidatePair| be the candidate pair which is being pruned.
+          Let |candidatePair:RTCIceCandidatePair| be the candidate pair which is being removed.
+        </p>
+      </li>
+      <li>
+        <p>
+          Let |cancelable:boolean| be <code>true</code> if the candidate pair is being removed in order to free an unused candidate, and <code>false</code> otherwise.
         </p>
       </li>
       <li>
         <p>
           Let |accepted:boolean| be the result of [= fire an event | firing an event =] named
-          {{RTCIceTransport/icecandidatepairprune}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
-          {{Event/cancelable}} attribute initialized to <code>true</code>, and the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively, of |candidatePair|.
+          {{RTCIceTransport/icecandidatepairremove}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
+          {{Event/cancelable}} attribute initialized to <var>cancelable</var>, and the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively, of |candidatePair|.
         </p>
       </li>
       <li>
         <p>
-          If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not prune the candidate pair indicated by |candidatePair|, and instead continue to send and respond to ICE connectivity checks on the candidate pair as before.
+          If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not remove the candidate pair indicated by |candidatePair|, and instead continue to send and respond to ICE connectivity checks on the candidate pair as before.
         </p>
       </li>
       <li>
         <p>
-          Otherwise, instruct the [= ICE agent =] to prune the candidate pair indicated by |candidatePair|.
+          Otherwise, instruct the [= ICE agent =] to remove the candidate pair indicated by |candidatePair|.
         </p>
       </li>
     </ol>
     <pre class="idl">
       partial interface RTCIceTransport {
-        attribute EventHandler onicecandidatepair;
-        attribute EventHandler onicecandidatepairprune;
+        attribute EventHandler onicecandidatepairadd;
+        attribute EventHandler onicecandidatepairremove;
       };</pre>
     <section>
       <h2>Attributes</h2>
       <dl data-link-for="RTCIceTransport" data-dfn-for="RTCIceTransport" class="attributes">
         <dt>
-          <dfn>onicecandidatepair</dfn> of type <span class="idlAttrType">{{EventHandler}}</span>
+          <dfn>onicecandidatepairadd</dfn> of type <span class="idlAttrType">{{EventHandler}}</span>
         </dt>
         <dd>
           <p>
-            The event type of this event handler is {{icecandidatepair}}.
+            The event type of this event handler is {{icecandidatepairadd}}.
           </p>
           <p>
             When the [= ICE agent =] has formed a candidate pair, the [= user agent =] MUST queue a task to [= fire an
-            event =] named {{icecandidatepair}} using the {{RTCIceCandidatePairEvent}} interface, with the
+            event =] named {{icecandidatepairadd}} using the {{RTCIceCandidatePairEvent}} interface, with the
             {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes set to the local and remote candidates, respectively, of the formed candidate pair.
           </p>
         </dd>
         <dt>
-          <dfn>onicecandidatepairprune</dfn> of type <span class="idlAttrType">{{EventHandler}}</span>
+          <dfn>onicecandidatepairremove</dfn> of type <span class="idlAttrType">{{EventHandler}}</span>
         </dt>
         <dd>
           <p>
-            The event type of this event handler is {{icecandidatepairprune}}.
+            The event type of this event handler is {{icecandidatepairremove}}.
           </p>
           <p>
-            When the [= ICE agent =] has selected a candidate pair to prune, but before the pruning has actually occurred,
-            the [= user agent =] MUST run the steps to [= prune a candidate pair =].
+            When the [= ICE agent =] has picked a candidate pair to remove, but before the removal has actually occurred,
+            the [= user agent =] MUST run the steps to [= remove a candidate pair =].
           </p>
         </dd>
       </dl>
@@ -787,7 +792,7 @@ dictionary RTCEncodingOptions {
         <dfn>RTCIceCandidatePairEvent</dfn>
       </h2>
       <p>
-        The {{RTCIceTransport/icecandidatepair}} and {{RTCIceTransport/icecandidatepairprune}} events use the {{RTCIceCandidatePairEvent}} interface.
+        The {{RTCIceTransport/icecandidatepairadd}} and {{RTCIceTransport/icecandidatepairremove}} events use the {{RTCIceCandidatePairEvent}} interface.
       </p>
       <div>
         <pre class="idl">[Exposed=Window]
@@ -1282,17 +1287,17 @@ partial interface RTCRtpTransceiver {
       </thead>
       <tbody>
         <tr>
-          <th scope=row><dfn data-dfn-for="RTCIceTransport" data-dfn-type=event>icecandidatepair</dfn></th>
+          <th scope=row><dfn data-dfn-for="RTCIceTransport" data-dfn-type=event>icecandidatepairadd</dfn></th>
           <td>{{RTCIceCandidatePairEvent}}</td>
           <td>
             The [= ICE agent =] has formed a candidate pair and is making it available to the script.
           </td>
         </tr>
         <tr>
-          <th scope=row><dfn data-dfn-for="RTCIceTransport" data-dfn-type=event>icecandidatepairprune</dfn></th>
+          <th scope=row><dfn data-dfn-for="RTCIceTransport" data-dfn-type=event>icecandidatepairremove</dfn></th>
           <td>{{RTCIceCandidatePairEvent}}</td>
           <td>
-            The [= ICE agent =] has selected a candidate pair to prune, which will be pruned unless the operation is canceled by invoking the <code>preventDefault()</code> method on the event.
+            The [= ICE agent =] has picked a candidate pair to remove, and unless the operation is canceled by invoking the <code>preventDefault()</code> method on the event, it will be removed.
           </td>
         </tr>
       </tbody>
