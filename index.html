@@ -755,14 +755,104 @@ dictionary RTCEncodingOptions {
           If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not {{nominate}} |candidatePair|, and instead
           to continue to perform connectivity checks. The [= ICE agent =] may exchange packets using the candidate pair
           indicated by |candidatePair| unless instructed to use another candidate pair with
-          <var>setSelectedCandidatePair</var>.
+          {{RTCIceTransport/setSelectedCandidatePair}}.
+          </p>
+      </li>
+      <li>
+        <p>
+          Otherwise, set |transport|.{{RTCIceTransport/[[CandidatePairNominated]]}} to <var>true</var> and instruct the [= ICE
+          agent =] to {{nominate}} the candidate pair indicated by |candidatePair|.
+        </p>
+      </li>
+    </ol>
+    <p>
+      When the [= ICE agent =] indicates that the {{nomination}} process has concluded, the [= user agent =] MUST queue a task
+      that runs
+      the following steps:
+    </p>
+    <ol class="algorithm">
+      <li>
+        <p>
+          Let |transport:RTCIceTransport| be the {{RTCIceTransport}} object associated with this [= ICE agent =].
         </p>
       </li>
       <li>
         <p>
-          Otherwise, instruct the [= ICE agent =] to {{nominate}} the candidate pair indicated by |candidatePair|. If the
-          nomination succeeds, |candidatePair| will become the selected candidate pair and be exclusively used for
-          exchanging packets. Changing the selected candidate pair will require an ICE restart.
+          If the nomination is successful, continue to the steps for a change in the selected candidate pair.
+        </p>
+      </li>
+      <li>
+        <p>
+          If the nomination fails, set |transport|.{{RTCIceTransport/[[CandidatePairNominated]]}} to false. The selected
+          candidate pair has not changed in this case.
+        </p>
+      </li>
+    </ol>
+    <p>
+      If the application defers the {{nomination}} of a candidate pair by cancelling the
+      {{RTCIceTransport/icecandidatepairnominate}} event, it may select a different candidate pair to exchange packets by
+      calling
+      {{RTCIceTransport/setSelectedCandidatePair}}. When the method is called, the [= user agent =] MUST run the steps to
+      <dfn id="rtcicetransport-select">change the selected candidate pair</dfn>:
+    </p>
+    <ol class="algorithm">
+      <li>
+        <p>
+          Let |connection:RTCPeerConnection| be the {{RTCPeerConnection}} object associated with this [= ICE agent =].
+        </p>
+      </li>
+      <li>
+        <p>
+          If <var>connection</var>.{{RTCPeerConnection/[[IsClosed]]}} is
+          <code>true</code>, [= exception/throw =] an {{InvalidStateError}}.
+        </p>
+      </li>
+      <li>
+        <p>
+          Let |transport:RTCIceTransport| be the {{RTCIceTransport}} object associated with this candidate pair.
+        </p>
+      </li>
+      <li>
+        <p>
+          If <var>transport</var>.{{RTCIceTransport/[[IceRole]]}} is {{RTCIceRole/"controlled"}}, [= exception/throw =] a
+          {{NotAllowedError}}.
+        </p>
+      </li>
+      <li>
+        <p>
+          If <var>transport</var>.{{RTCIceTransport/[[IceRole]]}} is {{RTCIceRole/"unknown"}}, [= exception/throw =] an
+          {{InvalidStateError}}.
+        </p>
+      </li>
+      <li>
+        <p>
+          If <var>transport</var>.{{RTCIceTransport/[[CandidatePairNominated]]}} is <code>true</code>, [= exception/throw =]
+          an {{InvalidStateError}}.
+        </p>
+      </li>
+      <li>
+        <p>
+          If |transport|.{{RTCIceTransport/[[IceTransportState]]}} is either of
+          {{RTCIceTransportState/"new"}}, {{RTCIceTransportState/"failed"}} or {{RTCIceTransportState/"closed"}}, [= exception/throw =]
+          an {{InvalidStateError}}.
+        </p>
+      </li>
+      <li>
+        <p>
+          Let |candidatePair:RTCIceCandidatePair| be the candidate pair which is being set as the selected candidate pair.
+        </p>
+      </li>
+      <li>
+        <p>
+          If |candidatePair| does not describe a candidate pair formed for this {{RTCIceTransport}} and sent in
+          {{RTCIceTransport/onicecandidatepairadd}}, [= exception/throw =] a {{NotFoundError}}.
+        </p>
+      </li>
+      <li>
+        <p>
+          Instruct the [= ICE agent =] to use |candidatePair| to send and receive packets, and continue to the steps for a
+          change in the selected candidate pair (leading up to
+          {{RTCIceTransport/onselectedcandidatepairchange}}).
         </p>
       </li>
     </ol>
@@ -814,11 +904,20 @@ dictionary RTCEncodingOptions {
         </p>
       </li>
     </ol>
+    <p>
+      The {{RTCIceTransport}} object is extended by adding the following internal slot:
+    </p>
+    <ul>
+      <li>
+        <dfn data-dfn-for="RTCIceTransport">[[\CandidatePairNominated]]</dfn> initialized to <var>false</var>.
+      </li>
+    </ul>
     <pre class="idl">
       partial interface RTCIceTransport {
         attribute EventHandler onicecandidatepairadd;
         attribute EventHandler onicecandidatepairremove;
         attribute EventHandler onicecandidatepairnominate;
+        undefined setSelectedCandidatePair(RTCIceCandidatePair candidatePair);
       };</pre>
     <section>
       <h2>Attributes</h2>
@@ -859,10 +958,25 @@ dictionary RTCEncodingOptions {
             When the [= ICE agent =] has picked a candidate pair to {{nominate}} as the selected candidate pair, but before the
             nomination takes place, the [= user agent =] MUST run the steps to [= nominate a candidate pair =].
           </p>
-        </dd>
-      </dl>
-    </section>
-    <section>
+          </dd>
+          </dl>
+          </section>
+          <section>
+            <h2>Methods</h2>
+            <dl data-link-for="RTCIceTransport" data-dfn-for="RTCIceTransport" class="methods">
+              <dt>
+                <dfn>setSelectedCandidatePair</dfn>
+              </dt>
+              <dd>
+                <p>
+                  The {{setSelectedCandidatePair}} method attempts to change the selected candidate pair. If successful, packets will be
+                  sent and received on the provided candidate pair. When this method is invoked, the [= user agent =] must run the
+                  steps to [= change the selected candidate pair =].
+                </p>
+              </dd>
+              </dl>
+              </section>
+      <section>
       <h2>
         <dfn>RTCIceCandidatePairEvent</dfn>
       </h2>
