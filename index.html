@@ -886,7 +886,7 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Let |cancelable:boolean| be <code>true</code> if the candidate pair is being removed in order to free an unused candidate, and <code>false</code> otherwise.
+          Let |cancelable:boolean| be <code>true</code> if |transport|.{{RTCIceTransport/[[CandidatePairNominated]]}} is <code>false</code> and the candidate pair is being removed in order to free an unused candidate, and <code>false</code> otherwise.
         </p>
       </li>
       <li>
