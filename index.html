@@ -717,7 +717,7 @@ dictionary RTCEncodingOptions {
     </p>
     <p>
       When the [= ICE agent =] has picked a candidate pair to {{nominate}} as the selected candidate pair, the [= user agent =]
-      MUST [= queue a task =] to <dfn id="rtcicetransport-nominate">nominate a candidate pair</dfn>:
+      MUST [= queue a task =] to <dfn id="rtcicetransport-nominate" data-lt="nominate the candidate pair">nominate a candidate pair</dfn>:
     </p>
     <ol class="algorithm">
       <li>
@@ -856,6 +856,9 @@ dictionary RTCEncodingOptions {
         </p>
       </li>
     </ol>
+    <p class="note">
+      After changing the selected candidate pair, the [= ICE agent =] may attempt to [= nominate the candidate pair =] as well to conclude ICE processing. The application may cancel the nomination to allow further changes to the selected candidate pair.
+    </p>
     <p>
       When the [= ICE agent =] has picked a candidate pair to remove, the [= user agent =] MUST [= queue a task =] to <dfn id="rtcicetransport-remove">remove a candidate pair</dfn>:
     </p>
