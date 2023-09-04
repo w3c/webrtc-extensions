@@ -74,6 +74,10 @@
     <p>
       The terms [= event =], [= event handlers =] and [= event handler event types =] are defined in [[!HTML]].
     </p>
+    <p>
+      The process of <dfn data-lt="nominate|nominated|nomination">nominating</dfn> a candidate pair is defined in
+      [[RFC8445]] Section 8.1.1.
+    </p>
   </section>
   <section id="ice-csp">
     <h3>
@@ -705,6 +709,64 @@ dictionary RTCEncodingOptions {
       application to observe and affect certain actions that an <dfn>ICE agent</dfn> [[RFC5245]] performs.
     </p>
     <p>
+      The [= ICE agent =] performs connectivity checks to identify valid candidate pairs on which it is possible to send and
+      receive media and data. In order to conclude ICE processing, the [= ICE agent =] {{nominates}} a valid candidate pair
+      as the selected candidate pair. Prior to nomination, any valid candidate pair may be used to exchange packets. Once a
+      candidate pair is nominated successfully, only the selected candidate pair may be used to exchange packets. Changing
+      the selected candidate pair after a successful nomination requires an ICE restart.
+    </p>
+    <p>
+      When the [= ICE agent =] has picked a candidate pair to {{nominate}} as the selected candidate pair, the [= user agent =]
+      MUST [= queue a task =] to <dfn id="rtcicetransport-nominate">nominate a candidate pair</dfn>:
+    </p>
+    <ol class="algorithm">
+      <li>
+        <p>
+          Let |connection:RTCPeerConnection| be the {{RTCPeerConnection}} object associated with this [= ICE agent =].
+        </p>
+      </li>
+      <li>
+        <p>
+          If <var>connection</var>.{{RTCPeerConnection/[[IsClosed]]}} is
+          <code>true</code>, abort these steps.
+        </p>
+      </li>
+      <li>
+        <p>
+          Let |transport:RTCIceTransport| be the {{RTCIceTransport}} object associated with this candidate pair.
+        </p>
+      </li>
+      <li>
+        <p>
+          Let |candidatePair:RTCIceCandidatePair| be the candidate pair which is being {{nominated}}.
+        </p>
+      </li>
+      <li>
+        <p>
+          Let |accepted:boolean| be the result of [= fire an event | firing an event =] named
+          {{RTCIceTransport/icecandidatepairnominate}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
+          {{Event/cancelable}} attribute initialized to <var>true</var>, and the {{RTCIceCandidatePairEvent/local}} and
+          {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively, of
+          |candidatePair|.
+        </p>
+      </li>
+      <li>
+        <p>
+          If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not {{nominate}} |candidatePair|, and instead
+          to continue to perform connectivity checks. The [= ICE agent =] may exchange packets using the candidate pair
+          indicated by |candidatePair| unless instructed to use another candidate pair with
+          <var>setSelectedCandidatePair</var>.
+        </p>
+      </li>
+      <li>
+        <p>
+          Otherwise, instruct the [= ICE agent =] to {{nominate}} the candidate pair indicated by |candidatePair|. If the
+          nomination succeeds, |candidatePair| will become the selected candidate pair and be exclusively used for
+          exchanging packets. Changing the selected candidate pair will require an ICE restart.
+        </p>
+      </li>
+    </ol>
+    <p>
       When the [= ICE agent =] has picked a candidate pair to remove, the [= user agent =] MUST [= queue a task =] to <dfn id="rtcicetransport-remove">remove a candidate pair</dfn>:
     </p>
     <ol class="algorithm">
@@ -756,6 +818,7 @@ dictionary RTCEncodingOptions {
       partial interface RTCIceTransport {
         attribute EventHandler onicecandidatepairadd;
         attribute EventHandler onicecandidatepairremove;
+        attribute EventHandler onicecandidatepairnominate;
       };</pre>
     <section>
       <h2>Attributes</h2>
@@ -783,6 +846,18 @@ dictionary RTCEncodingOptions {
           <p>
             When the [= ICE agent =] has picked a candidate pair to remove, but before the removal has actually occurred,
             the [= user agent =] MUST run the steps to [= remove a candidate pair =].
+          </p>
+        </dd>
+        <dt>
+          <dfn>onicecandidatepairnominate</dfn> of type <span class="idlAttrType">{{EventHandler}}</span>
+        </dt>
+        <dd>
+          <p>
+            The event type of this event handler is {{icecandidatepairnominate}}.
+          </p>
+          <p>
+            When the [= ICE agent =] has picked a candidate pair to {{nominate}} as the selected candidate pair, but before the
+            nomination takes place, the [= user agent =] MUST run the steps to [= nominate a candidate pair =].
           </p>
         </dd>
       </dl>
@@ -1298,6 +1373,14 @@ partial interface RTCRtpTransceiver {
           <td>{{RTCIceCandidatePairEvent}}</td>
           <td>
             The [= ICE agent =] has picked a candidate pair to remove, and unless the operation is canceled by invoking the <code>preventDefault()</code> method on the event, it will be removed.
+          </td>
+        </tr>
+        <tr>
+          <th scope=row><dfn data-dfn-for="RTCIceTransport" data-dfn-type=event>icecandidatepairnominate</dfn></th>
+          <td>{{RTCIceCandidatePairEvent}}</td>
+          <td>
+            The [= ICE agent =] has picked a valid candidate pair to {{nominate}}, and unless the operation is canceled by
+            invoking the <code>preventDefault()</code> method on the event, it will be {{nominated}}.
           </td>
         </tr>
       </tbody>
