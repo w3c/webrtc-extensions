@@ -709,15 +709,20 @@ dictionary RTCEncodingOptions {
       application to observe and affect certain actions that an <dfn>ICE agent</dfn> [[RFC5245]] performs.
     </p>
     <p>
-      The [= ICE agent =] performs connectivity checks to identify valid candidate pairs on which it is possible to send and
-      receive media and data. In order to conclude ICE processing, the [= ICE agent =] {{nominates}} a valid candidate pair
-      as the selected candidate pair. Prior to nomination, any valid candidate pair may be used to exchange packets. Once a
+      The [= ICE agent =] performs connectivity checks to identify valid candidate pairs on which it is possible to send
+      and
+      receive media and data. In order to conclude ICE processing, the [= ICE agent =] {{nominates}} a valid candidate
+      pair
+      as the selected candidate pair. Prior to nomination, any valid candidate pair may be used to exchange packets. Once
+      a
       candidate pair is nominated successfully, only the selected candidate pair may be used to exchange packets. Changing
       the selected candidate pair after a successful nomination requires an ICE restart.
     </p>
     <p>
-      When the [= ICE agent =] has picked a candidate pair to {{nominate}} as the selected candidate pair, the [= user agent =]
-      MUST [= queue a task =] to <dfn id="rtcicetransport-nominate" data-lt="nominate the candidate pair">nominate a candidate pair</dfn>:
+      When the [= ICE agent =] has picked a candidate pair to {{nominate}} as the selected candidate pair, the [= user
+      agent =]
+      MUST [= queue a task =] to <dfn id="rtcicetransport-nominate" data-lt="nominate the candidate pair">nominate a
+        candidate pair</dfn>:
     </p>
     <ol class="algorithm">
       <li>
@@ -752,21 +757,24 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not {{nominate}} |candidatePair|, and instead
+          If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not {{nominate}} |candidatePair|, and
+          instead
           to continue to perform connectivity checks. The [= ICE agent =] may exchange packets using the candidate pair
           indicated by |candidatePair| unless instructed to use another candidate pair with
           {{RTCIceTransport/setSelectedCandidatePair}}.
-          </p>
+        </p>
       </li>
       <li>
         <p>
-          Otherwise, set |transport|.{{RTCIceTransport/[[CandidatePairNominated]]}} to <var>true</var> and instruct the [= ICE
+          Otherwise, set |transport|.{{RTCIceTransport/[[CandidatePairNominated]]}} to <var>true</var> and instruct the [=
+          ICE
           agent =] to {{nominate}} the candidate pair indicated by |candidatePair|.
         </p>
       </li>
     </ol>
     <p>
-      When the [= ICE agent =] indicates that the {{nomination}} process has concluded, the [= user agent =] MUST queue a task
+      When the [= ICE agent =] indicates that the {{nomination}} process has concluded, the [= user agent =] MUST queue a
+      task
       that runs
       the following steps:
     </p>
@@ -826,14 +834,16 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          If <var>transport</var>.{{RTCIceTransport/[[CandidatePairNominated]]}} is <code>true</code>, [= exception/throw =]
+          If <var>transport</var>.{{RTCIceTransport/[[CandidatePairNominated]]}} is <code>true</code>, [= exception/throw
+          =]
           an {{InvalidStateError}}.
         </p>
       </li>
       <li>
         <p>
           If |transport|.{{RTCIceTransport/[[IceTransportState]]}} is either of
-          {{RTCIceTransportState/"new"}}, {{RTCIceTransportState/"failed"}} or {{RTCIceTransportState/"closed"}}, [= exception/throw =]
+          {{RTCIceTransportState/"new"}}, {{RTCIceTransportState/"failed"}} or {{RTCIceTransportState/"closed"}}, [=
+          exception/throw =]
           an {{InvalidStateError}}.
         </p>
       </li>
@@ -857,10 +867,13 @@ dictionary RTCEncodingOptions {
       </li>
     </ol>
     <p class="note">
-      After changing the selected candidate pair, the [= ICE agent =] may attempt to [= nominate the candidate pair =] as well to conclude ICE processing. The application may cancel the nomination to allow further changes to the selected candidate pair.
+      After changing the selected candidate pair, the [= ICE agent =] may attempt to [= nominate the candidate pair =] as
+      well to conclude ICE processing. The application may cancel the nomination to allow further changes to the selected
+      candidate pair.
     </p>
     <p>
-      When the [= ICE agent =] has picked a candidate pair to remove, the [= user agent =] MUST [= queue a task =] to <dfn id="rtcicetransport-remove">remove a candidate pair</dfn>:
+      When the [= ICE agent =] has picked a candidate pair to remove, the [= user agent =] MUST [= queue a task =] to <dfn
+        id="rtcicetransport-remove">remove a candidate pair</dfn>:
     </p>
     <ol class="algorithm">
       <li>
@@ -886,19 +899,25 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Let |cancelable:boolean| be <code>true</code> if |transport|.{{RTCIceTransport/[[CandidatePairNominated]]}} is <code>false</code> and the candidate pair is being removed in order to free an unused candidate, and <code>false</code> otherwise.
+          Let |cancelable:boolean| be <code>true</code> if |transport|.{{RTCIceTransport/[[CandidatePairNominated]]}} is
+          <code>false</code> and the candidate pair is being removed in order to free an unused candidate, and
+          <code>false</code> otherwise.
         </p>
       </li>
       <li>
         <p>
           Let |accepted:boolean| be the result of [= fire an event | firing an event =] named
           {{RTCIceTransport/icecandidatepairremove}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
-          {{Event/cancelable}} attribute initialized to <var>cancelable</var>, and the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively, of |candidatePair|.
+          {{Event/cancelable}} attribute initialized to <var>cancelable</var>, and the {{RTCIceCandidatePairEvent/local}}
+          and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively,
+          of |candidatePair|.
         </p>
       </li>
       <li>
         <p>
-          If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not remove the candidate pair indicated by |candidatePair|, and instead continue to send and respond to ICE connectivity checks on the candidate pair as before.
+          If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not remove the candidate pair indicated by
+          |candidatePair|, and instead continue to send and respond to ICE connectivity checks on the candidate pair as
+          before.
         </p>
       </li>
       <li>
@@ -916,13 +935,13 @@ dictionary RTCEncodingOptions {
       </li>
     </ul>
     <pre class="idl">
-      partial interface RTCIceTransport {
-        attribute EventHandler onicecandidatepairadd;
-        attribute EventHandler onicecandidatepairremove;
-        attribute EventHandler onicecandidatepairnominate;
-        undefined setSelectedCandidatePair(RTCIceCandidatePair candidatePair);
-      };</pre>
-    <section>
+        partial interface RTCIceTransport {
+          attribute EventHandler onicecandidatepairadd;
+          attribute EventHandler onicecandidatepairremove;
+          attribute EventHandler onicecandidatepairnominate;
+          undefined setSelectedCandidatePair(RTCIceCandidatePair candidatePair);
+        };</pre>
+    <section id="rtcicetransport-attributes">
       <h2>Attributes</h2>
       <dl data-link-for="RTCIceTransport" data-dfn-for="RTCIceTransport" class="attributes">
         <dt>
@@ -935,7 +954,8 @@ dictionary RTCEncodingOptions {
           <p>
             When the [= ICE agent =] has formed a candidate pair, the [= user agent =] MUST queue a task to [= fire an
             event =] named {{icecandidatepairadd}} using the {{RTCIceCandidatePairEvent}} interface, with the
-            {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes set to the local and remote candidates, respectively, of the formed candidate pair.
+            {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes set to the local and
+            remote candidates, respectively, of the formed candidate pair.
           </p>
         </dd>
         <dt>
@@ -958,49 +978,54 @@ dictionary RTCEncodingOptions {
             The event type of this event handler is {{icecandidatepairnominate}}.
           </p>
           <p>
-            When the [= ICE agent =] has picked a candidate pair to {{nominate}} as the selected candidate pair, but before the
+            When the [= ICE agent =] has picked a candidate pair to {{nominate}} as the selected candidate pair, but
+            before
+            the
             nomination takes place, the [= user agent =] MUST run the steps to [= nominate a candidate pair =].
           </p>
-          </dd>
-          </dl>
-          </section>
-          <section>
-            <h2>Methods</h2>
-            <dl data-link-for="RTCIceTransport" data-dfn-for="RTCIceTransport" class="methods">
-              <dt>
-                <dfn>setSelectedCandidatePair</dfn>
-              </dt>
-              <dd>
-                <p>
-                  The {{setSelectedCandidatePair}} method attempts to change the selected candidate pair. If successful, packets will be
-                  sent and received on the provided candidate pair. When this method is invoked, the [= user agent =] must run the
-                  steps to [= change the selected candidate pair =].
-                </p>
-              </dd>
-              </dl>
-              </section>
-      <section>
+        </dd>
+      </dl>
+    </section>
+    <section id="rtcicetransport-methods">
+      <h2>Methods</h2>
+      <dl data-link-for="RTCIceTransport" data-dfn-for="RTCIceTransport" class="methods">
+        <dt>
+          <dfn>setSelectedCandidatePair</dfn>
+        </dt>
+        <dd>
+          <p>
+            The {{setSelectedCandidatePair}} method attempts to change the selected candidate pair. If successful, packets
+            will be
+            sent and received on the provided candidate pair. When this method is invoked, the [= user agent =] must run
+            the
+            steps to [= change the selected candidate pair =].
+          </p>
+        </dd>
+      </dl>
+    </section>
+    <section>
       <h2>
         <dfn>RTCIceCandidatePairEvent</dfn>
       </h2>
       <p>
-        The {{RTCIceTransport/icecandidatepairadd}} and {{RTCIceTransport/icecandidatepairremove}} events use the {{RTCIceCandidatePairEvent}} interface.
+        The {{RTCIceTransport/icecandidatepairadd}} and {{RTCIceTransport/icecandidatepairremove}} events use the
+        {{RTCIceCandidatePairEvent}} interface.
       </p>
       <div>
         <pre class="idl">[Exposed=Window]
-interface RTCIceCandidatePairEvent : Event {
-  constructor(DOMString type, RTCIceCandidatePairEventInit eventInitDict);
-  readonly attribute RTCIceCandidate local;
-  readonly attribute RTCIceCandidate remote;
-};</pre>
-        <section>
+  interface RTCIceCandidatePairEvent : Event {
+    constructor(DOMString type, RTCIceCandidatePairEventInit eventInitDict);
+    readonly attribute RTCIceCandidate local;
+    readonly attribute RTCIceCandidate remote;
+  };</pre>
+        <section id="rtcicecandidatepairevent-constructors">
           <h4>Constructors</h4>
           <dl data-link-for="RTCIceCandidatePairEvent" data-dfn-for="RTCIceCandidatePairEvent" class="constructors">
             <dt><dfn>RTCIceCandidatePairEvent.constructor()</dfn></dt>
             <dd></dd>
           </dl>
         </section>
-        <section>
+        <section id="rtcicecandidatepairevent-attributes">
           <h4>Attributes</h4>
           <dl data-link-for="RTCIceCandidatePairEvent" data-dfn-for="RTCIceCandidatePairEvent" class="attributes">
             <dt>
@@ -1008,7 +1033,8 @@ interface RTCIceCandidatePairEvent : Event {
             </dt>
             <dd>
               <p>
-                The {{local}} attribute represents the local {{RTCIceCandidate}} of the candidate pair associated with the event.
+                The {{local}} attribute represents the local {{RTCIceCandidate}} of the candidate pair associated with the
+                event.
               </p>
             </dd>
             <dt>
@@ -1016,7 +1042,8 @@ interface RTCIceCandidatePairEvent : Event {
             </dt>
             <dd>
               <p>
-                The {{remote}} attribute represents the remote {{RTCIceCandidate}} of the candidate pair associated with the event.
+                The {{remote}} attribute represents the remote {{RTCIceCandidate}} of the candidate pair associated with
+                the event.
               </p>
             </dd>
           </dl>
@@ -1024,10 +1051,10 @@ interface RTCIceCandidatePairEvent : Event {
       </div>
       <div>
         <pre class="idl">
-dictionary RTCIceCandidatePairEventInit : EventInit {
-  required RTCIceCandidate local;
-  required RTCIceCandidate remote;
-};</pre>
+  dictionary RTCIceCandidatePairEventInit : EventInit {
+    required RTCIceCandidate local;
+    required RTCIceCandidate remote;
+  };</pre>
         <section id="rtcicecandidatepaireventinit">
           <h4>Dictionary <dfn>RTCIceCandidatePairEventInit</dfn> Members</h4>
           <dl data-link-for="RTCIceCandidatePairEventInit" data-dfn-for="RTCIceCandidatePairEventInit"
