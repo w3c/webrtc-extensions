@@ -748,11 +748,21 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
+          Set |transport|.{{RTCIceTransport/[[ProposalPending]]}} to <code>true</code>.
+        </p>
+      </li>
+      <li>
+        <p>
           Let |accepted:boolean| be the result of [= fire an event | firing an event =] named
           {{RTCIceTransport/icecandidatepairnominate}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
           {{Event/cancelable}} attribute initialized to <var>true</var>, and the {{RTCIceCandidatePairEvent/local}} and
           {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively, of
           |candidatePair|.
+        </p>
+      </li>
+      <li>
+        <p>
+          Set |transport|.{{RTCIceTransport/[[ProposalPending]]}} to <code>false</code>.
         </p>
       </li>
       <li>
@@ -818,6 +828,11 @@ dictionary RTCEncodingOptions {
       <li>
         <p>
           Let |transport:RTCIceTransport| be the {{RTCIceTransport}} object associated with this candidate pair.
+        </p>
+      </li>
+      <li>
+        <p>
+          If |transport|.{{RTCIceTransport/[[ProposalPending]]}} is <code>true</code>, [= exception/throw =] an {{InvalidStateError}}.
         </p>
       </li>
       <li>
@@ -906,11 +921,21 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
+          Set |transport|.{{RTCIceTransport/[[ProposalPending]]}} to <code>true</code>.
+        </p>
+      </li>
+      <li>
+        <p>
           Let |accepted:boolean| be the result of [= fire an event | firing an event =] named
           {{RTCIceTransport/icecandidatepairremove}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
           {{Event/cancelable}} attribute initialized to <var>cancelable</var>, and the {{RTCIceCandidatePairEvent/local}}
           and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively,
           of |candidatePair|.
+        </p>
+      </li>
+      <li>
+        <p>
+          Set |transport|.{{RTCIceTransport/[[ProposalPending]]}} to <code>false</code>.
         </p>
       </li>
       <li>
@@ -927,11 +952,14 @@ dictionary RTCEncodingOptions {
       </li>
     </ol>
     <p>
-      The {{RTCIceTransport}} object is extended by adding the following internal slot:
+      The {{RTCIceTransport}} object is extended by adding the following internal slots:
     </p>
     <ul>
       <li>
-        <dfn data-dfn-for="RTCIceTransport">[[\CandidatePairNominated]]</dfn> initialized to <var>false</var>.
+        <dfn data-dfn-for="RTCIceTransport">[[\CandidatePairNominated]]</dfn> initialized to <code>false</code>.
+      </li>
+      <li>
+        <dfn data-dfn-for="RTCIceTransport">[[\ProposalPending]]</dfn> initialized to <code>false</code>.
       </li>
     </ul>
     <pre class="idl">
@@ -996,7 +1024,7 @@ dictionary RTCEncodingOptions {
           <p>
             The {{setSelectedCandidatePair}} method attempts to change the selected candidate pair. If successful, packets
             will be
-            sent and received on the provided candidate pair. When this method is invoked, the [= user agent =] must run
+            sent and received on the provided candidate pair. When this method is invoked, the [= user agent =] MUST run
             the
             steps to [= change the selected candidate pair =].
           </p>
