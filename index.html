@@ -691,7 +691,7 @@ dictionary RTCEncodingOptions {
       <ul>
         <li>
           <p>For each <var>setParameterOptions.encodingOptions</var> indexed by <var>i</var>,
-          if <code><var>setParameterOptions.encodingOptions</var>[i].keyFrame</code> is set to <var>true</var>,
+          if <code><var>setParameterOptions.encodingOptions</var>[i].keyFrame</code> is set to <code>true</code>,
           request that the encoder associated with <code><var>parameters</var>.encodings[i]</code> generates a key frame.</p>
         </li>
       </ul>
@@ -755,7 +755,7 @@ dictionary RTCEncodingOptions {
         <p>
           Let |accepted:boolean| be the result of [= fire an event | firing an event =] named
           {{RTCIceTransport/icecandidatepairnominate}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
-          {{Event/cancelable}} attribute initialized to <var>true</var>, and the {{RTCIceCandidatePairEvent/local}} and
+          {{Event/cancelable}} attribute initialized to <code>true</code>, and the {{RTCIceCandidatePairEvent/local}} and
           {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively, of
           |candidatePair|.
         </p>
@@ -776,7 +776,7 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Otherwise, set |transport|.{{RTCIceTransport/[[CandidatePairNominated]]}} to <var>true</var> and instruct the [=
+          Otherwise, set |transport|.{{RTCIceTransport/[[CandidatePairNominated]]}} to <code>true</code> and instruct the [=
           ICE
           agent =] to {{nominate}} the candidate pair indicated by |candidatePair|.
         </p>
