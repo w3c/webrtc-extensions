@@ -916,6 +916,7 @@ dictionary RTCEncodingOptions {
           attribute EventHandler onicecandidatepairremove;
           attribute EventHandler onicecandidatepairnominate;
           undefined setSelectedCandidatePair(RTCIceCandidatePair candidatePair);
+          undefined removeCandidatePairs(sequence&lt;RTCIceCandidatePair&gt; candidatePairs);
         };</pre>
     <section id="rtcicetransport-attributes">
       <h2>Attributes</h2>
@@ -974,6 +975,67 @@ dictionary RTCEncodingOptions {
             on the provided candidate pair. When this method is invoked, the [= user agent =] MUST run the steps to [= change the
             selected candidate pair =].
           </p>
+        </dd>
+        <dt>
+          <dfn>removeCandidatePairs</dfn>
+        </dt>
+        <dd>
+          <p>
+            The {{removeCandidatePairs}} method immediately removes the provided candidate pairs, making them unavailable to use
+            for transport. The [= ICE agent =] may free up candidates once all the associated candidate pairs have been removed.
+          </p>
+          <p>
+            When this method is invoked, the [= user agent =] MUST run the following steps:
+          </p>
+          <ol class="algorithm">
+            <li>
+              <p>
+                Let |connection:RTCPeerConnection| be the {{RTCPeerConnection}} object associated with this [= ICE agent =].
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>connection</var>.{{RTCPeerConnection/[[IsClosed]]}} is
+                <code>true</code>, [= exception/throw =] an
+                {{InvalidStateError}}.
+              </p>
+            </li>
+            <li>
+              <p>
+                Let |transport:RTCIceTransport| be the associated {{RTCIceTransport}} object.
+              </p>
+            </li>
+            <li>
+              <p>
+                If |transport|.{{RTCIceTransport/[[IceTransportState]]}} is either of
+                {{RTCIceTransportState/"new"}}, {{RTCIceTransportState/"failed"}} or {{RTCIceTransportState/"closed"}}, [=
+                exception/throw =]
+                an {{InvalidStateError}}.
+              </p>
+            </li>
+            <li>
+              <p>
+                If |transport|.{{RTCIceTransport/[[ProposalPending]]}} is <code>true</code>, [= exception/throw =] an
+                {{InvalidStateError}}.
+              </p>
+            </li>
+            <li>
+              <p>
+                Instruct the [= ICE agent =] to remove the candidate pairs indicated by |candidatePairs|, ignoring any unknown
+                or invalid candidate pairs.
+              </p>
+            </li>
+            <li>
+              <p>
+                For each valid |removedPair| in |candidatePairs| that was removed by the [= ICE agent =], [= fire an event =] named
+                {{RTCIceTransport/icecandidatepairremove}}
+                at |transport|, using {{RTCIceCandidatePairEvent}}, with the
+                {{Event/cancelable}} attribute initialized to <code>false</code>, and the {{RTCIceCandidatePairEvent/local}}
+                and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively,
+                of |removedPair|.
+              </p>
+            </li>
+          </ol>
         </dd>
       </dl>
     </section>
