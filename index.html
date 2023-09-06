@@ -776,33 +776,7 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Otherwise, set |transport|.{{RTCIceTransport/[[CandidatePairNominated]]}} to <code>true</code> and instruct the [=
-          ICE
-          agent =] to {{nominate}} the candidate pair indicated by |candidatePair|.
-        </p>
-      </li>
-    </ol>
-    <p>
-      When the [= ICE agent =] indicates that the {{nomination}} process has concluded, the [= user agent =] MUST queue a
-      task
-      that runs
-      the following steps:
-    </p>
-    <ol class="algorithm">
-      <li>
-        <p>
-          Let |transport:RTCIceTransport| be the {{RTCIceTransport}} object associated with this [= ICE agent =].
-        </p>
-      </li>
-      <li>
-        <p>
-          If the nomination is successful, continue to the steps for a change in the selected candidate pair.
-        </p>
-      </li>
-      <li>
-        <p>
-          If the nomination fails, set |transport|.{{RTCIceTransport/[[CandidatePairNominated]]}} to false. The selected
-          candidate pair has not changed in this case.
+          Otherwise, instruct the [= ICE agent =] to {{nominate}} the candidate pair indicated by |candidatePair|.
         </p>
       </li>
     </ol>
@@ -845,13 +819,6 @@ dictionary RTCEncodingOptions {
         <p>
           If <var>transport</var>.{{RTCIceTransport/[[IceRole]]}} is {{RTCIceRole/"unknown"}}, [= exception/throw =] an
           {{InvalidStateError}}.
-        </p>
-      </li>
-      <li>
-        <p>
-          If <var>transport</var>.{{RTCIceTransport/[[CandidatePairNominated]]}} is <code>true</code>, [= exception/throw
-          =]
-          an {{InvalidStateError}}.
         </p>
       </li>
       <li>
@@ -914,8 +881,7 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Let |cancelable:boolean| be <code>true</code> if |transport|.{{RTCIceTransport/[[CandidatePairNominated]]}} is
-          <code>false</code> and the candidate pair is being removed in order to free an unused candidate, and
+          Let |cancelable:boolean| be <code>true</code> if the candidate pair is being removed in order to free an unused candidate, and
           <code>false</code> otherwise.
         </p>
       </li>
@@ -952,12 +918,9 @@ dictionary RTCEncodingOptions {
       </li>
     </ol>
     <p>
-      The {{RTCIceTransport}} object is extended by adding the following internal slots:
+      The {{RTCIceTransport}} object is extended by adding the following internal slot:
     </p>
     <ul>
-      <li>
-        <dfn data-dfn-for="RTCIceTransport">[[\CandidatePairNominated]]</dfn> initialized to <code>false</code>.
-      </li>
       <li>
         <dfn data-dfn-for="RTCIceTransport">[[\ProposalPending]]</dfn> initialized to <code>false</code>.
       </li>
