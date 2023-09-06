@@ -710,12 +710,11 @@ dictionary RTCEncodingOptions {
     </p>
     <p>
       The [= ICE agent =] performs connectivity checks to identify valid candidate pairs on which it is possible to send
-      and
-      receive media and data. In order to conclude ICE processing, the [= ICE agent =] {{nominates}} a valid candidate
-      pair
-      as the selected candidate pair. Prior to nomination, any valid candidate pair may be used to exchange packets. Once
-      a
-      candidate pair is nominated successfully, only the selected candidate pair may be used to exchange packets. Changing
+      and receive media and data. In order to conclude ICE processing, the [= ICE agent =] {{nominates}} a valid candidate
+      pair as the selected candidate pair. Prior to nomination, any valid candidate pair may be used to send and receive data.
+      Once
+      a candidate pair is nominated successfully, only the selected candidate pair will be used to send and receive data.
+      Changing
       the selected candidate pair after a successful nomination requires an ICE restart.
     </p>
     <p>
@@ -767,9 +766,8 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not {{nominate}} |candidatePair|, and
-          instead
-          to continue to perform connectivity checks. The [= ICE agent =] may exchange packets using the candidate pair
+          If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not {{nominate}} |candidatePair|, and instead to
+          continue to perform connectivity checks. The [= ICE agent =] may continue to send data using the candidate pair
           indicated by |candidatePair| unless instructed to use another candidate pair with
           {{RTCIceTransport/setSelectedCandidatePair}}.
         </p>
@@ -782,10 +780,9 @@ dictionary RTCEncodingOptions {
     </ol>
     <p>
       If the application defers the {{nomination}} of a candidate pair by cancelling the
-      {{RTCIceTransport/icecandidatepairnominate}} event, it may select a different candidate pair to exchange packets by
-      calling
-      {{RTCIceTransport/setSelectedCandidatePair}}. When the method is called, the [= user agent =] MUST run the steps to
-      <dfn id="rtcicetransport-select">change the selected candidate pair</dfn>:
+      {{RTCIceTransport/icecandidatepairnominate}} event, it may select a different candidate pair to send data by calling
+      {{RTCIceTransport/setSelectedCandidatePair}}. When the method is called, the [= user agent =] MUST run the steps to <dfn
+        id="rtcicetransport-select">change the selected candidate pair</dfn>:
     </p>
     <ol class="algorithm">
       <li>
@@ -811,18 +808,6 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          If <var>transport</var>.{{RTCIceTransport/[[IceRole]]}} is {{RTCIceRole/"controlled"}}, [= exception/throw =] a
-          {{NotAllowedError}}.
-        </p>
-      </li>
-      <li>
-        <p>
-          If <var>transport</var>.{{RTCIceTransport/[[IceRole]]}} is {{RTCIceRole/"unknown"}}, [= exception/throw =] an
-          {{InvalidStateError}}.
-        </p>
-      </li>
-      <li>
-        <p>
           If |transport|.{{RTCIceTransport/[[IceTransportState]]}} is either of
           {{RTCIceTransportState/"new"}}, {{RTCIceTransportState/"failed"}} or {{RTCIceTransportState/"closed"}}, [=
           exception/throw =]
@@ -842,14 +827,14 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Instruct the [= ICE agent =] to use |candidatePair| to send and receive packets, and continue to the steps for a
-          change in the selected candidate pair (leading up to
-          {{RTCIceTransport/onselectedcandidatepairchange}}).
+          Instruct the [= ICE agent =] to use |candidatePair| to send data, and continue to the steps for a change in the selected
+          candidate pair (leading up to {{RTCIceTransport/onselectedcandidatepairchange}}).
         </p>
       </li>
     </ol>
     <p class="note">
-      After changing the selected candidate pair, the [= ICE agent =] may attempt to [= nominate the candidate pair =] as
+      After changing the selected candidate pair, the controlling [= ICE agent =] may attempt to [= nominate the candidate
+      pair =] as
       well to conclude ICE processing. The application may cancel the nomination to allow further changes to the selected
       candidate pair.
     </p>
@@ -985,11 +970,9 @@ dictionary RTCEncodingOptions {
         </dt>
         <dd>
           <p>
-            The {{setSelectedCandidatePair}} method attempts to change the selected candidate pair. If successful, packets
-            will be
-            sent and received on the provided candidate pair. When this method is invoked, the [= user agent =] MUST run
-            the
-            steps to [= change the selected candidate pair =].
+            The {{setSelectedCandidatePair}} method attempts to change the selected candidate pair. If successful, data will be sent
+            on the provided candidate pair. When this method is invoked, the [= user agent =] MUST run the steps to [= change the
+            selected candidate pair =].
           </p>
         </dd>
       </dl>
