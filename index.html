@@ -57,11 +57,23 @@
       <a href="https://webrtc.org/experiments/rtp-hdrext/abs-capture-time"><dfn>RTP Header Extension for Absolute Capture Time</dfn></a>:
     </p>
     <ul>
-      <li><a href="https://webrtc.org/experiments/rtp-hdrext/abs-capture-time#absolute-capture-timestamp"><dfn>absolute capture timestamp</dfn></a>
-      <li><a href="https://webrtc.org/experiments/rtp-hdrext/abs-capture-time#timestamp-interpolation"><dfn>timestamp interpolation</dfn></a>
-      <li><a href="https://webrtc.org/experiments/rtp-hdrext/abs-capture-time#estimated-capture-clock-offset"><dfn>estimated capture clock offset</dfn></a>
+      <li><a href="https://webrtc.org/experiments/rtp-hdrext/abs-capture-time#absolute-capture-timestamp"><dfn>absolute capture timestamp</dfn></a></li>
+      <li><a href="https://webrtc.org/experiments/rtp-hdrext/abs-capture-time#timestamp-interpolation"><dfn>timestamp interpolation</dfn></a></li>
+      <li><a href="https://webrtc.org/experiments/rtp-hdrext/abs-capture-time#estimated-capture-clock-offset"><dfn>estimated capture clock offset</dfn></a></li>
     </ul>
     <p>The process of <dfn>chaining</dfn> an operation to an <dfn>operations chain</dfn> is defined in [[WEBRTC]] Section 4.4.1.2.</p>
+    <p>
+      The {{EventHandler}} interface, representing a callback used for event handlers, is defined in [[!HTML]].
+    </p>
+    <p>
+      The concepts [= queue a task =] and [= networking task source =] are defined in [[!HTML]].
+    </p>
+    <p>
+      The concept [= fire an event =] is defined in [[!DOM]].
+    </p>
+    <p>
+      The terms [= event =], [= event handlers =] and [= event handler event types =] are defined in [[!HTML]].
+    </p>
   </section>
   <section id="ice-csp">
     <h3>
@@ -684,6 +696,171 @@ dictionary RTCEncodingOptions {
       </p>
     </section>
   </section>
+  <section id="rtcicetransport">
+    <h3>
+      {{RTCIceTransport}} extensions
+    </h3>
+    <p>
+      The {{RTCIceTransport}} interface is defined in [[WEBRTC]]. This document extends that interface to allow an
+      application to observe and affect certain actions that an <dfn>ICE agent</dfn> [[RFC5245]] performs.
+    </p>
+    <p>
+      When the [= ICE agent =] has picked a candidate pair to remove, the [= user agent =] MUST [= queue a task =] to <dfn id="rtcicetransport-remove">remove a candidate pair</dfn>:
+    </p>
+    <ol class="algorithm">
+      <li>
+        <p>
+          Let |connection:RTCPeerConnection| be the {{RTCPeerConnection}} object associated with this [= ICE agent =].
+        </p>
+      </li>
+      <li>
+        <p>
+          If <var>connection</var>.{{RTCPeerConnection/[[IsClosed]]}} is
+          <code>true</code>, abort these steps.
+        </p>
+      </li>
+      <li>
+        <p>
+          Let |transport:RTCIceTransport| be the {{RTCIceTransport}} object associated with this candidate pair.
+        </p>
+      </li>
+      <li>
+        <p>
+          Let |candidatePair:RTCIceCandidatePair| be the candidate pair which is being removed.
+        </p>
+      </li>
+      <li>
+        <p>
+          Let |cancelable:boolean| be <code>true</code> if the candidate pair is being removed in order to free an unused candidate, and <code>false</code> otherwise.
+        </p>
+      </li>
+      <li>
+        <p>
+          Let |accepted:boolean| be the result of [= fire an event | firing an event =] named
+          {{RTCIceTransport/icecandidatepairremove}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
+          {{Event/cancelable}} attribute initialized to <var>cancelable</var>, and the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively, of |candidatePair|.
+        </p>
+      </li>
+      <li>
+        <p>
+          If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not remove the candidate pair indicated by |candidatePair|, and instead continue to send and respond to ICE connectivity checks on the candidate pair as before.
+        </p>
+      </li>
+      <li>
+        <p>
+          Otherwise, instruct the [= ICE agent =] to remove the candidate pair indicated by |candidatePair|.
+        </p>
+      </li>
+    </ol>
+    <pre class="idl">
+      partial interface RTCIceTransport {
+        attribute EventHandler onicecandidatepairadd;
+        attribute EventHandler onicecandidatepairremove;
+      };</pre>
+    <section>
+      <h2>Attributes</h2>
+      <dl data-link-for="RTCIceTransport" data-dfn-for="RTCIceTransport" class="attributes">
+        <dt>
+          <dfn>onicecandidatepairadd</dfn> of type <span class="idlAttrType">{{EventHandler}}</span>
+        </dt>
+        <dd>
+          <p>
+            The event type of this event handler is {{icecandidatepairadd}}.
+          </p>
+          <p>
+            When the [= ICE agent =] has formed a candidate pair, the [= user agent =] MUST queue a task to [= fire an
+            event =] named {{icecandidatepairadd}} using the {{RTCIceCandidatePairEvent}} interface, with the
+            {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes set to the local and remote candidates, respectively, of the formed candidate pair.
+          </p>
+        </dd>
+        <dt>
+          <dfn>onicecandidatepairremove</dfn> of type <span class="idlAttrType">{{EventHandler}}</span>
+        </dt>
+        <dd>
+          <p>
+            The event type of this event handler is {{icecandidatepairremove}}.
+          </p>
+          <p>
+            When the [= ICE agent =] has picked a candidate pair to remove, but before the removal has actually occurred,
+            the [= user agent =] MUST run the steps to [= remove a candidate pair =].
+          </p>
+        </dd>
+      </dl>
+    </section>
+    <section>
+      <h2>
+        <dfn>RTCIceCandidatePairEvent</dfn>
+      </h2>
+      <p>
+        The {{RTCIceTransport/icecandidatepairadd}} and {{RTCIceTransport/icecandidatepairremove}} events use the {{RTCIceCandidatePairEvent}} interface.
+      </p>
+      <div>
+        <pre class="idl">[Exposed=Window]
+interface RTCIceCandidatePairEvent : Event {
+  constructor(DOMString type, RTCIceCandidatePairEventInit eventInitDict);
+  readonly attribute RTCIceCandidate local;
+  readonly attribute RTCIceCandidate remote;
+};</pre>
+        <section>
+          <h4>Constructors</h4>
+          <dl data-link-for="RTCIceCandidatePairEvent" data-dfn-for="RTCIceCandidatePairEvent" class="constructors">
+            <dt><dfn>RTCIceCandidatePairEvent.constructor()</dfn></dt>
+            <dd></dd>
+          </dl>
+        </section>
+        <section>
+          <h4>Attributes</h4>
+          <dl data-link-for="RTCIceCandidatePairEvent" data-dfn-for="RTCIceCandidatePairEvent" class="attributes">
+            <dt>
+              <dfn>local</dfn> of type <span class="idlAttrType">{{RTCIceCandidate}}</span>, readonly
+            </dt>
+            <dd>
+              <p>
+                The {{local}} attribute represents the local {{RTCIceCandidate}} of the candidate pair associated with the event.
+              </p>
+            </dd>
+            <dt>
+              <dfn>remote</dfn> of type <span class="idlAttrType">{{RTCIceCandidate}}</span>, readonly
+            </dt>
+            <dd>
+              <p>
+                The {{remote}} attribute represents the remote {{RTCIceCandidate}} of the candidate pair associated with the event.
+              </p>
+            </dd>
+          </dl>
+        </section>
+      </div>
+      <div>
+        <pre class="idl">
+dictionary RTCIceCandidatePairEventInit : EventInit {
+  required RTCIceCandidate local;
+  required RTCIceCandidate remote;
+};</pre>
+        <section id="rtcicecandidatepaireventinit">
+          <h4>Dictionary <dfn>RTCIceCandidatePairEventInit</dfn> Members</h4>
+          <dl data-link-for="RTCIceCandidatePairEventInit" data-dfn-for="RTCIceCandidatePairEventInit"
+            class="dictionary-members">
+            <dt>
+              <dfn>local</dfn> of type <span class="idlAttrType">{{RTCIceCandidate}}</span>, required
+            </dt>
+            <dd>
+              <p>
+                The local {{RTCIceCandidate}} of the candidate pair announced by the event.
+              </p>
+            </dd>
+            <dt>
+              <dfn>remote</dfn> of type <span class="idlAttrType">{{RTCIceCandidate}}</span>, required
+            </dt>
+            <dd>
+              <p>
+                The remote {{RTCIceCandidate}} of the candidate pair announced by the event.
+              </p>
+            </dd>
+          </dl>
+        </section>
+      </div>
+    </section>
+  </section>
   <section id="rtcrtpcontributingsource-extensions">
     <h3>
       {{RTCRtpContributingSource}} extensions
@@ -1095,6 +1272,36 @@ partial interface RTCRtpTransceiver {
         is hardware-accelerated".
       </p>
     </section>
+  </section>
+  <section class="informative">
+    <h2>Event summary</h2>
+    <p>
+      The following events fire on {{RTCIceTransport}} objects:</p>
+    <table class="simple">
+      <thead>
+        <tr>
+          <th>Event name</th>
+          <th>Interface</th>
+          <th>Fired when...</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope=row><dfn data-dfn-for="RTCIceTransport" data-dfn-type=event>icecandidatepairadd</dfn></th>
+          <td>{{RTCIceCandidatePairEvent}}</td>
+          <td>
+            The [= ICE agent =] has formed a candidate pair and is making it available to the script.
+          </td>
+        </tr>
+        <tr>
+          <th scope=row><dfn data-dfn-for="RTCIceTransport" data-dfn-type=event>icecandidatepairremove</dfn></th>
+          <td>{{RTCIceCandidatePairEvent}}</td>
+          <td>
+            The [= ICE agent =] has picked a candidate pair to remove, and unless the operation is canceled by invoking the <code>preventDefault()</code> method on the event, it will be removed.
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </section>
   <section class="informative" id="security-considerations">
     <h2>

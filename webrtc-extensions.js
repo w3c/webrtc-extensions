@@ -5,7 +5,7 @@ var respecConfig = {
       repoURL: "https://github.com/w3c/webrtc-extensions/",
       branch: "main"
     },
-    "xref": ["html", "webidl", "webrtc", "hr-time", "mediacapture-streams", "webrtc-stats", "infra"],
+    "xref": ["html", "webidl", "webrtc", "hr-time", "mediacapture-streams", "webrtc-stats", "infra", "dom"],
     "shortName": "webrtc-extensions",
     "specStatus": "ED",
     "subjectPrefix": "[webrtc-extensions]",
