@@ -827,6 +827,11 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
+          If |candidatePair| describes a [= candidate pair removed =] by the [= ICE agent =] or removed by the application by calling {{RTCIceTransport/removeCandidatePairs}}, [= exception/throw =] a {{NotFoundError}}.
+        </p>
+      </li>
+      <li>
+        <p>
           Instruct the [= ICE agent =] to use |candidatePair| to send data, and continue to the steps for a change in the selected
           candidate pair (leading up to {{RTCIceTransport/onselectedcandidatepairchange}}).
         </p>
@@ -839,8 +844,7 @@ dictionary RTCEncodingOptions {
       candidate pair.
     </p>
     <p>
-      When the [= ICE agent =] has picked a candidate pair to remove, the [= user agent =] MUST [= queue a task =] to <dfn
-        id="rtcicetransport-remove">remove a candidate pair</dfn>:
+      When the [= ICE agent =] has picked a candidate pair to remove, the [= user agent =] MUST [= queue a task =] to <dfn data-lt="candidate pair removed" id="rtcicetransport-remove">remove a candidate pair</dfn>:
     </p>
     <ol class="algorithm">
       <li>
@@ -916,7 +920,7 @@ dictionary RTCEncodingOptions {
           attribute EventHandler onicecandidatepairremove;
           attribute EventHandler onicecandidatepairnominate;
           undefined setSelectedCandidatePair(RTCIceCandidatePair candidatePair);
-          undefined removeCandidatePairs(sequence&lt;RTCIceCandidatePair&gt; candidatePairs);
+          Promise&lt;undefined&gt; removeCandidatePairs(sequence&lt;RTCIceCandidatePair&gt; candidatePairs);
         };</pre>
     <section id="rtcicetransport-attributes">
       <h2>Attributes</h2>
@@ -981,7 +985,7 @@ dictionary RTCEncodingOptions {
         </dt>
         <dd>
           <p>
-            The {{removeCandidatePairs}} method immediately removes the provided candidate pairs, making them unavailable to use
+            The {{removeCandidatePairs}} method removes the provided candidate pairs, making them unavailable to use
             for transport. The [= ICE agent =] may free up candidates once all the associated candidate pairs have been removed.
           </p>
           <p>
@@ -1021,18 +1025,37 @@ dictionary RTCEncodingOptions {
             </li>
             <li>
               <p>
-                Instruct the [= ICE agent =] to remove the candidate pairs indicated by |candidatePairs|, ignoring any unknown
-                or invalid candidate pairs.
+                Let |p:Promise| be a new promise.
               </p>
             </li>
             <li>
               <p>
-                For each valid |removedPair| in |candidatePairs| that was removed by the [= ICE agent =], [= fire an event =] named
-                {{RTCIceTransport/icecandidatepairremove}}
-                at |transport|, using {{RTCIceCandidatePairEvent}}, with the
-                {{Event/cancelable}} attribute initialized to <code>false</code>, and the {{RTCIceCandidatePairEvent/local}}
-                and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively,
-                of |removedPair|.
+                In parallel, instruct the [= ICE agent =] to remove the candidate pairs indicated by |candidatePairs|, ignoring any unknown or invalid candidate pairs.
+              </p>
+              <ol>
+                <li>
+                  <p>
+                    When the [= ICE agent =] has completed the removal, [= queue a task =] to run the following steps:
+                  </p>
+                  <ol>
+                    <li>
+                      <p>
+                        For each valid |removedPair| in |candidatePairs| that was removed by the [= ICE agent =], [= fire an event =] named {{RTCIceTransport/icecandidatepairremove}}
+                        at |transport|, using {{RTCIceCandidatePairEvent}}, with the {{Event/cancelable}} attribute initialized to <code>false</code>, and the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively, of |removedPair|.
+                      </p>
+                    </li>
+                    <li>
+                      <p>
+                        Resolve <var>p</var>.
+                      </p>
+                    </li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+            <li>
+              <p>
+                Return <var>p</var>.
               </p>
             </li>
           </ol>
