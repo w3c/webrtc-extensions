@@ -769,7 +769,7 @@ dictionary RTCEncodingOptions {
           If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not {{nominate}} |candidatePair|, and instead to
           continue to perform connectivity checks. The [= ICE agent =] may continue to send data using the candidate pair
           indicated by |candidatePair| unless instructed to use another candidate pair with
-          {{RTCIceTransport/setSelectedCandidatePair}}.
+          {{RTCIceTransport/selectCandidatePair}}.
         </p>
       </li>
       <li>
@@ -855,7 +855,7 @@ dictionary RTCEncodingOptions {
           attribute EventHandler onicecandidatepairadd;
           attribute EventHandler onicecandidatepairremove;
           attribute EventHandler onicecandidatepairnominate;
-          undefined setSelectedCandidatePair(RTCIceCandidatePair candidatePair);
+          undefined selectCandidatePair(RTCIceCandidatePair candidatePair);
         };</pre>
     <section id="rtcicetransport-attributes">
       <h2>Attributes</h2>
@@ -906,11 +906,11 @@ dictionary RTCEncodingOptions {
       <h2>Methods</h2>
       <dl data-link-for="RTCIceTransport" data-dfn-for="RTCIceTransport" class="methods">
         <dt>
-          <dfn>setSelectedCandidatePair</dfn>
+          <dfn>selectCandidatePair</dfn>
         </dt>
         <dd>
           <p>
-            The {{setSelectedCandidatePair}} method attempts to select a different candidate pair to send data
+            The {{selectCandidatePair}} method attempts to select a different candidate pair to send data
             over. If successful, data will be sent on the provided candidate pair.
             It is meant to be called after the application defers the {{nomination}} of a candidate pair
             by cancelling the {{RTCIceTransport/icecandidatepairnominate}} event.
