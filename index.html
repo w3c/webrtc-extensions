@@ -985,8 +985,7 @@ dictionary RTCEncodingOptions {
         </dt>
         <dd>
           <p>
-            The {{removeCandidatePairs}} method removes the provided candidate pairs, making them unavailable to use
-            for transport. The [= ICE agent =] may free up candidates once all the associated candidate pairs have been removed.
+            The {{removeCandidatePairs}} method removes the provided candidate pairs. The [= ICE agent =] will stop sending and responding to ICE connectivity checks on the removed candidate pairs, and they can no longer be used to send data for this transport. This method is meant to be called when the application wants to free resources allocated for candidates that it no longer needs. The application cannot call {{RTCIceTransport/setSelectedCandidatePair}}() with a candidate pair removed with this method.
           </p>
           <p>
             When this method is invoked, the [= user agent =] MUST run the following steps:
@@ -994,7 +993,7 @@ dictionary RTCEncodingOptions {
           <ol class="algorithm">
             <li>
               <p>
-                Let |connection:RTCPeerConnection| be the {{RTCPeerConnection}} object associated with this [= ICE agent =].
+                Let |connection:RTCPeerConnection| be the {{RTCPeerConnection}} object associated with [= this =].
               </p>
             </li>
             <li>
@@ -1006,21 +1005,23 @@ dictionary RTCEncodingOptions {
             </li>
             <li>
               <p>
-                Let |transport:RTCIceTransport| be the associated {{RTCIceTransport}} object.
-              </p>
-            </li>
-            <li>
-              <p>
-                If |transport|.{{RTCIceTransport/[[IceTransportState]]}} is either of
-                {{RTCIceTransportState/"new"}}, {{RTCIceTransportState/"failed"}} or {{RTCIceTransportState/"closed"}}, [=
-                exception/throw =]
-                an {{InvalidStateError}}.
-              </p>
-            </li>
-            <li>
-              <p>
-                If |transport|.{{RTCIceTransport/[[ProposalPending]]}} is <code>true</code>, [= exception/throw =] an
+                If [= this =].{{RTCIceTransport/[[ProposalPending]]}} is <code>true</code>, [= exception/throw =] an
                 {{InvalidStateError}}.
+              </p>
+            </li>
+            <li>
+              <p>
+                If [= this =].{{RTCIceTransport/[[IceTransportState]]}} is either of {{RTCIceTransportState/"new"}}, {{RTCIceTransportState/"failed"}} or {{RTCIceTransportState/"closed"}}, [= exception/throw =] an {{InvalidStateError}}.
+              </p>
+            </li>
+            <li>
+              <p>
+                Let |candidatePairs:sequence&lt;RTCIceCandidatePair&gt;| be the method's first argument.
+              </p>
+            </li>
+            <li>
+              <p>
+                Let |filteredCandidatePairs:sequence&lt;RTCIceCandidatePair&gt;| be the result of filtering down <var>candidatePairs</var> to just the {{RTCIceCandidatePair}} elements whose  {{RTCIceCandidatePair/local}} and {{RTCIceCandidatePair/remote}} attributes respectively match a pairing of {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} sent in {{RTCIceTransport/onicecandidatepairadd}}.
               </p>
             </li>
             <li>
@@ -1030,7 +1031,7 @@ dictionary RTCEncodingOptions {
             </li>
             <li>
               <p>
-                In parallel, instruct the [= ICE agent =] to remove the candidate pairs indicated by |candidatePairs|, ignoring any unknown or invalid candidate pairs.
+                In parallel, instruct the [= ICE agent =] to remove the candidate pairs indicated by <var>filteredCandidatePairs</var>.
               </p>
               <ol>
                 <li>
@@ -1040,8 +1041,7 @@ dictionary RTCEncodingOptions {
                   <ol>
                     <li>
                       <p>
-                        For each valid |removedPair| in |candidatePairs| that was removed by the [= ICE agent =], [= fire an event =] named {{RTCIceTransport/icecandidatepairremove}}
-                        at |transport|, using {{RTCIceCandidatePairEvent}}, with the {{Event/cancelable}} attribute initialized to <code>false</code>, and the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively, of |removedPair|.
+                        For each |removedPair:RTCIceCandidatePair| in <var>filteredCandidatePairs</var> that was removed by the [= ICE agent =], [= fire an event =] named {{RTCIceTransport/icecandidatepairremove}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the {{Event/cancelable}} attribute initialized to <code>false</code>, and the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the {{RTCIceCandidatePair/local}} and {{RTCIceCandidatePair/remote}} candidates, respectively, of <var>removedPair</var>.
                       </p>
                     </li>
                     <li>
