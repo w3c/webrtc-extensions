@@ -779,71 +779,6 @@ dictionary RTCEncodingOptions {
       </li>
     </ol>
     <p>
-      If the application defers the {{nomination}} of a candidate pair by cancelling the
-      {{RTCIceTransport/icecandidatepairnominate}} event, it may select a different candidate pair to send data by calling
-      {{RTCIceTransport/setSelectedCandidatePair}}. When the method is called, the [= user agent =] MUST run the steps to <dfn
-        id="rtcicetransport-select">change the selected candidate pair</dfn>:
-    </p>
-    <ol class="algorithm">
-      <li>
-        <p>
-          Let |connection:RTCPeerConnection| be the {{RTCPeerConnection}} object associated with this [= ICE agent =].
-        </p>
-      </li>
-      <li>
-        <p>
-          If <var>connection</var>.{{RTCPeerConnection/[[IsClosed]]}} is
-          <code>true</code>, [= exception/throw =] an {{InvalidStateError}}.
-        </p>
-      </li>
-      <li>
-        <p>
-          Let |transport:RTCIceTransport| be the {{RTCIceTransport}} object associated with this candidate pair.
-        </p>
-      </li>
-      <li>
-        <p>
-          If |transport|.{{RTCIceTransport/[[ProposalPending]]}} is <code>true</code>, [= exception/throw =] an {{InvalidStateError}}.
-        </p>
-      </li>
-      <li>
-        <p>
-          If |transport|.{{RTCIceTransport/[[IceTransportState]]}} is either of
-          {{RTCIceTransportState/"new"}}, {{RTCIceTransportState/"failed"}} or {{RTCIceTransportState/"closed"}}, [=
-          exception/throw =]
-          an {{InvalidStateError}}.
-        </p>
-      </li>
-      <li>
-        <p>
-          Let |candidatePair:RTCIceCandidatePair| be the candidate pair which is being set as the selected candidate pair.
-        </p>
-      </li>
-      <li>
-        <p>
-          If |candidatePair| does not describe a candidate pair formed for this {{RTCIceTransport}} and sent in
-          {{RTCIceTransport/onicecandidatepairadd}}, [= exception/throw =] a {{NotFoundError}}.
-        </p>
-      </li>
-      <li>
-        <p>
-          If |candidatePair| describes a [= candidate pair removed =] by the [= ICE agent =] or removed by the application by calling {{RTCIceTransport/removeCandidatePairs}}, [= exception/throw =] a {{NotFoundError}}.
-        </p>
-      </li>
-      <li>
-        <p>
-          Instruct the [= ICE agent =] to use |candidatePair| to send data, and continue to the steps for a change in the selected
-          candidate pair (leading up to {{RTCIceTransport/onselectedcandidatepairchange}}).
-        </p>
-      </li>
-    </ol>
-    <p class="note">
-      After changing the selected candidate pair, the controlling [= ICE agent =] may attempt to [= nominate the candidate
-      pair =] as
-      well to conclude ICE processing. The application may cancel the nomination to allow further changes to the selected
-      candidate pair.
-    </p>
-    <p>
       When the [= ICE agent =] has picked a candidate pair to remove, the [= user agent =] MUST [= queue a task =] to <dfn data-lt="candidate pair removed" id="rtcicetransport-remove">remove a candidate pair</dfn>:
     </p>
     <ol class="algorithm">
@@ -975,9 +910,62 @@ dictionary RTCEncodingOptions {
         </dt>
         <dd>
           <p>
-            The {{setSelectedCandidatePair}} method attempts to change the selected candidate pair. If successful, data will be sent
-            on the provided candidate pair. When this method is invoked, the [= user agent =] MUST run the steps to [= change the
-            selected candidate pair =].
+            The {{setSelectedCandidatePair}} method attempts to select a different candidate pair to send data
+            over. If successful, data will be sent on the provided candidate pair.
+            It is meant to be called after the application defers the {{nomination}} of a candidate pair
+            by cancelling the {{RTCIceTransport/icecandidatepairnominate}} event.
+          <p>
+          <p>
+            When this method is invoked, the [= user agent =] MUST run the following steps:
+          </p>
+          <ol class="algorithm">
+            <li>
+              <p>
+                Let |connection:RTCPeerConnection| be the {{RTCPeerConnection}} object associated with [=this=].
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>connection</var>.{{RTCPeerConnection/[[IsClosed]]}} is
+                <code>true</code>, [= exception/throw =] an {{InvalidStateError}}.
+              </p>
+            </li>
+            <li>
+              <p>
+                If [=this=].{{RTCIceTransport/[[ProposalPending]]}} is <code>true</code>, [= exception/throw =] an {{InvalidStateError}}.
+              </p>
+            </li>
+            <li>
+              <p>
+                If [=this=].{{RTCIceTransport/[[IceTransportState]]}} is either of
+                {{RTCIceTransportState/"new"}}, {{RTCIceTransportState/"failed"}} or {{RTCIceTransportState/"closed"}}, [=
+                exception/throw =]
+                an {{InvalidStateError}}.
+              </p>
+            </li>
+            <li>
+              <p>
+                Let |candidatePair:RTCIceCandidatePair| be the method's first argument.
+              </p>
+            </li>
+            <li>
+              <p>
+                If |candidatePair| does not describe a candidate pair formed for [=this=] {{RTCIceTransport}} and sent in
+                {{RTCIceTransport/onicecandidatepairadd}}, [= exception/throw =] a {{NotFoundError}}.
+              </p>
+            </li>
+            <li>
+              <p>
+                Instruct the [= ICE agent =] to use |candidatePair| to send data, and continue to the steps for a change in the selected
+                candidate pair (leading up to {{RTCIceTransport/onselectedcandidatepairchange}}).
+              </p>
+            </li>
+          </ol>
+          <p class="note">
+            After changing the selected candidate pair, the controlling [= ICE agent =] may attempt to [= nominate the candidate
+            pair =] as
+            well to conclude ICE processing. The application may cancel the nomination to allow further changes to the selected
+            candidate pair.
           </p>
         </dd>
         <dt>
