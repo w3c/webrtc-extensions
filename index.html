@@ -855,7 +855,7 @@ dictionary RTCEncodingOptions {
           attribute EventHandler onicecandidatepairremove;
           attribute EventHandler onicecandidatepairnominate;
           undefined setSelectedCandidatePair(RTCIceCandidatePair candidatePair);
-          Promise&lt;undefined&gt; removeCandidatePairs(sequence&lt;RTCIceCandidatePair&gt; candidatePairs);
+          Promise&lt;undefined&gt; removeCandidatePair(RTCIceCandidatePair candidatePair);
         };</pre>
     <section id="rtcicetransport-attributes">
       <h2>Attributes</h2>
@@ -969,11 +969,11 @@ dictionary RTCEncodingOptions {
           </p>
         </dd>
         <dt>
-          <dfn>removeCandidatePairs</dfn>
+          <dfn>removeCandidatePair</dfn>
         </dt>
         <dd>
           <p>
-            The {{removeCandidatePairs}} method removes the provided candidate pairs. The [= ICE agent =] will stop sending and responding to ICE connectivity checks on the removed candidate pairs, and they can no longer be used to send data for this transport. This method is meant to be called when the application wants to free resources allocated for candidates that it no longer needs. The application cannot call {{RTCIceTransport/setSelectedCandidatePair}}() with a candidate pair removed with this method.
+            The {{removeCandidatePair}} method removes the provided candidate pair. The [= ICE agent =] will stop sending and responding to ICE connectivity checks on the removed candidate pair, and it can no longer be used to send data for this transport. This method is meant to be called when the application wants to free resources allocated for candidates that it no longer needs. The application cannot call {{RTCIceTransport/setSelectedCandidatePair}}() with a candidate pair removed with this method.
           </p>
           <p>
             When this method is invoked, the [= user agent =] MUST run the following steps:
@@ -1004,12 +1004,12 @@ dictionary RTCEncodingOptions {
             </li>
             <li>
               <p>
-                Let |candidatePairs:sequence&lt;RTCIceCandidatePair&gt;| be the method's first argument.
+                Let |candidatePair:RTCIceCandidatePair| be the method's first argument.
               </p>
             </li>
             <li>
               <p>
-                Let |filteredCandidatePairs:sequence&lt;RTCIceCandidatePair&gt;| be the result of filtering down <var>candidatePairs</var> to just the {{RTCIceCandidatePair}} elements whose  {{RTCIceCandidatePair/local}} and {{RTCIceCandidatePair/remote}} attributes respectively match a pairing of {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} sent in {{RTCIceTransport/onicecandidatepairadd}}.
+                If the {{RTCIceCandidatePair/local}} and {{RTCIceCandidatePair/remote}} attributes of <var>candidatePair</var> do not match a pairing of {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} respectively sent in {{RTCIceTransport/onicecandidatepairadd}}, [= exception/throw =] a {{NotFoundError}}.
               </p>
             </li>
             <li>
@@ -1019,7 +1019,7 @@ dictionary RTCEncodingOptions {
             </li>
             <li>
               <p>
-                In parallel, instruct the [= ICE agent =] to remove the candidate pairs indicated by <var>filteredCandidatePairs</var>.
+                In parallel, instruct the [= ICE agent =] to remove the candidate pair indicated by <var>candidatePair</var>.
               </p>
               <ol>
                 <li>
@@ -1029,7 +1029,7 @@ dictionary RTCEncodingOptions {
                   <ol>
                     <li>
                       <p>
-                        For each |removedPair:RTCIceCandidatePair| in <var>filteredCandidatePairs</var> that was removed by the [= ICE agent =], [= fire an event =] named {{RTCIceTransport/icecandidatepairremove}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the {{Event/cancelable}} attribute initialized to <code>false</code>, and the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the {{RTCIceCandidatePair/local}} and {{RTCIceCandidatePair/remote}} candidates, respectively, of <var>removedPair</var>.
+                        [= Fire an event =] named {{RTCIceTransport/icecandidatepairremove}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the {{Event/cancelable}} attribute initialized to <code>false</code>, and the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the {{RTCIceCandidatePair/local}} and {{RTCIceCandidatePair/remote}} candidates, respectively, of <var>candidatePair</var>.
                       </p>
                     </li>
                     <li>
