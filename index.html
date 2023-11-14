@@ -756,7 +756,7 @@ dictionary RTCEncodingOptions {
           {{RTCIceTransport/icecandidatepairnominate}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
           {{Event/cancelable}} attribute initialized to <code>true</code>, and the {{RTCIceCandidatePairEvent/local}} and
           {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively, of
-          |candidatePair|.
+          <var>candidatePair</var>.
         </p>
       </li>
       <li>
@@ -766,18 +766,18 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not {{nominate}} |candidatePair|, and instead to
-          continue to perform connectivity checks. The [= ICE agent =] may continue to send data using the candidate pair
-          indicated by |candidatePair| unless instructed to use another candidate pair with
-          {{RTCIceTransport/setSelectedCandidatePair}}.
+          If |accepted| is <code>false</code>, abort these steps and instruct the [= ICE agent =] to continue to perform connectivity checks.
         </p>
       </li>
       <li>
         <p>
-          Otherwise, instruct the [= ICE agent =] to {{nominate}} the candidate pair indicated by |candidatePair|.
+          Otherwise, instruct the [= ICE agent =] to {{nominate}} the candidate pair indicated by <var>candidatePair</var>.
         </p>
       </li>
     </ol>
+    <p class="note">
+      The [= ICE agent =] will continue to send data using <var>candidatePair</var> until instructed to use another candidate pair with {{RTCIceTransport/setSelectedCandidatePair}}.
+    </p>
     <p>
       When the [= ICE agent =] has picked a candidate pair to remove, the [= user agent =] MUST [= queue a task =] to <dfn
         id="rtcicetransport-remove">remove a candidate pair</dfn>:
@@ -821,7 +821,7 @@ dictionary RTCEncodingOptions {
           {{RTCIceTransport/icecandidatepairremove}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
           {{Event/cancelable}} attribute initialized to <var>cancelable</var>, and the {{RTCIceCandidatePairEvent/local}}
           and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively,
-          of |candidatePair|.
+          of <var>candidatePair</var>.
         </p>
       </li>
       <li>
@@ -832,13 +832,13 @@ dictionary RTCEncodingOptions {
       <li>
         <p>
           If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not remove the candidate pair indicated by
-          |candidatePair|, and instead continue to send and respond to ICE connectivity checks on the candidate pair as
+          <var>candidatePair</var>, and instead continue to send and respond to ICE connectivity checks on the candidate pair as
           before.
         </p>
       </li>
       <li>
         <p>
-          Otherwise, instruct the [= ICE agent =] to remove the candidate pair indicated by |candidatePair|.
+          Otherwise, instruct the [= ICE agent =] to remove the candidate pair indicated by <var>candidatePair</var>.
         </p>
       </li>
     </ol>
