@@ -1001,7 +1001,7 @@ dictionary RTCEncodingOptions {
         </dt>
         <dd>
           <p>
-            The {{removeCandidatePair}} method removes the provided candidate pair. The [= ICE agent =] will stop sending and responding to ICE connectivity checks on the removed candidate pair, and it can no longer be used to send data for this transport. This method is meant to be called when the application wants to free resources allocated for candidates that it no longer needs. The application cannot call {{RTCIceTransport/setSelectedCandidatePair}}() with a candidate pair removed with this method.
+            The {{removeCandidatePair}} method removes the provided candidate pair. The [= ICE agent =] will stop sending and responding to ICE connectivity checks on the removed candidate pair, and it can no longer be used to send data for this transport. This method is meant to be called when the application wants to free resources allocated for candidates that it no longer needs. The application cannot call {{RTCIceTransport/selectCandidatePair}}() with a candidate pair removed with this method.
           </p>
           <p>
             When this method is invoked, the [= user agent =] MUST run the following steps:
