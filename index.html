@@ -769,7 +769,7 @@ dictionary RTCEncodingOptions {
           If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not {{nominate}} |candidatePair|, and instead to
           continue to perform connectivity checks. The [= ICE agent =] may continue to send data using the candidate pair
           indicated by |candidatePair| unless instructed to use another candidate pair with
-          {{RTCIceTransport/setSelectedCandidatePair}}.
+          {{RTCIceTransport/selectCandidatePair}}.
         </p>
       </li>
       <li>
@@ -855,7 +855,7 @@ dictionary RTCEncodingOptions {
           attribute EventHandler onicecandidatepairadd;
           attribute EventHandler onicecandidatepairremove;
           attribute EventHandler onicecandidatepairnominate;
-          undefined setSelectedCandidatePair(RTCIceCandidatePair candidatePair);
+          Promise&lt;undefined&gt; selectCandidatePair(RTCIceCandidatePair candidatePair);
         };</pre>
     <section id="rtcicetransport-attributes">
       <h2>Attributes</h2>
@@ -906,11 +906,11 @@ dictionary RTCEncodingOptions {
       <h2>Methods</h2>
       <dl data-link-for="RTCIceTransport" data-dfn-for="RTCIceTransport" class="methods">
         <dt>
-          <dfn>setSelectedCandidatePair</dfn>
+          <dfn>selectCandidatePair</dfn>
         </dt>
         <dd>
           <p>
-            The {{setSelectedCandidatePair}} method attempts to select a different candidate pair to send data
+            The {{selectCandidatePair}} method attempts to select a different candidate pair to send data
             over. If successful, data will be sent on the provided candidate pair.
             It is meant to be called after the application defers the {{nomination}} of a candidate pair
             by cancelling the {{RTCIceTransport/icecandidatepairnominate}} event.
@@ -956,8 +956,36 @@ dictionary RTCEncodingOptions {
             </li>
             <li>
               <p>
-                Instruct the [= ICE agent =] to use |candidatePair| to send data, and continue to the steps for a change in the selected
-                candidate pair (leading up to {{RTCIceTransport/onselectedcandidatepairchange}}).
+                Let |p:Promise| be a new promise.
+              </p>
+            </li>
+            <li>
+              <p>
+                In parallel, instruct the [= ICE agent =] to use |candidatePair| to send data.
+              </p>
+              <ol>
+                <li>
+                  <p>
+                    When the [= ICE agent =] has completed selecting |candidatePair|, [= queue a task =] to run the following steps:
+                  </p>
+                  <ol>
+                    <li>
+                      <p>
+                        Run the steps for a change in the selected candidate pair for an {{RTCIceTransport}}, leading up to a change in the {{RTCIceTransport/[[SelectedCandidatePair]]}} internal slot and {{RTCIceTransport/onselectedcandidatepairchange}}.
+                      </p>
+                    </li>
+                    <li>
+                      <p>
+                        Resolve <var>p</var>.
+                      </p>
+                    </li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+            <li>
+              <p>
+                Return <var>p</var>.
               </p>
             </li>
           </ol>
