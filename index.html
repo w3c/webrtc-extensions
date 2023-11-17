@@ -756,7 +756,7 @@ dictionary RTCEncodingOptions {
           {{RTCIceTransport/icecandidatepairnominate}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
           {{Event/cancelable}} attribute initialized to <code>true</code>, and the {{RTCIceCandidatePairEvent/local}} and
           {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively, of
-          <var>candidatePair</var>.
+          |candidatePair|.
         </p>
       </li>
       <li>
@@ -771,12 +771,12 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Otherwise, instruct the [= ICE agent =] to {{nominate}} the candidate pair indicated by <var>candidatePair</var>.
+          Otherwise, instruct the [= ICE agent =] to {{nominate}} the candidate pair indicated by |candidatePair|.
         </p>
       </li>
     </ol>
     <p class="note">
-      The [= ICE agent =] will continue to send data using <var>candidatePair</var> until instructed to use another candidate pair with {{RTCIceTransport/selectCandidatePair}}.
+      The [= ICE agent =] will continue to send data using |candidatePair| until instructed to use another candidate pair with {{RTCIceTransport/selectCandidatePair}}.
     </p>
     <p>
       When the [= ICE agent =] has picked a candidate pair to remove, the [= user agent =] MUST [= queue a task =] to <dfn
@@ -821,7 +821,7 @@ dictionary RTCEncodingOptions {
           {{RTCIceTransport/icecandidatepairremove}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
           {{Event/cancelable}} attribute initialized to <var>cancelable</var>, and the {{RTCIceCandidatePairEvent/local}}
           and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively,
-          of <var>candidatePair</var>.
+          of |candidatePair|.
         </p>
       </li>
       <li>
@@ -832,13 +832,13 @@ dictionary RTCEncodingOptions {
       <li>
         <p>
           If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not remove the candidate pair indicated by
-          <var>candidatePair</var>, and instead continue to send and respond to ICE connectivity checks on the candidate pair as
+          |candidatePair|, and instead continue to send and respond to ICE connectivity checks on the candidate pair as
           before.
         </p>
       </li>
       <li>
         <p>
-          Otherwise, instruct the [= ICE agent =] to remove the candidate pair indicated by <var>candidatePair</var>.
+          Otherwise, instruct the [= ICE agent =] to remove the candidate pair indicated by |candidatePair|.
         </p>
       </li>
     </ol>
