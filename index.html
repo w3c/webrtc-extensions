@@ -971,7 +971,7 @@ dictionary RTCEncodingOptions {
                   <ol>
                     <li>
                       <p>
-                        Run the steps for a change in the selected candidate pair for an {{RTCIceTransport}}, leading up to a change in the {{RTCIceTransport/[[SelectedCandidatePair]]}} internal slot and {{RTCIceTransport/onselectedcandidatepairchange}}.
+                        Run the steps labeled [=RTCIceTransport/change the selected candidate pair and state=] to update [=this=].{{RTCIceTransport/[[SelectedCandidatePair]]}} and [=this=].{{RTCIceTransport/[[IceTransportState]]}} as necessary and fire any associated events.
                       </p>
                     </li>
                     <li>
