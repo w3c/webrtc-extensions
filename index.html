@@ -766,10 +766,7 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          If |accepted| is <code>false</code>, instruct the [= ICE agent =] to not {{nominate}} |candidatePair|, and instead to
-          continue to perform connectivity checks. The [= ICE agent =] may continue to send data using the candidate pair
-          indicated by |candidatePair| unless instructed to use another candidate pair with
-          {{RTCIceTransport/selectCandidatePair}}.
+          If |accepted| is <code>false</code>, abort these steps and instruct the [= ICE agent =] to continue to perform connectivity checks.
         </p>
       </li>
       <li>
@@ -778,6 +775,9 @@ dictionary RTCEncodingOptions {
         </p>
       </li>
     </ol>
+    <p class="note">
+      The [= ICE agent =] will continue to send data using |candidatePair| until instructed to use another candidate pair with {{RTCIceTransport/selectCandidatePair}}.
+    </p>
     <p>
       When the [= ICE agent =] has picked a candidate pair to remove, the [= user agent =] MUST [= queue a task =] to <dfn
         id="rtcicetransport-remove">remove a candidate pair</dfn>:
