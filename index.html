@@ -75,6 +75,10 @@
       The terms [= event =], [= event handlers =] and [= event handler event types =] are defined in [[!HTML]].
     </p>
     <p>
+      The process of <dfn data-lt="form|formed|forming">forming</dfn> a candidate pair is defined in
+      [[RFC8445]] Section 6.1.2.2.
+    </p>
+    <p>
       The process of <dfn data-lt="nominate|nominated|nomination">nominating</dfn> a candidate pair is defined in
       [[RFC8445]] Section 8.1.1.
     </p>
@@ -718,6 +722,41 @@ dictionary RTCEncodingOptions {
       the selected candidate pair after a successful nomination requires an ICE restart.
     </p>
     <p>
+      When the [= ICE agent =] has [= formed =] a candidate pair, the [= user agent =] MUST [= queue a task =] to <dfn
+        id="rtcicetransport-add">add a candidate pair</dfn>:
+    </p>
+    <ol class="algorithm">
+      <li>
+        <p>
+          Let |connection:RTCPeerConnection| be the {{RTCPeerConnection}} object associated with this [= ICE agent =].
+        </p>
+      </li>
+      <li>
+        <p>
+          If <var>connection</var>.{{RTCPeerConnection/[[IsClosed]]}} is
+          <code>true</code>, abort these steps.
+        </p>
+      </li>
+      <li>
+        <p>
+          Let |candidatePair:RTCIceCandidatePair| be the candidate pair that was [= formed =].
+        </p>
+      </li>
+      <li>
+        <p>
+          Let |transport:RTCIceTransport| be the {{RTCIceTransport}} object associated with |candidatePair|.
+        </p>
+      </li>
+      <li>
+        <p>
+          [= Fire an event =] named
+          {{RTCIceTransport/icecandidatepairadd}} at |transport|, using {{RTCIceCandidatePairEvent}},
+          with the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes
+          initialized to the local and remote candidates, respectively, of |candidatePair|.
+        </p>
+      </li>
+    </ol>
+    <p>
       When the [= ICE agent =] has picked a candidate pair to {{nominate}} as the selected candidate pair, the [= user
       agent =]
       MUST [= queue a task =] to <dfn id="rtcicetransport-nominate" data-lt="nominate the candidate pair">nominate a
@@ -796,12 +835,12 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Let |transport:RTCIceTransport| be the {{RTCIceTransport}} object associated with this candidate pair.
+          Let |candidatePair:RTCIceCandidatePair| be the candidate pair which is being removed.
         </p>
       </li>
       <li>
         <p>
-          Let |candidatePair:RTCIceCandidatePair| be the candidate pair which is being removed.
+          Let |transport:RTCIceTransport| be the {{RTCIceTransport}} object associated with |candidatePair|.
         </p>
       </li>
       <li>
@@ -865,13 +904,8 @@ dictionary RTCEncodingOptions {
         </dt>
         <dd>
           <p>
-            The event type of this event handler is {{icecandidatepairadd}}.
-          </p>
-          <p>
-            When the [= ICE agent =] has formed a candidate pair, the [= user agent =] MUST queue a task to [= fire an
-            event =] named {{icecandidatepairadd}} using the {{RTCIceCandidatePairEvent}} interface, with the
-            {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes set to the local and
-            remote candidates, respectively, of the formed candidate pair.
+            The event type of this event handler is {{icecandidatepairadd}}, and is fired as part of
+            the [= add a candidate pair =] algorithm.
           </p>
         </dd>
         <dt>
@@ -879,11 +913,8 @@ dictionary RTCEncodingOptions {
         </dt>
         <dd>
           <p>
-            The event type of this event handler is {{icecandidatepairremove}}.
-          </p>
-          <p>
-            When the [= ICE agent =] has picked a candidate pair to remove, but before the removal has actually occurred,
-            the [= user agent =] MUST run the steps to [= remove a candidate pair =].
+            The event type of this event handler is {{icecandidatepairremove}}, and is fired as part of
+            the [= remove a candidate pair =] algorithm.
           </p>
         </dd>
         <dt>
@@ -891,13 +922,8 @@ dictionary RTCEncodingOptions {
         </dt>
         <dd>
           <p>
-            The event type of this event handler is {{icecandidatepairnominate}}.
-          </p>
-          <p>
-            When the [= ICE agent =] has picked a candidate pair to {{nominate}} as the selected candidate pair, but
-            before
-            the
-            nomination takes place, the [= user agent =] MUST run the steps to [= nominate a candidate pair =].
+            The event type of this event handler is {{icecandidatepairnominate}}, and is fired as part
+            of the [= nominate a candidate pair =] algorithm.
           </p>
         </dd>
       </dl>
