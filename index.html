@@ -82,6 +82,9 @@
       The process of <dfn data-lt="nominate|nominated|nomination">nominating</dfn> a candidate pair is defined in
       [[RFC8445]] Section 8.1.1.
     </p>
+    <p>
+      The process of <dfn data-lt="free|freed|freeing">freeing</dfn> a candidate is defined in [[RFC8445]] Section 8.3.
+    </p>
   </section>
   <section id="ice-csp">
     <h3>
@@ -818,7 +821,8 @@ dictionary RTCEncodingOptions {
       The [= ICE agent =] will continue to send data using |candidatePair| until instructed to use another candidate pair with {{RTCIceTransport/selectCandidatePair}}.
     </p>
     <p>
-      When the [= ICE agent =] has picked a candidate pair to remove, the [= user agent =] MUST [= queue a task =] to <dfn data-lt="candidate pair removed" id="rtcicetransport-remove">remove a candidate pair</dfn>:
+      When the [= ICE agent =] has picked a candidate pair to remove, the [= user agent =] MUST [= queue a task =] to <dfn
+        id="rtcicetransport-remove">remove a candidate pair</dfn>:
     </p>
     <ol class="algorithm">
       <li>
@@ -844,7 +848,8 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Let |cancelable:boolean| be <code>true</code> if the candidate pair is being removed in order to free an unused candidate, and
+          Let |cancelable:boolean| be <code>true</code> if the candidate pair is being removed in order to [= free =] an unused
+          candidate, and
           <code>false</code> otherwise.
         </p>
       </li>
@@ -1027,7 +1032,11 @@ dictionary RTCEncodingOptions {
         </dt>
         <dd>
           <p>
-            The {{removeCandidatePair}} method removes the provided candidate pair. The [= ICE agent =] will stop sending and responding to ICE connectivity checks on the removed candidate pair, and it can no longer be used to send data for this transport. This method is meant to be called when the application wants to free resources allocated for candidates that it no longer needs. The application cannot call {{RTCIceTransport/selectCandidatePair}}() with a candidate pair removed with this method.
+            The {{removeCandidatePair}} method removes the provided candidate pair. The [= ICE agent =] will stop sending and
+            responding to ICE connectivity checks on the removed candidate pair, and it can no longer be used to send data for this
+            transport. This method is meant to be called when the application wants to allow the [= ICE agent =] to [= free =]
+            candidates that it no longer needs. The application cannot call {{RTCIceTransport/selectCandidatePair}}() with a
+            candidate pair removed with this method.
           </p>
           <p>
             When this method is invoked, the [= user agent =] MUST run the following steps:
