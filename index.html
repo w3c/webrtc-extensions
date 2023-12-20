@@ -1100,6 +1100,26 @@ dictionary RTCEncodingOptions {
         </section>
       </div>
     </section>
+    <p>
+      The <dfn>candidate pair match</dfn> algorithm given two {{RTCIceCandidatePair}} |first:RTCIceCandidatePair| and |second:RTCIceCandidatePair| is as follows:
+    </p>
+    <ol class="algorithm">
+      <li>
+        <p>
+          If |first|.{{RTCIceCandidatePair/local}} does not [= candidate match | match =] |second|.{{RTCIceCandidatePair/local}}, return <code>false</code>.
+        </p>
+      </li>
+      <li>
+        <p>
+          If |first|.{{RTCIceCandidatePair/remote}} does not [= candidate match | match =] |second|.{{RTCIceCandidatePair/remote}}, return <code>false</code>.
+        </p>
+      </li>
+      <li>
+        <p>
+          Return <code>true</code>.
+        </p>
+      </li>
+    </ol>
   </section>
   <section id="rtcrtpcontributingsource-extensions">
     <h3>
