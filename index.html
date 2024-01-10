@@ -749,6 +749,11 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
+          [= list/Append =] |candidatePair| to {{RTCIceTransport/[[CandidatePairs]]}}.
+        </p>
+      </li>
+      <li>
+        <p>
           [= Fire an event =] named
           {{RTCIceTransport/icecandidatepairadd}} at |transport|, using {{RTCIceCandidatePairEvent}},
           with the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes
@@ -877,14 +882,29 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Otherwise, instruct the [= ICE agent =] to remove the candidate pair indicated by |candidatePair|.
+          Otherwise (if |accepted| is <code>true</code>), run the following steps:
         </p>
+        <ol>
+          <li>
+            <p>
+              [= list/Remove =] all items that [= candidate pair match | match =] |candidatePair| from |transport|.{{RTCIceTransport/[[CandidatePairs]]}}.
+            </p>
+          </li>
+          <li>
+            <p>
+              Instruct the [= ICE agent =] to remove the candidate pair indicated by |candidatePair|.
+            </p>
+          </li>
+        </ol>
       </li>
     </ol>
     <p>
-      The {{RTCIceTransport}} object is extended by adding the following internal slot:
+      The {{RTCIceTransport}} object is extended by adding the following internal slots:
     </p>
     <ul>
+      <li>
+        <dfn data-dfn-for="RTCIceTransport">[[\CandidatePairs]]</dfn> initialized to an empty list.
+      </li>
       <li>
         <dfn data-dfn-for="RTCIceTransport">[[\ProposalPending]]</dfn> initialized to <code>false</code>.
       </li>
@@ -976,8 +996,7 @@ dictionary RTCEncodingOptions {
             </li>
             <li>
               <p>
-                If |candidatePair| does not describe a candidate pair formed for [=this=] {{RTCIceTransport}} and sent in
-                {{RTCIceTransport/onicecandidatepairadd}}, [= exception/throw =] a {{NotFoundError}}.
+                If |candidatePair| does not [= candidate pair match | match =] any item in [=this=].{{RTCIceTransport/[[CandidatePairs]]}}, [= exception/throw =] a {{NotFoundError}}.
               </p>
             </li>
             <li>
