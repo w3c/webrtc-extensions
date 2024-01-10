@@ -1090,7 +1090,12 @@ dictionary RTCEncodingOptions {
             </li>
             <li>
               <p>
-                If the {{RTCIceCandidatePair/local}} and {{RTCIceCandidatePair/remote}} attributes of <var>candidatePair</var> do not match a pairing of {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} respectively sent in {{RTCIceTransport/onicecandidatepairadd}}, [= exception/throw =] a {{NotFoundError}}.
+                If |candidatePair| does not [= candidate pair match | match =] any item in [=this=].{{RTCIceTransport/[[CandidatePairs]]}}, [= exception/throw =] a {{NotFoundError}}.
+              </p>
+            </li>
+            <li>
+              <p>
+                [= list/Remove =] all items that [= candidate pair match | match =] |candidatePair| from [=this=].{{RTCIceTransport/[[CandidatePairs]]}}.
               </p>
             </li>
             <li>
