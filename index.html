@@ -82,6 +82,9 @@
       The process of <dfn data-lt="nominate|nominated|nomination">nominating</dfn> a candidate pair is defined in
       [[RFC8445]] Section 8.1.1.
     </p>
+    <p>
+      The process of <dfn data-lt="free|freed|freeing">freeing</dfn> a candidate is defined in [[RFC8445]] Section 8.3.
+    </p>
   </section>
   <section id="ice-csp">
     <h3>
@@ -850,7 +853,8 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Let |cancelable:boolean| be <code>true</code> if the candidate pair is being removed in order to free an unused candidate, and
+          Let |cancelable:boolean| be <code>true</code> if the candidate pair is being removed in order to [= free =] an unused
+          candidate, and
           <code>false</code> otherwise.
         </p>
       </li>
@@ -915,6 +919,7 @@ dictionary RTCEncodingOptions {
           attribute EventHandler onicecandidatepairremove;
           attribute EventHandler onicecandidatepairnominate;
           Promise&lt;undefined&gt; selectCandidatePair(RTCIceCandidatePair candidatePair);
+          Promise&lt;undefined&gt; removeCandidatePair(RTCIceCandidatePair candidatePair);
         };</pre>
     <section id="rtcicetransport-attributes">
       <h2>Attributes</h2>
@@ -1041,6 +1046,89 @@ dictionary RTCEncodingOptions {
             candidate pair.
           </p>
         </dd>
+        <dt>
+          <dfn>removeCandidatePair</dfn>
+        </dt>
+        <dd>
+          <p>
+            The {{removeCandidatePair}} method removes the provided candidate pair. The [= ICE agent =] will stop sending and
+            responding to ICE connectivity checks on the removed candidate pair, and it can no longer be used to send data for this
+            transport. This method is meant to be called when the application wants to allow the [= ICE agent =] to [= free =]
+            candidates that it no longer needs.
+          </p>
+          <p>
+            When this method is invoked, the [= user agent =] MUST run the following steps:
+          </p>
+          <ol class="algorithm">
+            <li>
+              <p>
+                Let |connection:RTCPeerConnection| be the {{RTCPeerConnection}} object associated with [= this =].
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>connection</var>.{{RTCPeerConnection/[[IsClosed]]}} is
+                <code>true</code>, [= exception/throw =] an
+                {{InvalidStateError}}.
+              </p>
+            </li>
+            <li>
+              <p>
+                If [= this =].{{RTCIceTransport/[[ProposalPending]]}} is <code>true</code>, [= exception/throw =] an
+                {{InvalidStateError}}.
+              </p>
+            </li>
+            <li>
+              <p>
+                If [= this =].{{RTCIceTransport/[[IceTransportState]]}} is either of {{RTCIceTransportState/"new"}}, {{RTCIceTransportState/"failed"}} or {{RTCIceTransportState/"closed"}}, [= exception/throw =] an {{InvalidStateError}}.
+              </p>
+            </li>
+            <li>
+              <p>
+                Let |candidatePair:RTCIceCandidatePair| be the method's first argument.
+              </p>
+            </li>
+            <li>
+              <p>
+                If the {{RTCIceCandidatePair/local}} and {{RTCIceCandidatePair/remote}} attributes of <var>candidatePair</var> do not match a pairing of {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} respectively sent in {{RTCIceTransport/onicecandidatepairadd}}, [= exception/throw =] a {{NotFoundError}}.
+              </p>
+            </li>
+            <li>
+              <p>
+                Let |p:Promise| be a new promise.
+              </p>
+            </li>
+            <li>
+              <p>
+                In parallel, instruct the [= ICE agent =] to remove the candidate pair indicated by <var>candidatePair</var>.
+              </p>
+              <ol>
+                <li>
+                  <p>
+                    When the [= ICE agent =] has completed the removal, [= queue a task =] to run the following steps:
+                  </p>
+                  <ol>
+                    <li>
+                      <p>
+                        [= Fire an event =] named {{RTCIceTransport/icecandidatepairremove}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the {{Event/cancelable}} attribute initialized to <code>false</code>, and the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the {{RTCIceCandidatePair/local}} and {{RTCIceCandidatePair/remote}} candidates, respectively, of <var>candidatePair</var>.
+                      </p>
+                    </li>
+                    <li>
+                      <p>
+                        Resolve <var>p</var>.
+                      </p>
+                    </li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+            <li>
+              <p>
+                Return <var>p</var>.
+              </p>
+            </li>
+          </ol>
+        </dd>
       </dl>
     </section>
     <section>
@@ -1163,6 +1251,26 @@ dictionary RTCEncodingOptions {
         <p>
           If neither of |first|.{{RTCIceCandidate/usernameFragment}} and |second|.{{RTCIceCandidate/usernameFragment}} is <code>null</code> and |first|.{{RTCIceCandidate/usernameFragment}} is not [= string/identical to =]
           |second|.{{RTCIceCandidate/usernameFragment}}, return <code>false</code>.
+        </p>
+      </li>
+      <li>
+        <p>
+          Return <code>true</code>.
+        </p>
+      </li>
+    </ol>
+    <p>
+      The <dfn>candidate pair match</dfn> algorithm given two {{RTCIceCandidatePair}} |first:RTCIceCandidatePair| and |second:RTCIceCandidatePair| is as follows:
+    </p>
+    <ol class="algorithm">
+      <li>
+        <p>
+          If |first|.{{RTCIceCandidatePair/local}} does not [= candidate match | match =] |second|.{{RTCIceCandidatePair/local}}, return <code>false</code>.
+        </p>
+      </li>
+      <li>
+        <p>
+          If |first|.{{RTCIceCandidatePair/remote}} does not [= candidate match | match =] |second|.{{RTCIceCandidatePair/remote}}, return <code>false</code>.
         </p>
       </li>
       <li>
