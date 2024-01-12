@@ -1101,6 +1101,58 @@ dictionary RTCEncodingOptions {
       </div>
     </section>
     <p>
+      The <dfn>candidate match</dfn> algorithm given two {{RTCIceCandidate}} |first:RTCIceCandidate| and
+      |second:RTCIceCandidate| is as follows:
+    </p>
+    <ol class="algorithm">
+      <li>
+        <p>
+          If |first|.{{RTCIceCandidate/candidate}} is not [= string/identical to =] |second|.{{RTCIceCandidate/candidate}}, return <code>false</code>.
+        </p>
+      </li>
+      <li>
+        <p>
+          If either (but not both) of |first|.{{RTCIceCandidate/sdpMid}} and |second|.{{RTCIceCandidate/sdpMid}} is
+          <code>null</code>, return <code>false</code>.
+        </p>
+      </li>
+      <li>
+        <p>
+          If neither of |first|.{{RTCIceCandidate/sdpMid}} and |second|.{{RTCIceCandidate/sdpMid}} is <code>null</code>, and |first|.{{RTCIceCandidate/sdpMid}} is not [= string/identical to =]
+          |second|.{{RTCIceCandidate/sdpMid}}, return <code>false</code>.
+        </p>
+      </li>
+      <li>
+        <p>
+          If either (but not both) of |first|.{{RTCIceCandidate/sdpMLineIndex}} and |second|.{{RTCIceCandidate/sdpMLineIndex}} is
+          <code>null</code>, return <code>false</code>.
+        </p>
+      </li>
+      <li>
+        <p>
+          If neither of |first|.{{RTCIceCandidate/sdpMLineIndex}} and |second|.{{RTCIceCandidate/sdpMLineIndex}} is <code>null</code> and |first|.{{RTCIceCandidate/sdpMLineIndex}} is not equal to
+          |second|.{{RTCIceCandidate/sdpMLineIndex}}, return <code>false</code>.
+        </p>
+      </li>
+      <li>
+        <p>
+          If either (but not both) of |first|.{{RTCIceCandidate/usernameFragment}} and |second|.{{RTCIceCandidate/usernameFragment}} is
+          <code>null</code>, return <code>false</code>.
+        </p>
+      </li>
+      <li>
+        <p>
+          If neither of |first|.{{RTCIceCandidate/usernameFragment}} and |second|.{{RTCIceCandidate/usernameFragment}} is <code>null</code> and |first|.{{RTCIceCandidate/usernameFragment}} is not [= string/identical to =]
+          |second|.{{RTCIceCandidate/usernameFragment}}, return <code>false</code>.
+        </p>
+      </li>
+      <li>
+        <p>
+          Return <code>true</code>.
+        </p>
+      </li>
+    </ol>
+    <p>
       The <dfn>candidate pair match</dfn> algorithm given two {{RTCIceCandidatePair}} |first:RTCIceCandidatePair| and |second:RTCIceCandidatePair| is as follows:
     </p>
     <ol class="algorithm">
