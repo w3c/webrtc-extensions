@@ -742,12 +742,26 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Let |candidatePair:RTCIceCandidatePair| be the candidate pair that was [= formed =].
+          Let |candidatePair:RTCIceCandidatePair| be a new {{RTCIceCandidatePair}} dictionary
+          with its {{RTCIceCandidatePair/local}} and {{RTCIceCandidatePair/remote}} members
+          initialized to new {{RTCIceCandidate}}s representing the local and remote part of the
+          [= formed =] pair respectively.
         </p>
       </li>
       <li>
         <p>
           Let |transport:RTCIceTransport| be the {{RTCIceTransport}} object associated with |candidatePair|.
+        </p>
+      </li>
+      <li>
+        <p>
+          [=Assert=]: |candidatePair| does not [= candidate pair match | match =] any
+          item in |transport|.{{RTCIceTransport/[[CandidatePairs]]}}
+        </p>
+      </li>
+      <li>
+        <p>
+          [= list/Append =] |candidatePair| to {{RTCIceTransport/[[CandidatePairs]]}}.
         </p>
       </li>
       <li>
@@ -881,14 +895,29 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Otherwise, instruct the [= ICE agent =] to remove the candidate pair indicated by |candidatePair|.
+          Otherwise (if |accepted| is <code>true</code>), run the following steps:
         </p>
+        <ol>
+          <li>
+            <p>
+              [= list/Remove =] |candidatePair| from |transport|.{{RTCIceTransport/[[CandidatePairs]]}}.
+            </p>
+          </li>
+          <li>
+            <p>
+              Instruct the [= ICE agent =] to remove the candidate pair indicated by |candidatePair|.
+            </p>
+          </li>
+        </ol>
       </li>
     </ol>
     <p>
-      The {{RTCIceTransport}} object is extended by adding the following internal slot:
+      The {{RTCIceTransport}} object is extended by adding the following internal slots:
     </p>
     <ul>
+      <li>
+        <dfn data-dfn-for="RTCIceTransport">[[\CandidatePairs]]</dfn> initialized to an empty list.
+      </li>
       <li>
         <dfn data-dfn-for="RTCIceTransport">[[\ProposalPending]]</dfn> initialized to <code>false</code>.
       </li>
@@ -981,8 +1010,8 @@ dictionary RTCEncodingOptions {
             </li>
             <li>
               <p>
-                If |candidatePair| does not describe a candidate pair formed for [=this=] {{RTCIceTransport}} and sent in
-                {{RTCIceTransport/onicecandidatepairadd}}, [= exception/throw =] a {{NotFoundError}}.
+                If |candidatePair| does not [= candidate pair match | match =] any item in [=this=].
+                {{RTCIceTransport/[[CandidatePairs]]}}, [= exception/throw =] a {{NotFoundError}}.
               </p>
             </li>
             <li>
@@ -1071,7 +1100,15 @@ dictionary RTCEncodingOptions {
             </li>
             <li>
               <p>
-                If the {{RTCIceCandidatePair/local}} and {{RTCIceCandidatePair/remote}} attributes of <var>candidatePair</var> do not match a pairing of {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} respectively sent in {{RTCIceTransport/onicecandidatepairadd}}, [= exception/throw =] a {{NotFoundError}}.
+                If |candidatePair| does not [= candidate pair match | match =] any item in [=this=].
+                {{RTCIceTransport/[[CandidatePairs]]}}, [= exception/throw =] a {{NotFoundError}}.
+              </p>
+            </li>
+            <li>
+              <p>
+                [= list/Remove =] the item in
+                [=this=].{{RTCIceTransport/[[CandidatePairs]]}} that
+                [= candidate pair match | matches =] |candidatePair|.
               </p>
             </li>
             <li>
