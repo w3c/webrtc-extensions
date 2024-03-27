@@ -43,6 +43,12 @@ var respecConfig = {
       },
       "CRYPTEX": {
 	"aliasOf": "RFC9335"
-    }
+      },
+      "RTP-EXT-CAPTURE-TIME": {
+	"title": "RTP Header Extension for Absolute Capture Time",
+	"publisher": "WebRTC Project",
+	href: "https://webrtc.googlesource.com/src/+/refs/heads/main/docs/native-code/rtp-hdrext/abs-capture-time",
+	"status": "Experimental RTP Header Extension"
+      }
     }
 }
