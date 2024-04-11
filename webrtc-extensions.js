@@ -1,16 +1,12 @@
 var respecConfig = {
-   lint: { "no-unused-dfns": false },
    "group": "webrtc",
     github: {
       repoURL: "https://github.com/w3c/webrtc-extensions/",
       branch: "main"
     },
+  latestVersion: null,
     "xref": ["html", "webidl", "webrtc", "hr-time", "mediacapture-streams", "webrtc-stats", "infra", "dom"],
-    "shortName": "webrtc-extensions",
     "specStatus": "ED",
-    "subjectPrefix": "[webrtc-extensions]",
-     // if there a publicly available Editor's Draft, this is the link
-    edDraftURI: "https://w3c.github.io/webrtc-extensions/",
     editors:  [
       //              { name: "Your Name", url: "http://example.org/",
       //                company: "Your Company", companyURL: "http://example.com/" },
@@ -43,6 +39,12 @@ var respecConfig = {
       },
       "CRYPTEX": {
 	"aliasOf": "RFC9335"
-    }
+      },
+      "RTP-EXT-CAPTURE-TIME": {
+	"title": "RTP Header Extension for Absolute Capture Time",
+	"publisher": "WebRTC Project",
+	href: "https://webrtc.googlesource.com/src/+/refs/heads/main/docs/native-code/rtp-hdrext/abs-capture-time",
+	"status": "Experimental RTP Header Extension"
+      }
     }
 }
