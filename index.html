@@ -429,7 +429,7 @@ partial interface RTCRtpTransceiver {
         </li>
         <li>
           <p>If any <var>encoding</var> in encodings [=map/exists|contains=] a codec
-            [= codec match | not found =] in <var>choosableCodecs</var>, return a promise
+            [= codec dictionary match | not found =] in <var>choosableCodecs</var>, return a promise
             [= rejected =] with a newly [= exception/created =] {{InvalidModificationError}}.</p>
         </li>
         <li>
@@ -443,7 +443,7 @@ partial interface RTCRtpTransceiver {
       <p>Add the following steps to the [=RTCPeerConnection/addTransceiver sendEncodings validation steps=]:</p>
       <ol>
         <li>
-          <p>If any <var>codec</var> parameter in <var>sendEncodings</var> does [= codec match | not match =] any codec in
+          <p>If any <var>codec</var> parameter in <var>sendEncodings</var> does [= codec dictionary match | not match =] any codec in
           {{RTCRtpSender.getCapabilities(kind)}}.<code>codecs</code>,
           [= exception/throw =] an {{OperationError}}.</p>
         </li>
@@ -467,7 +467,7 @@ partial interface RTCRtpTransceiver {
               <ol>
                 <li>
                   <p>Remove any <var>codec</var> value in <var>transceiver</var>.{{RTCRtpTransceiver/[[Sender]]}}.{{RTCRtpSender/[[SendEncodings]]}}
-                    that does not [= codec match | match =] any entry in <var>codecs</var>.</p>
+                    that does not [= codec dictionary match | match =] any entry in <var>codecs</var>.</p>
                 </li>
               </ol>
             </li>
