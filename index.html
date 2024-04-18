@@ -679,7 +679,21 @@ dictionary RTCEncodingOptions {
       The [= ICE agent =] will continue to send data using |candidatePair| until instructed to use another candidate pair with {{RTCIceTransport/selectCandidatePair}}.
     </p>
     <p>
-      When the [= ICE agent =] has picked a candidate pair to remove, the [= user agent =] MUST [= queue a task =] to <dfn
+      The [= ICE agent =] can decide to remove a candidate pair for several reasons. Examples include:
+    </p>
+    <ul>
+      <li>
+        A candidate could be [= freed =] because it is not associated with the selected candidate pair.
+      </li>
+      <li>
+        A candidate pair is no longer available due to a loss of the associated network interface.
+      </li>
+      <li>
+        All candidate pairs are being removed due to an ICE restart, as described in section 9 of [[RFC8445]].
+      </li>
+    </ul>
+    <p>
+      When the [= ICE agent =] has decided to remove a candidate pair, the [= user agent =] MUST [= queue a task =] to <dfn
         id="rtcicetransport-remove">remove a candidate pair</dfn>:
     </p>
     <ol class="algorithm">
