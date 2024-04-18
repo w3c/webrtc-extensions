@@ -586,10 +586,9 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Let |candidatePair:RTCIceCandidatePair| be a new {{RTCIceCandidatePair}} dictionary
-          with its {{RTCIceCandidatePair/local}} and {{RTCIceCandidatePair/remote}} members
-          initialized to new {{RTCIceCandidate}}s representing the local and remote part of the
-          [= formed =] pair respectively.
+          Let |candidatePair:RTCIceCandidatePair| be the result of [= creating an RTCIceCandidatePair =] with
+          |local:RTCIceCandidate| and |remote:RTCIceCandidate|, representing the local and remote candidates of the [= formed =]
+          pair respectively.
         </p>
       </li>
       <li>
@@ -612,8 +611,8 @@ dictionary RTCEncodingOptions {
         <p>
           [= Fire an event =] named
           {{RTCIceTransport/icecandidatepairadd}} at |transport|, using {{RTCIceCandidatePairEvent}},
-          with the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes
-          initialized to the local and remote candidates, respectively, of |candidatePair|.
+          with the {{RTCIceCandidatePairEvent/candidatePair}} attribute
+          initialized to |candidatePair|.
         </p>
       </li>
     </ol>
@@ -654,9 +653,8 @@ dictionary RTCEncodingOptions {
         <p>
           Let |accepted:boolean| be the result of [= fire an event | firing an event =] named
           {{RTCIceTransport/icecandidatepairnominate}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
-          {{Event/cancelable}} attribute initialized to <code>true</code>, and the {{RTCIceCandidatePairEvent/local}} and
-          {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively, of
-          |candidatePair|.
+          {{Event/cancelable}} attribute initialized to <code>true</code>, and the {{RTCIceCandidatePairEvent/candidatePair}} attribute
+          initialized to |candidatePair|.
         </p>
       </li>
       <li>
@@ -720,9 +718,8 @@ dictionary RTCEncodingOptions {
         <p>
           Let |accepted:boolean| be the result of [= fire an event | firing an event =] named
           {{RTCIceTransport/icecandidatepairremove}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the
-          {{Event/cancelable}} attribute initialized to <var>cancelable</var>, and the {{RTCIceCandidatePairEvent/local}}
-          and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the local and remote candidates, respectively,
-          of |candidatePair|.
+          {{Event/cancelable}} attribute initialized to <var>cancelable</var>, and the {{RTCIceCandidatePairEvent/candidatePair}} attribute
+          initialized to |candidatePair|.
         </p>
       </li>
       <li>
@@ -972,7 +969,7 @@ dictionary RTCEncodingOptions {
                   <ol>
                     <li>
                       <p>
-                        [= Fire an event =] named {{RTCIceTransport/icecandidatepairremove}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the {{Event/cancelable}} attribute initialized to <code>false</code>, and the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the {{RTCIceCandidatePair/local}} and {{RTCIceCandidatePair/remote}} candidates, respectively, of <var>candidatePair</var>.
+                        [= Fire an event =] named {{RTCIceTransport/icecandidatepairremove}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the {{Event/cancelable}} attribute initialized to <code>false</code>, and the {{RTCIceCandidatePairEvent/candidatePair}} attribute initialized to |candidatePair|.
                       </p>
                     </li>
                     <li>
@@ -998,15 +995,15 @@ dictionary RTCEncodingOptions {
         <dfn>RTCIceCandidatePairEvent</dfn>
       </h2>
       <p>
-        The {{RTCIceTransport/icecandidatepairadd}} and {{RTCIceTransport/icecandidatepairremove}} events use the
+        The {{RTCIceTransport/icecandidatepairadd}}, {{RTCIceTransport/icecandidatepairnominate}} and
+        {{RTCIceTransport/icecandidatepairremove}} events use the
         {{RTCIceCandidatePairEvent}} interface.
       </p>
       <div>
         <pre class="idl">[Exposed=Window]
   interface RTCIceCandidatePairEvent : Event {
     constructor(DOMString type, RTCIceCandidatePairEventInit eventInitDict);
-    readonly attribute RTCIceCandidate local;
-    readonly attribute RTCIceCandidate remote;
+    readonly attribute RTCIceCandidatePair candidatePair;
   };</pre>
         <section id="rtcicecandidatepairevent-constructors">
           <h4>Constructors</h4>
@@ -1019,21 +1016,11 @@ dictionary RTCEncodingOptions {
           <h4>Attributes</h4>
           <dl data-link-for="RTCIceCandidatePairEvent" data-dfn-for="RTCIceCandidatePairEvent" class="attributes">
             <dt>
-              <dfn>local</dfn> of type <span class="idlAttrType">{{RTCIceCandidate}}</span>, readonly
+              <dfn>candidatePair</dfn> of type <span class="idlAttrType">{{RTCIceCandidatePair}}</span>, readonly
             </dt>
             <dd>
               <p>
-                The {{local}} attribute represents the local {{RTCIceCandidate}} of the candidate pair associated with the
-                event.
-              </p>
-            </dd>
-            <dt>
-              <dfn>remote</dfn> of type <span class="idlAttrType">{{RTCIceCandidate}}</span>, readonly
-            </dt>
-            <dd>
-              <p>
-                The {{remote}} attribute represents the remote {{RTCIceCandidate}} of the candidate pair associated with
-                the event.
+                The {{candidatePair}} attribute represents the candidate pair associated with the event.
               </p>
             </dd>
           </dl>
@@ -1042,27 +1029,18 @@ dictionary RTCEncodingOptions {
       <div>
         <pre class="idl">
   dictionary RTCIceCandidatePairEventInit : EventInit {
-    required RTCIceCandidate local;
-    required RTCIceCandidate remote;
+    required RTCIceCandidatePair candidatePair;
   };</pre>
         <section id="rtcicecandidatepaireventinit">
           <h4>Dictionary <dfn>RTCIceCandidatePairEventInit</dfn> Members</h4>
           <dl data-link-for="RTCIceCandidatePairEventInit" data-dfn-for="RTCIceCandidatePairEventInit"
             class="dictionary-members">
             <dt>
-              <dfn>local</dfn> of type <span class="idlAttrType">{{RTCIceCandidate}}</span>, required
+              <dfn>candidatePair</dfn> of type <span class="idlAttrType">{{RTCIceCandidatePair}}</span>, required
             </dt>
             <dd>
               <p>
-                The local {{RTCIceCandidate}} of the candidate pair announced by the event.
-              </p>
-            </dd>
-            <dt>
-              <dfn>remote</dfn> of type <span class="idlAttrType">{{RTCIceCandidate}}</span>, required
-            </dt>
-            <dd>
-              <p>
-                The remote {{RTCIceCandidate}} of the candidate pair announced by the event.
+                The candidate pair announced by the event.
               </p>
             </dd>
           </dl>
