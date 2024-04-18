@@ -598,8 +598,7 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          [=Assert=]: |candidatePair| does not [= candidate pair match | match =] any
-          item in |transport|.{{RTCIceTransport/[[CandidatePairs]]}}
+          [=Assert=]: |transport|.{{RTCIceTransport/[[CandidatePairs]]}} does not [= list/contain =] |candidatePair|.
         </p>
       </li>
       <li>
@@ -851,8 +850,7 @@ dictionary RTCEncodingOptions {
             </li>
             <li>
               <p>
-                If |candidatePair| does not [= candidate pair match | match =] any item in [=this=].
-                {{RTCIceTransport/[[CandidatePairs]]}}, [= exception/throw =] a {{NotFoundError}}.
+                If [=this=].{{RTCIceTransport/[[CandidatePairs]]}} does not [= list/contain =] |candidatePair|, [= exception/throw =] a {{NotFoundError}}.
               </p>
             </li>
             <li>
@@ -941,15 +939,13 @@ dictionary RTCEncodingOptions {
             </li>
             <li>
               <p>
-                If |candidatePair| does not [= candidate pair match | match =] any item in [=this=].
-                {{RTCIceTransport/[[CandidatePairs]]}}, [= exception/throw =] a {{NotFoundError}}.
+                If [=this=].{{RTCIceTransport/[[CandidatePairs]]}} does not [= list/contain =] |candidatePair|, [= exception/throw =] a {{NotFoundError}}.
               </p>
             </li>
             <li>
               <p>
-                [= list/Remove =] the item in
-                [=this=].{{RTCIceTransport/[[CandidatePairs]]}} that
-                [= candidate pair match | matches =] |candidatePair|.
+                [= list/Remove =] |candidatePair| from
+                [=this=].{{RTCIceTransport/[[CandidatePairs]]}}.
               </p>
             </li>
             <li>
@@ -1048,7 +1044,7 @@ dictionary RTCEncodingOptions {
       </div>
     </section>
     <p>
-      The <dfn>candidate match</dfn> algorithm given two {{RTCIceCandidate}} |first:RTCIceCandidate| and
+      The <dfn class="export">candidate match</dfn> algorithm given two {{RTCIceCandidate}} |first:RTCIceCandidate| and
       |second:RTCIceCandidate| is as follows:
     </p>
     <ol class="algorithm">
@@ -1091,26 +1087,6 @@ dictionary RTCEncodingOptions {
         <p>
           If neither of |first|.{{RTCIceCandidate/usernameFragment}} and |second|.{{RTCIceCandidate/usernameFragment}} is <code>null</code> and |first|.{{RTCIceCandidate/usernameFragment}} is not [= string/identical to =]
           |second|.{{RTCIceCandidate/usernameFragment}}, return <code>false</code>.
-        </p>
-      </li>
-      <li>
-        <p>
-          Return <code>true</code>.
-        </p>
-      </li>
-    </ol>
-    <p>
-      The <dfn>candidate pair match</dfn> algorithm given two {{RTCIceCandidatePair}} |first:RTCIceCandidatePair| and |second:RTCIceCandidatePair| is as follows:
-    </p>
-    <ol class="algorithm">
-      <li>
-        <p>
-          If |first|.{{RTCIceCandidatePair/local}} does not [= candidate match | match =] |second|.{{RTCIceCandidatePair/local}}, return <code>false</code>.
-        </p>
-      </li>
-      <li>
-        <p>
-          If |first|.{{RTCIceCandidatePair/remote}} does not [= candidate match | match =] |second|.{{RTCIceCandidatePair/remote}}, return <code>false</code>.
         </p>
       </li>
       <li>
