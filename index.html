@@ -593,8 +593,8 @@ dictionary RTCEncodingOptions {
       </li>
       <li>
         <p>
-          Let |candidatePair:RTCIceCandidatePair| be a new {{RTCIceCandidatePair}} dictionary
-          with its {{RTCIceCandidatePair/local}} and {{RTCIceCandidatePair/remote}} members
+          Let |candidatePair:RTCIceCandidatePair| be a new <a data-cite="WEBRTC#dom-rtcicecandidatepair">RTCIceCandidatePair</a> dictionary
+          with its <a data-cite="WEBRTC#dom-rtcicecandidatepair-local">local</a> and <a data-cite="WEBRTC#dom-rtcicecandidatepair-remote">remote</a> members
           initialized to new {{RTCIceCandidate}}s representing the local and remote part of the
           [= formed =] pair respectively.
         </p>
@@ -979,7 +979,7 @@ dictionary RTCEncodingOptions {
                   <ol>
                     <li>
                       <p>
-                        [= Fire an event =] named {{RTCIceTransport/icecandidatepairremove}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the {{Event/cancelable}} attribute initialized to <code>false</code>, and the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the {{RTCIceCandidatePair/local}} and {{RTCIceCandidatePair/remote}} candidates, respectively, of <var>candidatePair</var>.
+                        [= Fire an event =] named {{RTCIceTransport/icecandidatepairremove}} at |transport|, using {{RTCIceCandidatePairEvent}}, with the {{Event/cancelable}} attribute initialized to <code>false</code>, and the {{RTCIceCandidatePairEvent/local}} and {{RTCIceCandidatePairEvent/remote}} attributes initialized to the <a data-cite="WEBRTC#dom-rtcicecandidatepair-local">local</a> and <a data-cite="WEBRTC#dom-rtcicecandidatepair-remote">remote</a> candidates, respectively, of <var>candidatePair</var>.
                       </p>
                     </li>
                     <li>
@@ -1129,17 +1129,17 @@ dictionary RTCEncodingOptions {
       </li>
     </ol>
     <p>
-      The <dfn>candidate pair match</dfn> algorithm given two {{RTCIceCandidatePair}} |first:RTCIceCandidatePair| and |second:RTCIceCandidatePair| is as follows:
+      The <dfn>candidate pair match</dfn> algorithm given two <a data-cite="WEBRTC#dom-rtcicecandidatepair">RTCIceCandidatePair</a> |first:RTCIceCandidatePair| and |second:RTCIceCandidatePair| is as follows:
     </p>
     <ol class="algorithm">
       <li>
         <p>
-          If |first|.{{RTCIceCandidatePair/local}} does not [= candidate match | match =] |second|.{{RTCIceCandidatePair/local}}, return <code>false</code>.
+          If |first|.<a data-cite="WEBRTC#dom-rtcicecandidatepair-local">local</a> does not [= candidate match | match =] |second|.<a data-cite="WEBRTC#dom-rtcicecandidatepair-local">local</a>, return <code>false</code>.
         </p>
       </li>
       <li>
         <p>
-          If |first|.{{RTCIceCandidatePair/remote}} does not [= candidate match | match =] |second|.{{RTCIceCandidatePair/remote}}, return <code>false</code>.
+          If |first|.<a data-cite="WEBRTC#dom-rtcicecandidatepair-remote">remote</a> does not [= candidate match | match =] |second|.<a data-cite="WEBRTC#dom-rtcicecandidatepair-remote">remote</a>, return <code>false</code>.
         </p>
       </li>
       <li>
