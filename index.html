@@ -361,7 +361,6 @@ partial interface RTCRtpTransceiver {
     <pre class="idl">partial dictionary RTCRtpEncodingParameters {
   unsigned long ptime;
   boolean adaptivePtime = false;
-  RTCRtpCodec codec;
 };</pre>
     <section id="rtcrtpencodingparameters-attributes">
       <h2>Dictionary {{RTCRtpEncodingParameters}} Members</h2>
@@ -400,14 +399,6 @@ partial interface RTCRtpTransceiver {
           of increased latency. Changing the frame length dynamically
           allows the <a>user agent</a> to adapt its bandwidth allocation strategy
           based on the current network conditions.</p>
-        </dd>
-        <dt>
-          <dfn data-idl>codec</dfn> of type <span class="idlMemberType">RTCRtpCodec</span>
-        </dt>
-        <dd>
-          <p>Optional value selecting which codec is used for this encoding's
-            RTP stream. The {{RTCRtpCodec}} dictionary is defined in [[WEBRTC]].
-            If [=map/exists|absent=], the user agent can chose to use any negotiated codec.</p>
         </dd>
       </dl>
     </section>
