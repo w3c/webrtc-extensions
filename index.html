@@ -359,7 +359,7 @@ partial interface RTCRtpTransceiver {
       additional members to control audio packetization.
     </p>
     <pre class="idl">partial dictionary RTCRtpEncodingParameters {
-    RTCResolutionRestriction restrictedResolution;
+    RTCResolutionRestriction resolutionRestriction;
     unsigned long            ptime;
     boolean                  adaptivePtime = false;
 };</pre>
@@ -367,7 +367,7 @@ partial interface RTCRtpTransceiver {
       <h2>Dictionary {{RTCRtpEncodingParameters}} Members</h2>
       <dl data-link-for="RTCRtpEncodingParameters" data-dfn-for="RTCRtpEncodingParameters" class="dictionary-members">
         <dt>
-          <dfn data-idl>restrictedResolution</dfn> of type <span class="idlMemberType">{{RTCResolutionRestriction}}</span>
+          <dfn data-idl>resolutionRestriction</dfn> of type <span class="idlMemberType">{{RTCResolutionRestriction}}</span>
         </dt>
         <dd>
           <p>The resolution at which to restrict this encoding.</p>
@@ -377,12 +377,12 @@ partial interface RTCRtpTransceiver {
           restrictions. The encoder will never upscale a frame. In simulcast,
           this can result in dropping top layer(s) if the input frame is too
           small as to avoid sending the same resolution on multiple layers.</p>
-          <p>When setting parameters, if {{restrictedResolution}} is specified
+          <p>When setting parameters, if {{resolutionRestriction}} is specified
           on any encoding, check that the following is true or else throw an
           {{InvalidModificationError}}:</p>
           <ul>
             <li>
-              <p>{{restrictedResolution}} is specified on all encodings and has
+              <p>{{resolutionRestriction}} is specified on all encodings and has
               values in both dimensions that are greater than 0.</p>
             </li>
             <li>
@@ -464,7 +464,7 @@ partial interface RTCRtpTransceiver {
         in landscape mode but the frame is in portrait mode or vice versa, the
         encoder will internally swap the restricted width and height prior to
         each size comparison. This does not modify the value of
-        {{RTCRtpEncodingParameters/restrictedResolution}}.
+        {{RTCRtpEncodingParameters/resolutionRestriction}}.
       </p>
     </section>
   </section>
