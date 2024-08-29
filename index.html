@@ -375,8 +375,8 @@ partial interface RTCRtpTransceiver {
           applied when this parameter is used. Instead, frames are either sent
           as-is or they are downscaled by the encoder to uphold the
           restrictions. The encoder will never upscale a frame. In simulcast,
-          this can result in dropping top layer(s) if the input frame is too
-          small as to avoid sending the same resolution on multiple layers.</p>
+          encodings are sent up to and including the layer that results in a
+          downscale, ignoring any layers further up.</p>
           <p>When setting parameters, if {{resolutionRestriction}} is specified
           on any encoding, check that the following is true or else throw an
           {{InvalidModificationError}}:</p>
