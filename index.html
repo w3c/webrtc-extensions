@@ -359,7 +359,7 @@ partial interface RTCRtpTransceiver {
       additional members to control audio packetization.
     </p>
     <pre class="idl">partial dictionary RTCRtpEncodingParameters {
-    RTCResolutionRestriction resolutionRestriction;
+    RTCResolutionRestriction scaleResolutionDownTo;
     unsigned long            ptime;
     boolean                  adaptivePtime = false;
 };</pre>
@@ -367,22 +367,26 @@ partial interface RTCRtpTransceiver {
       <h2>Dictionary {{RTCRtpEncodingParameters}} Members</h2>
       <dl data-link-for="RTCRtpEncodingParameters" data-dfn-for="RTCRtpEncodingParameters" class="dictionary-members">
         <dt>
-          <dfn data-idl>resolutionRestriction</dfn> of type <span class="idlMemberType">{{RTCResolutionRestriction}}</span>
+          <dfn data-idl>scaleResolutionDownTo</dfn> of type <span class="idlMemberType">{{RTCResolutionRestriction}}</span>
         </dt>
         <dd>
-          <p>The resolution at which to restrict this encoding.</p>
+          <p>The maximum dimensions at which to restrict this encoding.</p>
           <p>The default "scale resolution down by" factors (e.g. 4:2:1) are not
           applied when this parameter is used. Instead, frames are either sent
           as-is or they are downscaled by the encoder to uphold the
           restrictions. The encoder will never upscale a frame. In simulcast,
-          encodings are sent up to and including the layer that results in a
-          downscale, ignoring any layers further up.</p>
-          <p>When setting parameters, if {{resolutionRestriction}} is specified
+          not upscaling can result in multiple same-sized encodings if the size
+          of the frame is smaller than {{scaleResolutionDownTo}}; an encoding is
+          not sent if {{scaleResolutionDownTo}} is larger than the frame and
+          there exists another {{RTCRtpEncodingParameters/active}} encoding with
+          a smaller {{scaleResolutionDownTo}} density resulting in the same
+          size.</p>
+          <p>When setting parameters, if {{scaleResolutionDownTo}} is specified
           on any encoding, check that the following is true or else throw an
           {{InvalidModificationError}}:</p>
           <ul>
             <li>
-              <p>{{resolutionRestriction}} is specified on all encodings and has
+              <p>{{scaleResolutionDownTo}} is specified on all encodings and has
               values in both dimensions that are greater than 0.</p>
             </li>
             <li>
@@ -445,27 +449,18 @@ partial interface RTCRtpTransceiver {
         </dt>
         <dd>
           <p>The maximum width that frames will be encoded with without getting
-          downscaled. The size comparison is orientation agnostic. When scaling
-          is applied, both dimensions of the frame are downscaled using the same
-          factor.</p>
+          downscaled. When scaling is applied, both dimensions of the frame are
+          downscaled using the same factor.</p>
         </dd>
         <dt>
           <dfn data-idl>maxHeight</dfn> of type <span class="idlMemberType">unsigned long</span>
         </dt>
         <dd>
           <p>The maximum height that frames will be encoded with without getting
-          downscaled. The size comparison is orientation agnostic. When scaling
-          is applied, both dimensions of the frame are downscaled using the same
-          factor.</p>
+          downscaled. When scaling is applied, both dimensions of the frame are
+          downscaled using the same factor.</p>
         </dd>
       </dl>
-      <p class="note">
-        Orientation agnostic means that if resolution restrictions are specified
-        in landscape mode but the frame is in portrait mode or vice versa, the
-        encoder will internally swap the restricted width and height prior to
-        each size comparison. This does not modify the value of
-        {{RTCRtpEncodingParameters/resolutionRestriction}}.
-      </p>
     </section>
   </section>
   <section id="rtcrtpsender-setparameters-keyframe">
