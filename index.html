@@ -382,7 +382,8 @@ partial interface RTCRtpTransceiver {
           a smaller {{scaleResolutionDownTo}} density resulting in the same
           size.</p>
           <p>When setting parameters, if {{scaleResolutionDownTo}} is specified
-          on any encoding, check that the following is true or else throw an
+          on any encoding, check that the following is true or else return a
+          promise [= rejected =] with a newly [= exception/created =]
           {{InvalidModificationError}}:</p>
           <ul>
             <li>
