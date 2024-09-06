@@ -371,28 +371,30 @@ partial interface RTCRtpTransceiver {
         </dt>
         <dd>
           <p>The maximum dimensions at which to restrict this encoding.</p>
-          <p>The default "scale resolution down by" factors (e.g. 4:2:1) are not
-          applied when this parameter is used. Instead, frames are either sent
-          as-is or they are downscaled by the encoder to uphold the
-          restrictions. The encoder will never upscale a frame. In simulcast,
-          not upscaling can result in multiple same-sized encodings if the size
-          of the frame is smaller than {{scaleResolutionDownTo}}; an encoding is
-          not sent if {{scaleResolutionDownTo}} is larger than the frame and
+          <p>When {{scaleResolutionDownTo}} is specified, the
+          {{RTCRtpEncodingParameters/scaleResolutionDownBy}} scaling factor MUST
+          be ignored by the encoder. Instead, frames are sent according to the
+          specified resolution restrictions: frames MUST either be downscaled or
+          sent as-is. The encoder MUST NOT upscale a frame. In simulcast, not
+          upscaling can result in multiple same-sized encodings if the size of
+          the frame is smaller than {{scaleResolutionDownTo}}; an encoding MUST
+          NOT be sent if {{scaleResolutionDownTo}} is larger than the frame and
           there exists another {{RTCRtpEncodingParameters/active}} encoding with
           a smaller {{scaleResolutionDownTo}} density resulting in the same
           size.</p>
-          <p>When setting parameters, if {{scaleResolutionDownTo}} is specified
-          on any encoding, check that the following is true or else return a
-          promise [= rejected =] with a newly [= exception/created =]
-          {{InvalidModificationError}}:</p>
+          <p>When configuring parameters - either via
+          {{RTCPeerConnection/addTransceiver()}} or
+          {{RTCRtpSender/setParameters()}} - if {{scaleResolutionDownTo}} is
+          specified on any encoding, check that the following is true or else
+          [= exception/throw =] / [= reject =] with a newly
+          [= exception/created =] {{InvalidModificationError}}:</p>
           <ul>
             <li>
-              <p>{{scaleResolutionDownTo}} is specified on all encodings and has
-              values in both dimensions that are greater than 0.</p>
+              <p>{{scaleResolutionDownTo}} is specified on all encodings.</p>
             </li>
             <li>
-              <p>{{RTCRtpEncodingParameters/scaleResolutionDownBy}} is not
-              specified on any encoding.</p>
+              <p>For each {{scaleResolutionDownTo}} value, both dimensions have
+              a value greater than 0.</p>
             </li>
           </ul>
         </dd>
