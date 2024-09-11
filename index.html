@@ -382,11 +382,11 @@ partial interface RTCRtpTransceiver {
           there exists another {{RTCRtpEncodingParameters/active}} encoding with
           a smaller {{scaleResolutionDownTo}} density resulting in the same
           size.</p>
-          <p>When configuring parameters - either via
-          {{RTCPeerConnection/addTransceiver()}} or
-          {{RTCRtpSender/setParameters()}} - if {{scaleResolutionDownTo}} is
-          specified on any encoding, check that the following is true or else
-          [= exception/throw =] / [= reject =] with a newly
+          <p>When configuring parameters, the following validation MUST be
+          performed if {{scaleResolutionDownTo}} is specified on any encoding or
+          else {{RTCPeerConnection/addTransceiver()}} [= exception/throws =] a
+          newly [= exception/created =] {{OperationError}} and
+          {{RTCRtpSender/setParameters()}} [= reject|rejects =] with a newly
           [= exception/created =] {{InvalidModificationError}}:</p>
           <ul>
             <li>
