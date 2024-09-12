@@ -372,15 +372,9 @@ partial interface RTCRtpTransceiver {
         <dd>
           <p>The maximum dimensions at which to restrict this encoding.</p>
           <p>When {{scaleResolutionDownTo}} is specified, the
-          {{RTCRtpEncodingParameters/scaleResolutionDownBy}} value MUST
-          be ignored. Instead, frames are sent according to the
-          specified resolution restrictions: frames MUST NOT be upscaled. In simulcast, not
-          upscaling can result in multiple same-sized encodings if the size of
-          the frame is smaller than {{scaleResolutionDownTo}}; an encoding MUST
-          NOT be sent if {{scaleResolutionDownTo}} is larger than the frame and
-          there exists another {{RTCRtpEncodingParameters/active}} encoding with
-          a smaller {{scaleResolutionDownTo}} density resulting in the same
-          size.</p>
+          {{RTCRtpEncodingParameters/scaleResolutionDownBy}} value MUST be
+          ignored. Instead, frames are sent according to the specified
+          resolution restrictions: frames MUST NOT be upscaled.</p>
           <p>When configuring parameters, the following validation MUST be
           performed if {{scaleResolutionDownTo}} is specified on any encoding or
           else {{RTCPeerConnection/addTransceiver()}} [= exception/throws =] a
@@ -450,19 +444,19 @@ partial interface RTCRtpTransceiver {
           <dfn data-idl>maxWidth</dfn> of type <span class="idlMemberType">unsigned long</span>
         </dt>
         <dd>
-          <p>The maximum width that frames will be encoded with.
-          The restrictions are orientation agnostic, see note below.
-          When scaling is applied, both dimensions of the frame are downscaled
-          using the same factor.</p>
+          <p>The maximum width that frames will be encoded with. The
+          restrictions are orientation agnostic, see note below. When scaling is
+          applied, both dimensions of the frame are downscaled using the same
+          factor.</p>
         </dd>
         <dt>
           <dfn data-idl>maxHeight</dfn> of type <span class="idlMemberType">unsigned long</span>
         </dt>
         <dd>
-          <p>The maximum height that frames will be encoded with.
-          The restrictions are orientation agnostic, see note below.
-          When scaling is applied, both dimensions of the frame MUST be downscaled
-          using the same factor.</p>
+          <p>The maximum height that frames will be encoded with. The
+          restrictions are orientation agnostic, see note below. When scaling is
+          applied, both dimensions of the frame MUST be downscaled using the
+          same factor.</p>
         </dd>
         <p class="note">
           The restrictions being orientation agnostic means that they will
