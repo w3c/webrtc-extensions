@@ -359,12 +359,38 @@ partial interface RTCRtpTransceiver {
       additional members to control audio packetization.
     </p>
     <pre class="idl">partial dictionary RTCRtpEncodingParameters {
-  unsigned long ptime;
-  boolean adaptivePtime = false;
+    RTCResolutionRestriction scaleResolutionDownTo;
+    unsigned long            ptime;
+    boolean                  adaptivePtime = false;
 };</pre>
     <section id="rtcrtpencodingparameters-attributes">
       <h2>Dictionary {{RTCRtpEncodingParameters}} Members</h2>
       <dl data-link-for="RTCRtpEncodingParameters" data-dfn-for="RTCRtpEncodingParameters" class="dictionary-members">
+        <dt>
+          <dfn data-idl>scaleResolutionDownTo</dfn> of type <span class="idlMemberType">{{RTCResolutionRestriction}}</span>
+        </dt>
+        <dd>
+          <p>The maximum dimensions at which to restrict this encoding.</p>
+          <p>When {{scaleResolutionDownTo}} is specified, the
+          {{RTCRtpEncodingParameters/scaleResolutionDownBy}} value MUST be
+          ignored. Instead, frames are sent according to the specified
+          resolution restrictions: frames MUST NOT be upscaled.</p>
+          <p>When configuring parameters, the following validation MUST be
+          performed if {{scaleResolutionDownTo}} is specified on any encoding or
+          else {{RTCPeerConnection/addTransceiver()}} [= exception/throws =] a
+          newly [= exception/created =] {{OperationError}} and
+          {{RTCRtpSender/setParameters()}} [= reject|rejects =] with a newly
+          [= exception/created =] {{InvalidModificationError}}:</p>
+          <ul>
+            <li>
+              <p>{{scaleResolutionDownTo}} is specified on all encodings.</p>
+            </li>
+            <li>
+              <p>For each {{scaleResolutionDownTo}} value, both dimensions have
+              a value greater than 0.</p>
+            </li>
+          </ul>
+        </dd>
         <dt>
           <dfn data-idl>ptime</dfn> of type <span class="idlMemberType">unsigned long</span>
         </dt>
@@ -400,6 +426,46 @@ partial interface RTCRtpTransceiver {
           allows the <a>user agent</a> to adapt its bandwidth allocation strategy
           based on the current network conditions.</p>
         </dd>
+      </dl>
+    </section>
+  </section>
+  <section id="rtcresolutionrestriction">
+    <h3>
+      The {{RTCResolutionRestriction}} dictionary.
+    </h3>
+    <pre class="idl">dictionary RTCResolutionRestriction {
+    unsigned long maxWidth;
+    unsigned long maxHeight;
+};</pre>
+    <section id="rtcresolutionrestriction-attributes">
+      <h2>Dictionary {{RTCResolutionRestriction}} Members</h2>
+      <dl data-link-for="RTCResolutionRestriction" data-dfn-for="RTCResolutionRestriction" class="dictionary-members">
+        <dt>
+          <dfn data-idl>maxWidth</dfn> of type <span class="idlMemberType">unsigned long</span>
+        </dt>
+        <dd>
+          <p>The maximum width that frames will be encoded with. The
+          restrictions are orientation agnostic, see note below. When scaling is
+          applied, both dimensions of the frame are downscaled using the same
+          factor.</p>
+        </dd>
+        <dt>
+          <dfn data-idl>maxHeight</dfn> of type <span class="idlMemberType">unsigned long</span>
+        </dt>
+        <dd>
+          <p>The maximum height that frames will be encoded with. The
+          restrictions are orientation agnostic, see note below. When scaling is
+          applied, both dimensions of the frame MUST be downscaled using the
+          same factor.</p>
+        </dd>
+        <p class="note">
+          The restrictions being orientation agnostic means that they will
+          automatically be adjusted to the orientation of the frame being
+          restricted (portrait mode or landscape mode) by swapping width and
+          height if necessary. This means that it does not matter if 1280x720 or
+          720x1280 is specified, both always result in the exact same scaling
+          factor regardless of the orientation of the frame.
+        </p>
       </dl>
     </section>
   </section>
