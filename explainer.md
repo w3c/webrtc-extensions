@@ -50,8 +50,8 @@ This specification adds captureTimestamp, type of DOMHighResTimeStamp, to the RT
 
     [receiverAudio, receiverVideo] = peerconnection.getReceivers();
 
-    latestCaptureTimestampAudio = receiverAudio.getSynchronizationSources()[0].captureTimeStamp;
-    latestCaptureTimestampVideo = receiverVideo.getSynchronizationSources()[0].captureTimeStamp;
+    latestCaptureTimestampAudio = receiverAudio.getSynchronizationSources()[0].captureTimestamp;
+    latestCaptureTimestampVideo = receiverVideo.getSynchronizationSources()[0].captureTimestamp;
 
     synchronizationError = latestCaptureTimestampAudio - latestCaptureTimestampVideo;
 
@@ -63,8 +63,8 @@ An example code to use captureTimestamp and senderCaptureTimeOffset to calculate
 
     receiver = peerconnection.getReceivers()[0];
     csrc = receiver.getSynchronizationSources()[0];
-    latestCaptureTimestamp = csrc.captureTimeStamp;
-    latestSenderCaptureTimeOffset = csrc.SenderCaptureTimeOffset;
+    latestCaptureTimestamp = csrc.captureTimestamp;
+    latestSenderCaptureTimeOffset = csrc.senderCaptureTimeOffset;
     receiverTimestamp = csrc.timestamp;
 
     // Calculates sender-receiver clock offset from stats.
@@ -77,7 +77,7 @@ An example code to use captureTimestamp and senderCaptureTimeOffset to calculate
     captureReceiverTimeOffset = senderReceiverTimeOffset + latestSenderCaptureTimeOffset;
 
     receiverCaptureTimestamp = latestCaptureTimestamp + captureReceiverTimeOffset;
-    endToEndDelay = receiverTimestamp - receiverCaptureTimestamp.
+    endToEndDelay = receiverTimestamp - receiverCaptureTimestamp;
 
 #### Detailed design discussion
 
