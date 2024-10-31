@@ -458,7 +458,6 @@ partial interface RTCRtpTransceiver {
           restrictions are orientation agnostic, see note below. When scaling is
           applied, both dimensions of the frame MUST be downscaled using the
           same factor.</p>
-        </dd>
         <p class="note">
           The restrictions being orientation agnostic means that they will
           automatically be adjusted to the orientation of the frame being
@@ -467,6 +466,7 @@ partial interface RTCRtpTransceiver {
           720x1280 is specified, both always result in the exact same scaling
           factor regardless of the orientation of the frame.
         </p>
+        </dd>
       </dl>
     </section>
   </section>
@@ -1293,66 +1293,13 @@ dictionary RTCEncodingOptions {
      <h3>
        Transferable Data Channels
      </h3>
-     <p>This section extends {{RTCDataChannel}} by making it <a data-cite="!HTML/#transferable-objects">transferable</a>.</p>
-     <p>This allows sending and receiving messages outside the context the connection was created, for instance in workers or third-party iframes.</p>
+     <p>This section extends {{RTCDataChannel}} by exposing it to any type of {{Worker}} (not just <code>DedicatedWorker</code>).</p>
       <div>
       <p>The WebIDL changes are the following:
       <pre class="idl">
   [Exposed=(Window,Worker), Transferable]
   partial interface RTCDataChannel {
 };</pre>
-    </div>
-    <div>
-      <p>The <a data-cite="WEBRTC#dfn-create-an-rtcdatachannel">create an RTCDataChannel</a> algorithm is updated by adding the following steps after step 4 of the original algorithm:</p>
-      <ol>
-        <li><p>Initialize <var>channel</var>.`[[IsTransferable]]` to <code>true</code>.</p></li>
-        <li><p>Queue a task to run the following step:</p>
-          <ol>
-            <li><p>Set <var>channel</var>.`[[IsTransferable]]` to <code>false</code>.</p></li>
-          </ol>
-        </li>
-      </ol>
-      <p>This task needs to run before any task enqueued by the <a data-cite="WEBRTC#dfn-receive-an-rtcdatachannel-message">receiving messages on a data channel</a> algorithm for <var>channel</var>.
-      This ensures that no message is lost during the transfer of a {{RTCDataChannel}}.</p>
-    </div>
-    <div>The <a data-cite="WEBRTC#datachannel-send">send() algorithm</a> is modified by adding the following step after step 1 of the original algorithm:
-      <ol>
-        <li><p>Set <var>channel</var>.`[[IsTransferable]]` to <code>false</code>.</p></li>
-      </ol>
-    </div>
-    <div>
-      <p>The {{RTCDataChannel}} <a data-cite="!HTML/#transfer-steps">transfer steps</a>, given <var>value</var> and <var>dataHolder</var>, are:</p>
-      <ol>
-        <li><p>If <var>value</var>.`[[IsTransferable]]` is <code>false</code>, throw a "DataCloneError" DOMException.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[ReadyState]]` to <var>value</var>.<a data-cite="WEBRTC#dfn-readystate">`[[ReadyState]]`</a>.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[DataChannelLabel]]` to <var>value</var>.<a data-cite="WEBRTC#dfn-datachannellabel">`[[DataChannelLabel]]`</a>.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[Ordered]]` to <var>value</var>.<a data-cite="WEBRTC#dfn-ordered">`[[Ordered]]`</a>.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[MaxPacketLifeTime]]` to <var>value</var>.<a data-cite="WEBRTC#dfn-maxpacketlifetime"></a>.`[[MaxPacketLifeTime]]`</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[MaxRetransmits]]` to <var>value</var>.<a data-cite="WEBRTC#dfn-maxretransmits">`[[MaxRetransmits]]`</a>.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[DataChannelProtocol]]` to <var>value</var>.<a data-cite="WEBRTC#dfn-datachannelprotocol">`[[DataChannelProtocol]]`</a>.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[Negotiated]]` to <var>value</var>.<a data-cite="WEBRTC#dfn-negotiated">`[[Negotiated]]`</a>.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[DataChannelId]]` to <var>value</var>.<a data-cite="WEBRTC#dfn-datachannelid">`[[DataChannelId]]`</a>.</p></li>
-        <li><p>Set <var>dataHolder</var>.`[[underlyingDataTransport]]` to <var>value</var> <a data-cite="WEBRTC#dfn-data-transport">underlying data transport</a>.</p></li>
-        <li><p>Set <var>value</var>.`[[IsTransferable]]` to <code>false</code>.</p></li>
-        <li><p>Set <var>value</var>.`[[ReadyState]]` to <a data-cite="WEBRTC/#dom-rtcdatachannelstate-closed">"closed"</a>.</p></li>
-      </ol>
-    </div>
-    <div><p>The {{RTCDataChannel}} [=transfer-receiving steps=], given <var>dataHolder</var> and <var>channel</var>, are:</p>
-      <ol>
-        <li><p>Initialize <var>channel</var>.<a data-cite="WEBRTC#dfn-readystate">`[[ReadyState]]`</a> to <var>dataHolder</var>.`[[ReadyState]]`.</p></li>
-        <li><p>Initialize <var>channel</var>.<a data-cite="WEBRTC#dfn-datachannellabel">`[[DataChannelLabel]]`</a> to <var>dataHolder</var>.`[[\DataChannelLabel]]`.</p></li>
-        <li><p>Initialize <var>channel</var>.<a data-cite="WEBRTC#dfn-ordered">`[[Ordered]]`</a> to <var>dataHolder</var>.`[[Ordered]]`.</p></li>
-        <li><p>Initialize <var>channel</var>.<a data-cite="WEBRTC#dfn-maxpacketlifetime">`[[MaxPacketLifeTime]]`</a> to <var>dataHolder</var>.`[[MaxPacketLifeTime]]`.</p></li>
-        <li><p>Initialize <var>channel</var>.<a data-cite="WEBRTC#dfn-maxretransmits">`[[MaxRetransmits]]`</a> to <var>dataHolder</var>.`[[MaxRetransmits]]`.</p></li>
-        <li><p>Initialize <var>channel</var>.<a data-cite="WEBRTC#dfn-datachannelprotocol">`[[DataChannelProtocol]]`</a> to <var>dataHolder</var>.`[[DataChannelProtocol]]`.</p></li>
-        <li><p>Initialize <var>channel</var>.<a data-cite="WEBRTC#dfn-negotiated">`[[Negotiated]]`</a> to <var>dataHolder</var>.`[[Negotiated]]`.</p></li>
-        <li><p>Initialize <var>channel</var>.<a data-cite="WEBRTC#dfn-datachannelid">`[[DataChannelId]]`</a> to <var>dataHolder</var>.`[[DataChannelId]]`.</p></li>
-        <li><p>Initialize <var>channel</var> <a data-cite="WEBRTC#dfn-data-transport">underlying data transport</a> to <var>dataHolder</var>.`[[underlyingDataTransport]]`.</p></li>
-      </ol>
-      <p>The above steps do not need to transfer <a data-cite="WEBRTC#dfn-readystate">`[[BufferedAmount]]`</a> as its value will always be equal to <code>0</code>.
-      The reason is an {{RTCDataChannel}} can be transferred only if its <a data-cite="WEBRTC#datachannel-send">send() algorithm</a> was not called prior the transfer.</p>
-      <p>If the <a data-cite="WEBRTC#dfn-data-transport">underlying data transport</a> is closed at the time of the [=transfer-receiving steps=],
-      the {{RTCDataChannel}} object will be closed by running the <a data-cite="WEBRTC#announcing-a-data-channel-as-closed">announcing a data channel as closed</a> algorithm immediately after the [=transfer-receiving steps=].</p>
     </div>
   </section>
 </section>
