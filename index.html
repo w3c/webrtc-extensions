@@ -1560,14 +1560,11 @@ partial interface RTCRtpTransceiver {
       The user agent defines a <dfn class="export">frame timestamp</dfn> being the same as the [=capture timestamp=]
       of the frame being produced on the {{RTCRtpSender}} {{MediaStreamTrack}} if it is set.
       If it is unset the user agent MUST estimate a timestamp from the sent frame's [=presentation timestamp=] together with the
-      time it was received by the {{RTCRtpSender}}.
+      time it was received by the {{RTCRtpSender}}. This estimate MUST NOT be based on [= RTP timestamp =].
     </p>
     <p>
       The NTP and RTP timestamps of the encoded frame corresponding to the frame being produced on the {{RTCRtpSender}}
       {{MediaStreamTrack}} MUST be sourced from the [=frame timestamp=].
-    </p>
-    <p>
-      The [=RTP timestamp=] of frames produced on the {{RTCRtpSender}} {{MediaStreamTrack}} SHOULD not be used by the {{RTCRtpSender}}.
     </p>
     <h2>RTCRtpReceiver timestamps</h2>
     <h3>Remote capture timestamp</h3>
