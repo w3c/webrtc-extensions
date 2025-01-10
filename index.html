@@ -1553,21 +1553,21 @@ partial interface RTCRtpTransceiver {
       </tbody>
     </table>
   </section>
-  <section class="informative">
+  <section>
     <h2>Timestamp behavior</h2>
-    <h2>RTCRtpSender timestamp effects on packet NTP and RTP timestamps</h2>
+    <h2>RTCRtpSender video track frame timestamp effects on outgoing packet NTP and RTP timestamps</h2>
     <p>
       The user agent defines a <dfn class="export">frame timestamp</dfn> being the same as the [=capture timestamp=]
       of the frame being produced on the {{RTCRtpSender}} {{MediaStreamTrack}} if it is set.
-      If it is unset the user agent estimates a timestamp from the sent frame's [=presentation timestamp=] together with the
+      If it is unset the user agent MUST estimate a timestamp from the sent frame's [=presentation timestamp=] together with the
       time it was received by the {{RTCRtpSender}}.
     </p>
     <p>
       The NTP and RTP timestamps of the encoded frame corresponding to the frame being produced on the {{RTCRtpSender}}
-      {{MediaStreamTrack}} are sourced from the [=frame timestamp=].
+      {{MediaStreamTrack}} MUST be sourced from the [=frame timestamp=].
     </p>
     <p>
-      The [=RTP timestamp=] of frames being produced on the {{RTCRtpSender}} is ignored.
+      The [=RTP timestamp=] of frames produced on the {{RTCRtpSender}} {{MediaStreamTrack}} SHOULD not be used by the {{RTCRtpSender}}.
     </p>
     <h2>RTCRtpReceiver timestamps</h2>
     <h3>Remote capture timestamp</h3>
@@ -1583,12 +1583,12 @@ partial interface RTCRtpTransceiver {
     </p>
     <h3>Received RTP timestamp</h3>
     <p>
-      For a frame produced in a {{RTCRtpReceiver}} track, the frame's [=RTP timestamp=] is set
+      For a video frame produced in a {{RTCRtpReceiver}} track, the frame's [=RTP timestamp=] MUST be set
       from the RTP timestamp of constituent packets of the corresponding received encoded frame.
     </p>
     <h3>Receive timestamp</h3>
     <p>
-      For a frame produced in a {{RTCRtpReceiver}} track, the [=receive timestamp=] is set
+      For a frame produced in a {{RTCRtpReceiver}} track, the [=receive timestamp=] MUST be set
       as the time the corresponding encoded frame was received by the platform, i.e. the time at which the
       last packet belonging to this frame was received over the network.
     </p>
