@@ -1555,35 +1555,25 @@ partial interface RTCRtpTransceiver {
   </section>
   <section>
     <h2>Timestamp behavior</h2>
-    <h2>RTCRtpSender video track frame timestamp effects on outgoing packet NTP and RTP timestamps</h2>
+    <h3>RTCRtpReceiver timestamps</h3>
+    <h4>Remote capture timestamp</h4>
     <p>
-      The user agent defines a <dfn class="export">frame timestamp</dfn> being the same as the [=capture timestamp=]
-      of the frame being produced on the {{RTCRtpSender}} {{MediaStreamTrack}} if it is set.
-      If it is unset the user agent MUST estimate a timestamp from the sent frame's [=presentation timestamp=] together with the
-      time it was received by the {{RTCRtpSender}}. This estimate MUST NOT be based on [= RTP timestamp =].
-    </p>
-    <p>
-      The NTP and RTP timestamps of the encoded frame corresponding to the frame being produced on the {{RTCRtpSender}}
-      {{MediaStreamTrack}} MUST be sourced from the [=frame timestamp=].
-    </p>
-    <h2>RTCRtpReceiver timestamps</h2>
-    <h3>Remote capture timestamp</h3>
-    <p>
-      <!-- TODO: How this is estimated is under specified and should be fixed, but the section holds the requestVideoFrameCallback text for now -->
-      For a frame produced in a {{RTCRtpReceiver}} track, the user agent computes a
-      <dfn class="export">remote capture timestamp</dfn>. It is a best-effort estimate of the local capture
-      time on the sender translated to the receiver clock, and can use methods like using RTCP SR
+      For a frame produced in a {{RTCRtpReceiver}} track, the user agent may compute a
+      <dfn class="export">remote capture timestamp</dfn>. It is a best-effort estimate of the capture
+      time of the frame translated to the receiver clock, and can use methods like using RTCP SR
       as specified in [[?RFC3550]] Section 6.4.1, or by other alternative means if use by RTCP SR
       isn't feasible.
+      The capture time of an incoming frame is available if its constituent RTP packets contain the
+      [=RTP Header Extension for Absolute Capture Time=].
     </p><p>
       Each frame's [=capture timestamp=] is set to the [=remote capture timestamp=], if available.
     </p>
-    <h3>Received RTP timestamp</h3>
+    <h4>Received RTP timestamp</h4>
     <p>
       For a video frame produced in a {{RTCRtpReceiver}} track, the frame's [=RTP timestamp=] MUST be set
       from the RTP timestamp of constituent packets of the corresponding received encoded frame.
     </p>
-    <h3>Receive timestamp</h3>
+    <h4>Receive timestamp</h4>
     <p>
       For a frame produced in a {{RTCRtpReceiver}} track, the [=receive timestamp=] MUST be set
       as the time the corresponding encoded frame was received by the platform, i.e. the time at which the
