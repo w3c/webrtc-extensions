@@ -72,6 +72,18 @@
     <p>
       The process of <dfn data-lt="free|freed|freeing">freeing</dfn> a candidate is defined in [[RFC8445]] Section 8.3.
     </p>
+
+    <p>
+      <!-- TODO: use the xref mechanism when mediacapture-extensions spec status is cleared up.
+           See https://github.com/w3c/mediacapture-extensions/issues/132 -->
+      The following terms are defined in <a href="https://w3c.github.io/mediacapture-extensions">mediacapture-extensions</a>
+      <a href="https://w3c.github.io/mediacapture-extensions/#video-timestamp-concepts/">video timestamp concepts</a>
+    </p>
+    <ul>
+      <li><dfn>capture timestamp</dfn></li>
+      <li><dfn>receive timestamp</dfn></li>
+      <li><dfn>RTP timestamp</dfn></li>
+    </ul>
   </section>
   <section id="ice-csp">
     <h3>
@@ -1539,6 +1551,35 @@ partial interface RTCRtpTransceiver {
         </tr>
       </tbody>
     </table>
+  </section>
+  <section>
+    <h2>Timestamp behavior</h2>
+    <h3>RTCRtpReceiver timestamps</h3>
+    <h4>Remote capture timestamp</h4>
+    <p>
+      For a frame produced in a {{RTCRtpReceiver}} track, it is possible for the user agent to compute a
+      <dfn class="export">remote capture timestamp</dfn>. It is a best-effort estimate of the capture
+      time of the frame translated to the receiver clock, and can use methods like using RTCP SR
+      as specified in [[?RFC3550]] Section 6.4.1, or by other alternative means if use by RTCP SR
+      isn't feasible.
+      The capture time of an incoming frame is available if its constituent RTP packets contain the
+      [=RTP Header Extension for Absolute Capture Time=].
+    </p>
+    <p>
+      Each frame's [=capture timestamp=] MUST be set to the [=remote capture timestamp=], if the information
+      required to compute it is available.
+    </p>
+    <h4>Received RTP timestamp</h4>
+    <p>
+      For a video frame produced in a {{RTCRtpReceiver}} track, the frame's [=RTP timestamp=] MUST be set
+      from the RTP timestamp of constituent packets of the corresponding received encoded frame.
+    </p>
+    <h4>Receive timestamp</h4>
+    <p>
+      For a frame produced in a {{RTCRtpReceiver}} track, the [=receive timestamp=] MUST be set
+      as the time the corresponding encoded frame was received by the platform, i.e. the time at which the
+      last packet belonging to this frame was received over the network.
+    </p>
   </section>
   <section class="informative" id="security-considerations">
     <h2>
