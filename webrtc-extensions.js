@@ -41,10 +41,13 @@ var respecConfig = {
 	"aliasOf": "RFC9335"
       },
       "RTP-EXT-CAPTURE-TIME": {
-	"title": "RTP Header Extension for Absolute Capture Time",
-	"publisher": "WebRTC Project",
-	href: "https://webrtc.googlesource.com/src/+/refs/heads/main/docs/native-code/rtp-hdrext/abs-capture-time",
-	"status": "Experimental RTP Header Extension"
+        "title": "Absolute Capture Timestamp RTP header extension",
+        "href": "https://www.ietf.org/archive/id/draft-ietf-avtcore-abs-capture-time-00.html",
+        "authors": [
+          "H. Alvestrand"
+        ],
+        "status": "6 February 2025. Internet Draft (work in progress)",
+        "publisher": "IETF"
       }
     }
 }
