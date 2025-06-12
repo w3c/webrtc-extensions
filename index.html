@@ -54,7 +54,8 @@
     <h2>Terminology</h2>
     <p>
       The following terms are defined in
-      <dfn data-cite="RTP-EXT-CAPTURE-TIME#">RTP Header Extension for Absolute Capture Time</dfn>:
+      <dfn>Absolute Capture Timestamp RTP header extension</dfn>
+      [[RTP-EXT-CAPTURE-TIME]]:
     </p>
     <ul>
       <li><dfn data-cite="RTP-EXT-CAPTURE-TIME#absolute-capture-timestamp">absolute capture timestamp</dfn></li>
@@ -1164,7 +1165,7 @@ dictionary RTCEncodingOptions {
       measurements only accounting for the "last hop", one-way delay from the
       [=capture system=]'s time of capture to the [=receiver system=]'s
       time of playout can be estimated if the
-      [=RTP Header Extension for Absolute Capture Time=] is used all hops of
+      [=Absolute Capture Timestamp RTP header extension=] is used all hops of
       the way, where each RTCP-terminating intermediate system appropriately
       updates the [=estimated capture clock offset=].
     </p>
@@ -1192,13 +1193,13 @@ dictionary RTCEncodingOptions {
           <ol>
             <li>
               <p>If the relevant RTP packet contains the
-              <a>RTP Header Extension for Absolute Capture Time</a>, return the
+              <a>Absolute Capture Timestamp RTP header extension</a>, return the
               value of the <a>absolute capture timestamp</a> field and abort
               these steps.</p>
             </li>
             <li>
               <p>Otherwise, if the relevant RTP packet does not contain the
-              <a>RTP Header Extension for Absolute Capture Time</a> but a
+              <a>Absolute Capture Timestamp RTP header extension</a> but a
               previous RTP packet did, return the result of calculating the
               absolute capture timestamp according to
               <a>timestamp interpolation</a> and abort these steps.</p>
@@ -1229,14 +1230,14 @@ dictionary RTCEncodingOptions {
           <ol>
             <li>
               <p>If the relevant RTP packet contains the
-              <a>RTP Header Extension for Absolute Capture Time</a> and the
+              <a>Absolute Capture Timestamp RTP header extension</a> and the
               <a>estimated capture clock offset</a> field is present, return the
               value of the <a>estimated capture clock offset</a> field and abort
               these steps.</p>
             </li>
             <li>
               <p>Otherwise, if the relevant RTP packet does not contain the
-              <a>RTP Header Extension for Absolute Capture Time</a>'s
+              <a>Absolute Capture Timestamp RTP header extension</a>'s
               <a>estimated capture clock offset</a> field, but a
               previous RTP packet did, return the most recent value that was
               present and abort these steps.</p>
@@ -1542,7 +1543,7 @@ partial interface RTCRtpTransceiver {
       as specified in [[?RFC3550]] Section 6.4.1, or by other alternative means if use by RTCP SR
       isn't feasible.
       The capture time of an incoming frame is available if its constituent RTP packets contain the
-      [=RTP Header Extension for Absolute Capture Time=].
+      [=Absolute Capture Timestamp RTP header extension=].
     </p>
     <p>
       Each frame's [=capture timestamp=] MUST be set to the [=remote capture timestamp=], if the information
