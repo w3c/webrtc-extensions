@@ -230,6 +230,14 @@ partial interface RTCRtpTransceiver {
               <var>transceiver</var>.{{RTCRtpTransceiver/[[NegotiatedHeaderExtensions]]}}
               to <var>negotiatedExtensions</var>.</p>
             </li>
+            <li>
+              <p>
+                Set <var>transceiver</var>.{{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}}
+                to <var>negotiatedExtensions</var>.
+                This ensures that unless further calls to setHeaderExtensionsToNegotiate() are done,
+                subsequent offer/answer will not alter the list of extensions.
+              </p>
+            </li>
           </ol>
         </li>
       </ul>
