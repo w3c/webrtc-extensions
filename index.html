@@ -172,6 +172,13 @@ partial interface RTCRtpTransceiver {
           The {{RTCRtpHeaderExtensionCapability/direction}} attribute for
           extensions that will not be offered by default in an initial offer MUST
             be initialized to {{RTCRtpTransceiverDirection/"stopped"}}.</p>
+          <p>
+            If there are header extensions whose state needs to be consistent across all transceivers
+            in a bundle,
+            and any other transceiver exists that will be included in the same bundle,
+            copy the {{RTCRtpHeaderExtensionCapability/direction}} attribute
+            for that extension from that other transceiver.
+          </p>
           <p class="note">The list of header extensions that MUST/SHOULD be
           supported is listed in [[RTCWEB-RTP]], section 5.2. The "mid" extension
           is mandatory to use when BUNDLE is in use, per [[BUNDLE]] section
