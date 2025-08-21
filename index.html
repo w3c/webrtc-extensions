@@ -159,14 +159,19 @@ partial interface RTCRtpTransceiver {
       </p>
       <ol>
         <li>
-          <p>Set {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}} to the
+          <p>If a transceiver of the same kind exists in the current PeerConnection,
+            copy its {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}}.
+            This ensures consistency across transceivers if they are added
+            after initial negotiation.
+          </p>
+          <p>If no such transceiver exists, set {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}} to the
           platform-specific list of implemented RTP header extensions. The
           {{RTCRtpHeaderExtensionCapability/direction}} attribute for all
           extensions that are mandatory to use MUST be initialized to an
           appropriate value other than {{RTCRtpTransceiverDirection/"stopped"}}.
           The {{RTCRtpHeaderExtensionCapability/direction}} attribute for
           extensions that will not be offered by default in an initial offer MUST
-          be initialized to {{RTCRtpTransceiverDirection/"stopped"}}.</p>
+            be initialized to {{RTCRtpTransceiverDirection/"stopped"}}.</p>
           <p class="note">The list of header extensions that MUST/SHOULD be
           supported is listed in [[RTCWEB-RTP]], section 5.2. The "mid" extension
           is mandatory to use when BUNDLE is in use, per [[BUNDLE]] section
