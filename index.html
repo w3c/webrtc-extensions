@@ -159,8 +159,9 @@ partial interface RTCRtpTransceiver {
       </p>
       <ol>
         <li>
-          <p>If a transceiver of the same kind exists in the current PeerConnection,
-            copy its {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}}.
+          <p>If transceivers of the same kind exist in the current PeerConnection,
+            copy {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}} from
+            the first such transceiver.
             This ensures consistency across transceivers if they are added
             after initial negotiation.
           </p>
