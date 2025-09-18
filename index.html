@@ -215,6 +215,10 @@ partial interface RTCRtpTransceiver {
                   view.</p>
                 </li>
                 <li>
+                  <p>If this extension cannot be used because of other options
+                    negotiated in the answer, set <var>answeredDirection</var>
+                    to {{RTCRtpTransceiverDirection/"stopped"}}.</p>
+                <li>
                   <p>Set
                   <var>extension</var>.{{RTCRtpHeaderExtensionCapability/direction}}
                   to <var>answeredDirection</var>.</p>
