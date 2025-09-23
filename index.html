@@ -161,7 +161,7 @@ partial interface RTCRtpTransceiver {
         <li>
           <p>If transceivers of the same kind exist in the current PeerConnection,
             copy {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}} from
-            the first such transceiver.
+            the first such transceiver, in the order defined by the [=CollectTransceivers=] algorithm.
             This ensures consistency across transceivers if they are added
             after initial negotiation.
           </p>
@@ -179,6 +179,11 @@ partial interface RTCRtpTransceiver {
             and any other transceiver exists that will be included in the same bundle,
             copy the {{RTCRtpHeaderExtensionCapability/direction}} attribute
             for that extension from that other transceiver.
+          </p>
+          <p class="note">An example of header extensions that need to be identical across all
+            media sections is the key management extensions from [[RFC4567]], as described in section 5.35 of
+            [[RFC8859]], where they have category IDENTICAL. If this is supported and negotiated as "sendrecv",
+            and a new transceiver is added, that transceiver needs to also have the extension as "sendrecv". 
           </p>
           <p class="note">The list of header extensions that MUST/SHOULD be
           supported is listed in [[RTCWEB-RTP]], section 5.2. The "mid" extension
@@ -247,7 +252,7 @@ partial interface RTCRtpTransceiver {
               <p>
                 Set <var>transceiver</var>.{{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}}
                 to <var>negotiatedExtensions</var>.
-                This ensures that unless further calls to setHeaderExtensionsToNegotiate() are done,
+                This ensures that unless further calls to {{setHeaderExtensionsToNegotiate()}} are done,
                 subsequent offer/answer will not alter the list of extensions.
               </p>
             </li>
