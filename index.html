@@ -1503,6 +1503,8 @@ partial interface RTCRtpTransceiver {
       <p>
         {{RTCConfiguration/alwaysNegotiateDataChannels}} defines a way for the application
         to negotiate data channels in the SDP offer before creating a datachannel.
+        This also negotiates the data m= section before any audio or video m sections and
+        uses it as the "offerer-tagged m= section" for [[BUNDLE]].
       </p>
       <pre class="idl">partial dictionary RTCConfiguration {
     boolean alwaysNegotiateDataChannels = false;
