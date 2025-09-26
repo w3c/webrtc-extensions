@@ -1448,6 +1448,57 @@ partial interface RTCRtpTransceiver {
       </section>
     </section>
   </section>
+  <section id="source-change-event">
+    <h2>
+      {{RTCRtpReceiver}} extensions
+    </h2>
+    <p>
+      The {{RTCRtpReceiver}} interface and {{RTCRtpContributingSource}} and {{RTCRtpSynchronizationSource}}
+      dictionaries are defined in [[WEBRTC]]. This document extends this interface by
+      adding two event handlers that fire when the {{RTCRtpContributingSource/source}} of
+      {{RTCRtpReceiver/getSynchronizationSources()}} or {{RTCRtpReceiver/getContributingSources()}} changes.
+    </p>
+    <p>
+      By listening to these events, apps can react more quickly to source changes than if they were polling
+      these APIs, enabling the UX to be updated more quickly in response to virtual SSRCs changing which is
+      a common way for apps to keep track of which participant's media is currently being received.
+    </p>
+    <pre class="idl">partial interface RTCRtpReceiver {
+  attribute EventHandler onssrcchange;
+  attribute EventHandler oncsrcchange;
+};</pre>
+    <p>
+      Whenever an RTP packet is received resulting in the most recent SSRC or CSRC
+      {{RTCRtpContributingSource/source}} identifier changing, the [= user agent =] MUST [= queue a task =]
+      to [= fire an event =] named {{RTCRtpReceiver/ssrcchange}} if the SSRC changed and an event named
+      {{RTCRtpReceiver/csrcchange}} if the CSRC changed. If both identifiers are changed in response to the
+      same RTP packet, both events fire in the same queued task ensuring SSRC and CSRC information from the
+      same RTP packet is surfaced at the same time.
+    </p>
+      <h3>
+        Attributes
+      </h3>
+      <dl data-link-for="RTCRtpReceiver" data-dfn-for="RTCRtpReceiver" class="attributes">
+        <dt>
+          <dfn id="dom-rtptransceiver-onssrcchange">onssrcchange</dfn> of type {{EventHandler}}
+        </dt>
+        <dd>
+          <p>
+            Fired when the {{RTCRtpContributingSource/source}} in {{RTCRtpReceiver/getSynchronizationSources()}}
+            changes, see above.
+          </p>
+        </dd>
+        <dt>
+          <dfn id="dom-rtptransceiver-oncsrcchange">oncsrcchange</dfn> of type {{EventHandler}}
+        </dt>
+        <dd>
+          <p>
+            Fired when the {{RTCRtpContributingSource/source}} in {{RTCRtpReceiver/getContributingSources()}}
+            changes, see above.
+          </p>
+        </dd>
+      </dl>
+    </section>
   <section id="disable-hardware">
     <h2>Disabling hardware acceleration</h2>
     <p>
@@ -1526,8 +1577,7 @@ partial interface RTCRtpTransceiver {
   </section>
   <section class="informative">
     <h2>Event summary</h2>
-    <p>
-      The following events fire on {{RTCIceTransport}} objects:</p>
+    <p>The following events fire on {{RTCIceTransport}} objects:</p>
     <table class="simple">
       <thead>
         <tr>
@@ -1557,6 +1607,32 @@ partial interface RTCRtpTransceiver {
           <td>
             The [= ICE agent =] has picked a valid candidate pair to {{nominate}}, and unless the operation is canceled by
             invoking the <code>preventDefault()</code> method on the event, it will be {{nominated}}.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>The following events fire on {{RTCRtpReceiver}} objects:</p>
+    <table class="simple">
+      <thead>
+        <tr>
+          <th>Event name</th>
+          <th>Interface</th>
+          <th>Fired when...</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope=row><dfn data-dfn-for="RTCRtpReceiver" data-dfn-type=event>ssrcchange</dfn></th>
+          <td>{{Event}}</td>
+          <td>
+            The SSRC identifier changed in response to an RTP packet.
+          </td>
+        </tr>
+        <tr>
+          <th scope=row><dfn data-dfn-for="RTCRtpReceiver" data-dfn-type=event>csrcchange</dfn></th>
+          <td>{{Event}}</td>
+          <td>
+            The CSRC identifier changed in response to an RTP packet.
           </td>
         </tr>
       </tbody>
