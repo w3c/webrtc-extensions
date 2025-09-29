@@ -1461,19 +1461,18 @@ partial interface RTCRtpTransceiver {
     <p>
       By listening to these events, apps can react more quickly to source changes than if they were polling
       these APIs, enabling the UX to be updated more quickly in response to virtual SSRCs changing which is
-      a common way for apps to keep track of which participant's media is currently being received.
+      a common way for apps to keep track of which participant's media is currently being played out.
     </p>
     <pre class="idl">partial interface RTCRtpReceiver {
   attribute EventHandler onssrcchange;
   attribute EventHandler oncsrcchange;
 };</pre>
     <p>
-      Whenever an RTP packet is received resulting in the most recent SSRC or CSRC
-      {{RTCRtpContributingSource/source}} identifier changing, the [= user agent =] MUST [= queue a task =]
-      to [= fire an event =] named {{RTCRtpReceiver/ssrcchange}} if the SSRC changed and an event named
-      {{RTCRtpReceiver/csrcchange}} if the CSRC changed. If both identifiers are changed in response to the
-      same RTP packet, both events fire in the same queued task ensuring SSRC and CSRC information from the
-      same RTP packet is surfaced at the same time.
+      Whenever the {{RTCRtpContributingSource/source}} identifier is updated based on the contents of an
+      RTP packet, the [= user agent =] MUST [= queue a task =] to [= fire an event =] named
+      {{RTCRtpReceiver/ssrcchange}} if the SSRC changed and an event named {{RTCRtpReceiver/csrcchange}} if
+      the CSRC changed. If both identifiers are changed based on the same RTP packet, both events fire in
+      the same queued task ensuring both SSRC and CSRC information is exposed to the app at the same time.
     </p>
       <h3>
         Attributes
