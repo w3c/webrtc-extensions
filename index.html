@@ -1468,8 +1468,8 @@ partial interface RTCRtpTransceiver {
   attribute EventHandler oncsrcchange;
 };</pre>
     <p>
-      Whenever the {{RTCRtpContributingSource/source}} identifier is updated based on the contents of an
-      RTP packet, the [= user agent =] MUST [= queue a task =] to [= fire an event =] named
+      Whenever the latest {{RTCRtpContributingSource/source}} identifier is updated based on the contents of
+      an RTP packet, the [= user agent =] MUST [= queue a task =] to [= fire an event =] named
       {{RTCRtpReceiver/ssrcchange}} if the SSRC changed and an event named {{RTCRtpReceiver/csrcchange}} if
       the CSRC changed. If both identifiers are changed based on the same RTP packet, both events fire in
       the same queued task ensuring both SSRC and CSRC information is exposed to the app at the same time.
