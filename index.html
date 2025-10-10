@@ -1525,6 +1525,20 @@ partial interface RTCRtpTransceiver {
         </dl>
       </section>
     </section>
+    <section id="always-negotiating-datachannels-negotiationneeded-extensions">
+      <h3>
+        Modifications to existing procedures
+      </h3>
+      <p>
+        In the steps to call the {{RTCPeerConnection/createDataChannel()}} method replace
+        "If channel is the first RTCDataChannel created on connection
+        update the negotiation-needed flag for connection"
+        with
+        "If channel is the first RTCDataChannel created on connection 
+        and {{RTCPeerConnection/[[SctpTransport]]}} is null
+        update the negotiation-needed flag for connection".
+      </p>
+    </section>
     <section id="always-negotiating-datachannels-interface-extensions">
       <h3>
         JSEP modifications
