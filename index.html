@@ -1524,6 +1524,74 @@ partial interface RTCRtpTransceiver {
       </p>
     </section>
   </section>
+  <section id="always-negotiating-datachannels">
+    <h2>Always negotiating data channels</h2>
+    <section id="always-negotiating-datachannels-configuration">
+      <h3>
+        {{RTCConfiguration}} extensions
+      </h3>
+      <p>
+        {{RTCConfiguration/alwaysNegotiateDataChannels}} defines a way for the application
+        to negotiate data channels in the SDP offer before creating a datachannel.
+        This also negotiates the data m= section before any audio or video m sections and
+        uses it as the "offerer-tagged m= section" for [[BUNDLE]].
+      </p>
+      <pre class="idl">partial dictionary RTCConfiguration {
+    boolean alwaysNegotiateDataChannels = false;
+};</pre>
+      <section>
+        <h2>
+          Dictionary {{RTCConfiguration}} Members
+        </h2>
+        <dl data-link-for="RTCConfiguration" data-dfn-for="RTCConfiguration" class="dictionary-members">
+          <dt>
+            <dfn data-idl="">alwaysNegotiateDataChannels</dfn> of type <span class="idlMemberType">boolean</span>
+          </dt>
+          <dd>
+            <p>
+            Specifies whether the application prefers to always negotiate data channels in the initial SDP offer.
+            </p>
+          </dd>
+        </dl>
+      </section>
+    </section>
+    <section id="always-negotiating-datachannels-negotiationneeded-extensions">
+      <h3>
+        Modifications to existing procedures
+      </h3>
+      <p>
+        In the steps to call the {{RTCPeerConnection/createDataChannel()}} method replace
+        "If channel is the first RTCDataChannel created on connection
+        update the negotiation-needed flag for connection"
+        with
+        "If channel is the first RTCDataChannel created on connection 
+        and {{RTCPeerConnection/[[SctpTransport]]}} is null
+        update the negotiation-needed flag for connection".
+      </p>
+    </section>
+    <section id="always-negotiating-datachannels-interface-extensions">
+      <h3>
+        JSEP modifications
+      </h3>
+      <p>
+        In the PeerConnection's Constructor in [[RTCWEB-JSEP]] section 4.1.1, add
+        "The application can specify whether it prefers to always negotiate data channels"</li>
+      </p>
+      <p>
+        In the algorithms for generating initial offers in [[RTCWEB-JSEP]] section 5.2.1, insert
+        "If the application prefers to always negotiate data channels, a m=section MUST be generated for data with fields set as described below."
+        before
+        "An m= section is generated for each RtpTransceiver that has been added to the PeerConnection, [...]".
+      </p>
+      <p>
+        In the algorithms for generating initial offers in [[RTCWEB-JSEP]] section 5.2.1,
+        replace 
+        "Lastly, if a data channel has been created, a m= section MUST be generated for data"
+        with
+        "Lastly, if a data channel has been created and no m=section has been generated for data, a m= section MUST be generated for data".
+      </p>
+    </section>
+  </section>
   <section class="informative">
     <h2>Event summary</h2>
     <p>
