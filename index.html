@@ -1468,36 +1468,46 @@ partial interface RTCRtpTransceiver {
   attribute EventHandler oncsrcchange;
 };</pre>
     <p>
-      Whenever the {{RTCRtpContributingSource/source}} identifier is updated based on the last decoded frame,
-      the [= user agent =] MUST [= queue a task =] to [= fire an event =] named {{RTCRtpReceiver/ssrcchange}}
-      if the SSRC changed and an event named {{RTCRtpReceiver/csrcchange}} if the CSRC changed. If both
-      identifiers are changed based on the same decoded frame, both events fire in the same queued task. This
-      ensures that both SSRC and CSRC information is exposed to the app at the same time.
+      Whenever the {{RTCRtpContributingSource/source}} identifier(s) are updated based on the last decoded
+      frame as defined <a data-cite="WEBRTC#dom-rtcrtpcontributingsource">here</a>, the [= user agent =]
+      MUST append the following steps to the end of the same [=queue a task|queued task=]:
     </p>
-      <h3>
-        Attributes
-      </h3>
-      <dl data-link-for="RTCRtpReceiver" data-dfn-for="RTCRtpReceiver" class="attributes">
-        <dt>
-          <dfn id="dom-rtptransceiver-onssrcchange">onssrcchange</dfn> of type {{EventHandler}}
-        </dt>
-        <dd>
-          <p>
-            Fired when the {{RTCRtpContributingSource/source}} in {{RTCRtpReceiver/getSynchronizationSources()}}
-            changes, see above.
-          </p>
-        </dd>
-        <dt>
-          <dfn id="dom-rtptransceiver-oncsrcchange">oncsrcchange</dfn> of type {{EventHandler}}
-        </dt>
-        <dd>
-          <p>
-            Fired when the {{RTCRtpContributingSource/source}} in {{RTCRtpReceiver/getContributingSources()}}
-            changes, see above.
-          </p>
-        </dd>
-      </dl>
-    </section>
+    <ol>
+      <li>
+        <p>If the SSRC changed, [= fire an event =] named {{RTCRtpReceiver/ssrcchange}}.</p>
+      </li>
+      <li>
+        <p>If the CSRC changed, [= fire an event =] named {{RTCRtpReceiver/csrcchange}}.</p>
+      </li>
+    </ol>
+    <p class="note">
+      By firing the events after both the SSRC and CSRC information has been updated, both changes are
+      observable at the time that the first event fires.
+    </p>
+    <h3>
+      Attributes
+    </h3>
+    <dl data-link-for="RTCRtpReceiver" data-dfn-for="RTCRtpReceiver" class="attributes">
+      <dt>
+        <dfn id="dom-rtptransceiver-onssrcchange">onssrcchange</dfn> of type {{EventHandler}}
+      </dt>
+      <dd>
+        <p>
+          Fired when the {{RTCRtpContributingSource/source}} in {{RTCRtpReceiver/getSynchronizationSources()}}
+          changes, see above.
+        </p>
+      </dd>
+      <dt>
+        <dfn id="dom-rtptransceiver-oncsrcchange">oncsrcchange</dfn> of type {{EventHandler}}
+      </dt>
+      <dd>
+        <p>
+          Fired when the {{RTCRtpContributingSource/source}} in {{RTCRtpReceiver/getContributingSources()}}
+          changes, see above.
+        </p>
+      </dd>
+    </dl>
+  </section>
   <section id="disable-hardware">
     <h2>Disabling hardware acceleration</h2>
     <p>
