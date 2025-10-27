@@ -1448,6 +1448,66 @@ partial interface RTCRtpTransceiver {
       </section>
     </section>
   </section>
+  <section id="source-change-event">
+    <h2>
+      {{RTCRtpReceiver}} extensions
+    </h2>
+    <p>
+      The {{RTCRtpReceiver}} interface and {{RTCRtpContributingSource}} and {{RTCRtpSynchronizationSource}}
+      dictionaries are defined in [[WEBRTC]]. This document extends this interface by
+      adding two event handlers that fire when the {{RTCRtpContributingSource/source}} of
+      {{RTCRtpReceiver/getSynchronizationSources()}} or {{RTCRtpReceiver/getContributingSources()}} changes.
+    </p>
+    <p>
+      By listening to these events, apps can react to source changes than if they were polling
+      these APIs, enabling the UX to be updated more quickly in response to virtual SSRCs changing which is
+      a common way for apps to keep track of which participant's media is currently being played out.
+    </p>
+    <pre class="idl">partial interface RTCRtpReceiver {
+  attribute EventHandler onssrcchange;
+  attribute EventHandler oncsrcchange;
+};</pre>
+    <p>
+      Whenever the {{RTCRtpContributingSource/source}} identifier(s) are updated based on the last decoded
+      frame as defined <a data-cite="WEBRTC#dom-rtcrtpcontributingsource">here</a>, the [= user agent =]
+      MUST append the following steps to the end of the same [=queue a task|queued task=]:
+    </p>
+    <ol>
+      <li>
+        <p>If the SSRC changed, [= fire an event =] named {{RTCRtpReceiver/ssrcchange}}.</p>
+      </li>
+      <li>
+        <p>If the CSRC changed, [= fire an event =] named {{RTCRtpReceiver/csrcchange}}.</p>
+      </li>
+    </ol>
+    <p class="note">
+      By firing the events after both the SSRC and CSRC information has been updated, both changes are
+      observable at the time that the first event fires.
+    </p>
+    <h3>
+      Attributes
+    </h3>
+    <dl data-link-for="RTCRtpReceiver" data-dfn-for="RTCRtpReceiver" class="attributes">
+      <dt>
+        <dfn id="dom-rtptransceiver-onssrcchange">onssrcchange</dfn> of type {{EventHandler}}
+      </dt>
+      <dd>
+        <p>
+          Fired when the {{RTCRtpContributingSource/source}} in {{RTCRtpReceiver/getSynchronizationSources()}}
+          changes, see above.
+        </p>
+      </dd>
+      <dt>
+        <dfn id="dom-rtptransceiver-oncsrcchange">oncsrcchange</dfn> of type {{EventHandler}}
+      </dt>
+      <dd>
+        <p>
+          Fired when the {{RTCRtpContributingSource/source}} in {{RTCRtpReceiver/getContributingSources()}}
+          changes, see above.
+        </p>
+      </dd>
+    </dl>
+  </section>
   <section id="disable-hardware">
     <h2>Disabling hardware acceleration</h2>
     <p>
@@ -1594,8 +1654,7 @@ partial interface RTCRtpTransceiver {
   </section>
   <section class="informative">
     <h2>Event summary</h2>
-    <p>
-      The following events fire on {{RTCIceTransport}} objects:</p>
+    <p>The following events fire on {{RTCIceTransport}} objects:</p>
     <table class="simple">
       <thead>
         <tr>
@@ -1625,6 +1684,32 @@ partial interface RTCRtpTransceiver {
           <td>
             The [= ICE agent =] has picked a valid candidate pair to {{nominate}}, and unless the operation is canceled by
             invoking the <code>preventDefault()</code> method on the event, it will be {{nominated}}.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>The following events fire on {{RTCRtpReceiver}} objects:</p>
+    <table class="simple">
+      <thead>
+        <tr>
+          <th>Event name</th>
+          <th>Interface</th>
+          <th>Fired when...</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope=row><dfn data-dfn-for="RTCRtpReceiver" data-dfn-type=event>ssrcchange</dfn></th>
+          <td>{{Event}}</td>
+          <td>
+            The SSRC identifier changed in response to an RTP packet.
+          </td>
+        </tr>
+        <tr>
+          <th scope=row><dfn data-dfn-for="RTCRtpReceiver" data-dfn-type=event>csrcchange</dfn></th>
+          <td>{{Event}}</td>
+          <td>
+            The CSRC identifier changed in response to an RTP packet.
           </td>
         </tr>
       </tbody>
