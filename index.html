@@ -161,7 +161,8 @@ partial interface RTCRtpTransceiver {
         <li>
           <p>If transceivers of the same kind exist in the current PeerConnection,
             copy {{RTCRtpTransceiver/[[HeaderExtensionsToNegotiate]]}} from
-            the first such transceiver, in the order defined by the [=CollectTransceivers=] algorithm.
+            the first such transceiver, in the order defined by the [=CollectTransceivers=] algorithm,
+            where the {{RTCRtpTransceiver/[[Stopping]]}} internal slot is false.
             This ensures consistency across transceivers if they are added
             after initial negotiation.
           </p>
