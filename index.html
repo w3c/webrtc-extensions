@@ -390,14 +390,18 @@ partial interface RTCRtpTransceiver {
           </ol>
         </dd>
       </dl>
-    \
-        </section>
-      </section>
-      <section id="rtcencodingcomplexity">
-        <h3>
-          The {{RTCEncodingComplexity}} enum.
-        </h3>
-        <pre class="idl">enum RTCEncodingComplexity {
+    </section>
+  </section>
+  <section id="rtcrtpencodingparameters">
+    <h3>
+      RTCRtpEncodingParameters extensions
+    </h3>
+    <p>
+      The {{RTCRtpEncodingParameters}} dictionary is defined in
+      [[WEBRTC]]. This document extends that dictionary with
+      additional members to control audio packetization.
+    </p>
+    <pre class="idl">enum RTCEncodingComplexity {
         "minimum",
         "low",
         "normal",
@@ -405,15 +409,6 @@ partial interface RTCRtpTransceiver {
         "very-high",
         "maximum"
     };</pre>
-      </section>
-      <section id="rtcrtpencodingparameters">
-        <h3>
-          RTCRtpEncodingParameters extensions
-        </h3>
-      The {{RTCRtpEncodingParameters}} dictionary is defined in
-      [[WEBRTC]]. This document extends that dictionary with
-      additional members to control audio packetization.
-    </p>
     <pre class="idl">partial dictionary RTCRtpEncodingParameters {
     RTCResolutionRestriction scaleResolutionDownTo;
     unsigned long            ptime;
