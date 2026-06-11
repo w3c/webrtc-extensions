@@ -402,10 +402,19 @@ partial interface RTCRtpTransceiver {
       [[WEBRTC]]. This document extends that dictionary with
       additional members to control audio packetization.
     </p>
+    <pre class="idl">enum RTCEncodingComplexity {
+        "minimum",
+        "low",
+        "normal",
+        "high",
+        "very-high",
+        "maximum"
+    };</pre>
     <pre class="idl">partial dictionary RTCRtpEncodingParameters {
     RTCResolutionRestriction scaleResolutionDownTo;
     unsigned long            ptime;
     boolean                  adaptivePtime = false;
+    RTCEncodingComplexity    encodingComplexity;
 };</pre>
     <section id="rtcrtpencodingparameters-attributes">
       <h2>Dictionary {{RTCRtpEncodingParameters}} Members</h2>
@@ -470,6 +479,22 @@ partial interface RTCRtpTransceiver {
           of increased latency. Changing the frame length dynamically
           allows the <a>user agent</a> to adapt its bandwidth allocation strategy
           based on the current network conditions.</p>
+        </dd>
+        <dt>
+          <dfn data-idl>encodingComplexity</dfn> of type <span class="idlMemberType">{{RTCEncodingComplexity}}</span>
+        </dt>
+        <dd>
+          <p>Indicates the desired complexity for this encoding. The user agent MAY use this as a hint to select encoder settings to achieve the desired complexity. Higher complexity values are expected to result in higher quality at the cost of higher CPU usage and power consumption. This feature is implemented on a best-effort basis, as not all encoder implementations support this, and others may only support a subset of the complexity settings. Even if an encoder supports a given complexity setting, the user agent MAY choose to use a different one, for example, selecting a lower complexity if the encoder is not meeting real-time deadlines. The actual encoding complexity used MAY also change dynamically based on system conditions.</p>
+          <p>Assuming that {{RTCEncodingComplexity/"normal"}} maps to the encoder's default real-time speed setting, the expected relative change in encoding time for other values are approximately:</p>
+          <ul>
+            <li>{{RTCEncodingComplexity/"maximum"}}: The highest complexity setting compliant with real-time constraints.</li>
+            <li>{{RTCEncodingComplexity/"very-high"}}: +50%</li>
+            <li>{{RTCEncodingComplexity/"high"}}: +15%</li>
+            <li>{{RTCEncodingComplexity/"normal"}}: +/- 0%</li>
+            <li>{{RTCEncodingComplexity/"low"}}: -15%</li>
+            <li>{{RTCEncodingComplexity/"minimum"}}: As low as possible</li>
+          </ul>
+          <p class="note">The user agent MAY choose to alternate between complexity levels to achieve an intermediate effect. This can be particularly useful in scenarios like temporal layering, where applying higher complexity to the base layer frames can yield significant quality benefits.</p>
         </dd>
       </dl>
     </section>
