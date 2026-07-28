@@ -1802,6 +1802,310 @@ partial interface RTCRtpTransceiver {
       </table>
     </section>
   </section>
+  <section id="diagnostic-logging">
+    <h2>Diagnostic logging</h2>
+      The WebRTC Diagnostic Logging API provides a programmatic interface for web
+      applications to start, finish, and cancel the collection of internal diagnostic
+      logs for WebRTC-related operations performed by the user agent.
+      These diagnostic logs are never exposed to the application. Instead they are
+      stored locally by the user agent and are under the control of the user.
+      The user agent can also upload the diagnostic logs to an endpoint decided by
+      the user agent.
+      The collection, storage and upload of diagnostic logs requires explicit
+      authorization by user and the application never knows if these operations
+      succeed. The contents of the diagnostic logs are also an implementation
+      detail.
+      The use cases intended to be supported by this API are the following:
+      <ul>
+        <li>
+          An application requests the collection of logs, which are stored locally. 
+          These logs can be used by a developer to help diagnose bugs in the
+          application. A user of the application can provide these logs to an
+          application developer in order to help fix bugs or otherwise improve the
+          application. An organization can collect these logs from its users to
+          diagnose bugs or make improvements.
+        </li>
+        <li>
+          An application may request that the logs be shared with the user agent vendor.
+          This is useful in case the application developer suspects a bug in the user
+          agent and it wants to provide the logs to help the user agent developer fix
+          the bug. To support this use case, the API returns a UUID that can be included
+          in a bug report to identify an uploaded diagnostic log. This mechanism allows
+          a user to authorize exposing the diagnostic log to the user agent vendor,
+          but it does not allow exposing the diagnostic log to the application.
+        </li>
+      </ul>
+      <section id="diagnostic-logging-security-privacy">
+        <h3>Security and Privacy</h3>
+        These diagnostic logs collect information about internal operations performed
+        by the user agent to implement WebRTC-related features. These diagnostic logs
+        may contain information not exposed to the Web application and therefore, the
+        API cannot expose these logs to the Web application in any way. The logs may,
+        subject to user authorization, be shared (via out-of-band uploads, for example)
+        with the user-agent vendor so that they can be used to assist in fixing
+        user-agent bugs or providing other improvements to the user agent.
+
+        The collection, storage and upload of diagnostic logs requires explicit
+        authorization by the user. The specific mechanism for this authorization is
+        [=implementation-defined=]. Some options to implement authorization include, but are
+        not limited to, dedicated UI, settings, enterprise policies, prompts, or
+        combination thereof. Authorization may be limited to specific origins. The
+        status of these authorizations is never exposed to the application. Therefore,
+        the APIs provide no guarantees of success.
+      </section>
+      <section id="diagnostic-logging-extensions-peer-connection">
+        <h3>Extensions to the RTCPeerConnection Interface</h3>
+        The API is exposed as a set of static methods on the {{RTCPeerConnection}}
+        interface.
+        <pre class="idl">
+          [
+            Exposed=Window
+          ] partial interface RTCPeerConnection {
+            static Promise&lt;DOMString&gt; startDiagnosticLogging(optional RTCStartDiagnosticLoggingOptions options = {});
+            static Promise&lt;undefined&gt; finishDiagnosticLogging(optional RTCFinishDiagnosticLoggingOptions options = {});
+            static Promise&lt;undefined&gt; cancelDiagnosticLogging();
+          };
+
+          dictionary RTCDiagnosticLoggingOptions {
+            record&lt;DOMString, DOMString&gt; metadata;
+          };
+
+          dictionary RTCStartDiagnosticLoggingOptions : RTCDiagnosticLoggingOptions {
+            boolean allowUpload = false;
+          };
+
+          dictionary RTCFinishDiagnosticLoggingOptions : RTCDiagnosticLoggingOptions {
+          };
+        </pre>
+      </section>
+      <section id="diagnostic-logging-internal-slots">
+        <h3>Internal slots</h3>
+          Let the the [=relevant global object=] have an
+          <dfn data-dfn-for="RTCPeerConnection">[[\RTCDiagnosticLoggingSessionId]]</dfn>
+          internal slot, initialized to <code>null</code>.
+      </section>
+      <section id="diagnostic-logging-methods">
+        <h3>Methods</h3>
+        <dl data-link-for="RTCPeerConnection" data-dfn-for="RTCPeerConnection" class="methods">
+          <dt>
+            <dfn>startDiagnosticLogging</dfn>
+          </dt>
+          <dd>
+            <p>The {{startDiagnosticLogging}} method attempts to start a diagnostic
+               logging session.</p>
+            <p>When this method is invoked, the [= user agent =] MUST run the following steps:</p>
+            <ol class="algorithm">
+              <li>
+                <p>Let |options| be the first argument of this method.</p>
+              </li>
+              <li>
+                <p>Let |allowUpload| be |options|'s
+                  {{RTCStartDiagnosticLoggingOptions/allowUpload}} member.</p>
+              </li>
+              <li>
+                <p>Let |metadata| be |options|'s
+                  {{RTCDiagnosticLoggingOptions/metadata}} member.</p>
+              </li>
+              <li>
+                <p>If the size of |metadata| exceeds 5 entries, or if any key or
+                   value in |metadata| exceeds 100 characters, return a promise
+                   [=rejected=] with a {{TypeError}}.</p>
+              </li>
+              <li>
+                <p>Let |p| be a new promise.</p>
+              </li>
+              <li>
+                <p>[=In parallel=], perform the following steps:</p>
+                <ol>
+                  <li>
+                    <p>Let |uuid| be a randomly generated UUID [[rfc4122]], which
+                       is 36 characters long in its canonical form. To avoid
+                       fingerprinting, implementations SHOULD use the forms in
+                       section 4.4 or 4.5 of RFC 4122 when generating UUIDs.</p>
+                  </li>
+                  <li>
+                    <p>Let |doc| be the [=relevant global object=]'s associated [=document=].</p>
+                  </li>
+                  <li>
+                    <p>If |doc|'s [=browsing context=] is not a [=top-level browsing context=],
+                       [=resolve=] |p| with |uuid| and abort these steps.</p>
+                  </li>
+                  <li>
+                    <p>If the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}} internal slot
+                       is not <code>null</code>, [=resolve=] |p| with |uuid| and abort these steps.</p>
+                  </li>
+                  <li>
+                    <p>Store |uuid| in the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
+                       internal slot.</p>
+                  </li>
+                  <li>
+                    <p>[=Resolve=] |p| with |uuid|.</p>
+                  </li>
+                  <li>
+                    <p>Start a logging session of internal WebRTC activity identified with |uuid|</p>
+                  </li>
+                </ol>
+              </li>
+              <li>
+                <p>Return |p|.</p>
+              </li>
+            </ol>
+            <p>
+              Once a logging session starts, any WebRTC-related activity generated
+              by |doc| or its descendant documents that are of the [=same origin=]
+              as |doc| MAY be logged by the user agent after |p| resolves.
+              The log MAY include |metadata| or information derived from it.
+              If |allowUpload| is <code>true</code>, the logged data may be shared with the
+              user agent vendor via an [=implementation-defined=] mechanism, as long as the user
+              has authorized it and the logging session has not been cancelled with the
+              {{cancelDiagnosticLogging}} method. The logging session is identified with
+              |uuid|, which means that all logged data can be internally referenced using
+              |uuid|.
+            </p>
+          </dd>
+          <dt>
+            <dfn>finishDiagnosticLogging</dfn>
+          </dt>
+          <dd>
+            <p>The {{finishDiagnosticLogging}} method ends an ongoing diagnostic logging session.</p>
+            <p>When this method is invoked, the [= user agent =] MUST run the following steps:</p>
+            <ol class="algorithm">
+              <li>
+                <p>Let |options| be the first argument of this method.</p>
+              </li>
+              <li>
+                <p>Let |metadata| be |options|'s {{RTCDiagnosticLoggingOptions/metadata}} member.</p>
+              </li>
+              <li>
+                <p>If the size of |metadata| exceeds 5 entries, or if any key or value
+                   in |metadata| exceeds 100 characters, return a promise [=rejected=]
+                   with a {{TypeError}}.</p>
+              </li>
+              <li>
+                <p>Let |p| be a new promise.</p>
+              </li>
+              <li>
+                <p>[=In parallel=], perform the following steps:</p>
+                <ol>
+                  <li>
+                    <p>If the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
+                       internal slot is <code>null</code>, [=resolve=] |p| with
+                       <code>undefined</code> and abort these steps.</p>
+                  </li>
+                  <li>
+                    <p>Stop the logging session identified with 
+                      {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}.</p>
+                  </li>
+                  <li>
+                    <p>Set {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
+                       to <code>null</code>.</p>
+                  </li>
+                  <li>
+                    <p>[=Resolve=] |p| with <code>undefined</code>.</p>
+                  </li>
+                </ol>
+              </li>
+              <li>
+                <p>Return |p|.</p>
+              </li>
+            </ol>
+            <p>
+              The user agent MUST not log any WebRTC-related activity generated by |doc| or
+              its descendant documents after the |p| resolves. The log MAY
+              include |metadata| or information derived from it.  The user agent MAY share the
+              logged data out of band with the user-agent vendor using an
+              [=implementation-defined=] mechanism, as long as the user has authorized it and the
+              logging session was initialized with
+              {{RTCStartDiagnosticLoggingOptions/allowUpload}} set to <code>true</code>.
+            </p>
+          </dd>
+          <dt>
+            <dfn>cancelDiagnosticLogging</dfn>
+          </dt>
+          <dd>
+            <p>The {{cancelDiagnosticLogging}} method cancels an ongoing diagnostic logging session.</p>
+            <p>When this method is invoked, the [= user agent =] MUST run the following steps:</p>
+            <ol class="algorithm">
+              <li>
+                <p>Let |p| be a new promise.</p>
+              </li>
+              <li>
+                <p>[=In parallel=], perform the following steps:</p>
+                <ol>
+                  <li>
+                    <p>Let |uuid| be the value of the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}.</p>
+                  </li>
+                  <li>
+                    <p>Cancel the logging session identified with 
+                      {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}.</p>
+                  </li>
+                  <li>
+                    <p>Set {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
+                       to <code>null</code>.</p>
+                  </li>
+                  <li>
+                    <p>[=Resolve=] |p| with <code>undefined</code>.</p>
+                  </li>
+                </ol>
+              </li>
+              <li>
+                <p>Return |p|.</p>
+              </li>
+            </ol>
+            <p>
+              After |p| resolves:
+              <ul>
+                <li>
+                  The user agent MUST not log any WebRTC-related activity
+                  generated by |doc| or its descendant documents.
+                </li>
+                <li>
+                  The user agent MUST remove any logged data associated with
+                  the session identified with |uuid|.
+                </li>
+                <li>
+                  The user agent MUST not share with the user-agent vendor any
+                  data associated with the the logging session identified with
+                  |uuid|.
+                </li>
+              </ul>
+            </p>
+          </dd>
+        </dl>
+      </section>
+      <section id="diagnostic-logging-options-dictionary">
+        <h3>Dictionary {{RTCDiagnosticLoggingOptions}} members</h3>
+        <dl data-link-for="RTCDiagnosticLoggingOptions" data-dfn-for="RTCDiagnosticLoggingOptions" class="dictionary-members">
+          <dt>
+            <dfn data-idl>metadata</dfn> of type <span class="idlMemberType">[=record=]&lt;{{DOMString}}, {{DOMString}}&gt;</span>,
+            defaulting to <code>[]</code>.
+          </dt>
+          <dd>
+            <p>
+              A [=record=] containing key-value pairs that the application can
+              use to provide context that can be stored in the diagnostic logs.
+            </p>
+          </dd>
+        </dl>
+      </section>
+      <section id="start-diagnostic-logging-options-dictionary">
+        <h3>Dictionary {{RTCStartDiagnosticLoggingOptions}} members</h3>
+        <dl data-link-for="RTCStartDiagnosticLoggingOptions" data-dfn-for="RTCStartDiagnosticLoggingOptions" class="dictionary-members">
+          <dt>
+            <dfn data-idl>allowUpload</dfn> of type <span class="idlMemberType">[=boolean=]</span>,
+            defaulting to <code>false</code>.
+          </dt>
+          <dd>
+            <p>
+              If <code>true</code>, the [=user agent=] MAY share the logs from
+              the logging session with the [=user agent=] vendor. 
+              If <code>false</code>, the [=user agent=] MUST NOT share the logs
+              from the logging session with the [=user agent=] vendor.
+            </p>
+          </dd>
+        </dl>
+      </section>
+  </section>
   <section class="informative" id="security-considerations">
     <h2>
       Security Considerations
