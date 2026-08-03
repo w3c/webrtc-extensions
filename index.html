@@ -1625,9 +1625,19 @@ partial interface RTCRtpTransceiver {
         "If channel is the first RTCDataChannel created on connection
         update the negotiation-needed flag for connection"
         with
-        "If channel is the first RTCDataChannel created on connection 
+        "If channel is the first RTCDataChannel created on connection
         and {{RTCPeerConnection/[[SctpTransport]]}} is null
         update the negotiation-needed flag for connection".
+      </p>
+      <p>
+        {{RTCConfiguration/alwaysNegotiateDataChannels}} can only be set when constructing the
+        {{RTCPeerConnection}} and MUST NOT be changed afterwards.
+        In the <a data-cite="WEBRTC#set-the-configuration">set the configuration</a> algorithm,
+        add a step after the step saying
+        "If the value of configuration.rtcpMuxPolicy differs from oldConfig.rtcpMuxPolicy, then fail."
+        saying
+        "If the value of configuration.{{RTCConfiguration/alwaysNegotiateDataChannels}} differs from
+        oldConfig.{{RTCConfiguration/alwaysNegotiateDataChannels}}, then fail."
       </p>
     </section>
     <section id="always-negotiating-datachannels-interface-extensions">
@@ -1650,6 +1660,13 @@ partial interface RTCRtpTransceiver {
         "Lastly, if a data channel has been created, a m= section MUST be generated for data"
         with
         "Lastly, if a data channel has been created and no m=section has been generated for data, a m= section MUST be generated for data".
+      </p>
+      <p>
+        In setConfiguration in [[RTCWEB-JSEP]] section 4.1.18, replace
+        "The bundle and RTCP-multiplexing policies MUST NOT be changed after the construction of the PeerConnection."
+        with
+        "The bundle policy, the RTCP-multiplexing policy and the preference to always negotiate data channels
+        MUST NOT be changed after the construction of the PeerConnection."
       </p>
     </section>
   </section>
