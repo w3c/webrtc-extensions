@@ -1435,7 +1435,7 @@ dictionary RTCEncodingOptions {
             </p>
             <p class="needs-test">
               {{RTCConfiguration/rtpHeaderEncryptionPolicy}} can only be set when
-              constructing the {{RTCPeerConnection}} and MUST NOT be changed afterwards.
+              constructing the {{RTCPeerConnection}} and cannot be changed afterwards.
               In the <a data-cite="WEBRTC#set-the-configuration">set the configuration</a>
               algorithm, add a step after the step saying
               "If the value of configuration.rtcpMuxPolicy differs from oldConfig.rtcpMuxPolicy, then fail."
