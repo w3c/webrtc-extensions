@@ -1363,8 +1363,8 @@ dictionary RTCEncodingOptions {
               <td>
                 <p>
                   Do not use RTP header encryption. The "a=cryptex" attribute is not
-                  included in offers or answers, and RTP header extensions and CSRCs are
-                  sent in the clear.
+                  included in offers or answers and not acted upon when present in the
+                  remote description. RTP header extensions and CSRCs are sent in the clear.
                 </p>
               </td>
             </tr>
@@ -1375,7 +1375,9 @@ dictionary RTCEncodingOptions {
                   Negotiate RTP header encryption as defined in [[RFC9335]]. If the remote
                   endpoint does not indicate that it is capable of receiving RTP packets
                   encrypted with cryptex, RTP header extensions and CSRCs are sent in the
-                  clear.
+                  clear. If the remote endpoint indicates support for cryptex, the user
+                  agent may use cryptex for endcrypting RTP header extensions and CSRCS
+                  as described in [[RFC9335]] Section 4.
                 </p>
               </td>
             </tr>
