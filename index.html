@@ -1805,7 +1805,7 @@ partial interface RTCRtpTransceiver {
   <section id="diagnostic-logging">
     <h2>Diagnostic logging</h2>
       The WebRTC Diagnostic Logging API provides a programmatic interface for web
-      applications to start, finish, and cancel the collection of internal diagnostic
+      applications to start, finish, and abort the collection of internal diagnostic
       logs for WebRTC-related operations performed by the user agent.
       These diagnostic logs are never exposed to the application. Instead they are
       stored in a location controlled by the user and may be shared with the
@@ -1859,9 +1859,9 @@ partial interface RTCRtpTransceiver {
           [
             Exposed=Window
           ] partial interface RTCPeerConnection {
-            static Promise&lt;DOMString&gt; startDiagnosticLogging(optional RTCStartDiagnosticLoggingOptions options = {});
-            static Promise&lt;undefined&gt; finishDiagnosticLogging(optional RTCFinishDiagnosticLoggingOptions options = {});
-            static Promise&lt;undefined&gt; cancelDiagnosticLogging();
+            static Promise&lt;DOMString&gt; startDiagnosticLogging(optional RTCDiagnosticLoggingOptions options = {});
+            static Promise&lt;undefined&gt; finishDiagnosticLogging(optional RTCDiagnosticLoggingOptions options = {});
+            static Promise&lt;undefined&gt; abortDiagnosticLogging();
           };
 
           dictionary RTCDiagnosticLoggingOptions {
@@ -1894,9 +1894,11 @@ partial interface RTCRtpTransceiver {
                   {{RTCDiagnosticLoggingOptions/metadata}} member.</p>
               </li>
               <li>
-                <p>If the size of |metadata| exceeds 5 entries, or if any key or
-                   value in |metadata| exceeds 100 characters, return a promise
-                   [=rejected=] with a {{TypeError}}.</p>
+                <p>If |metadata|'s [=map/size=] is greater than 5, or if any
+                   [=map/entry=] |key| → |value| of |metadata| has a 
+                   [=string/length=] greater than 100, return a promise
+                   [=rejected=] with a {{TypeError}}.
+                  </p>
               </li>
               <li>
                 <p>Let |p| be a new promise.</p>
@@ -1905,21 +1907,19 @@ partial interface RTCRtpTransceiver {
                 <p>[=In parallel=], perform the following steps:</p>
                 <ol>
                   <li>
-                    <p>Let |uuid| be a randomly generated UUID [[rfc4122]], which
-                       is 36 characters long in its canonical form. To avoid
-                       fingerprinting, implementations SHOULD use the forms in
-                       section 4.4 or 4.5 of RFC 4122 when generating UUIDs.</p>
+                    <p>Let |uuid| be a randomly generated UUID [[rfc4122]]. To avoid
+                       fingerprinting, implementations SHOULD use the form in
+                       section 4.4 of RFC 4122 when generating UUIDs.</p>
                   </li>
                   <li>
                     <p>Let |doc| be the [=relevant global object=]'s associated [=document=].</p>
                   </li>
                   <li>
-                    <p>If |doc|'s [=browsing context=] is not a [=top-level browsing context=],
-                       [=resolve=] |p| with |uuid| and abort these steps.</p>
-                  </li>
-                  <li>
-                    <p>If the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}} internal slot
-                       is not <code>null</code>, [=resolve=] |p| with |uuid| and abort these steps.</p>
+                    <p>If the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
+                       internal slot is not <code>null</code>, [=reject=] |p| with
+                       a {{DOMException}} object whose {{DOMException/name}}
+                       attribute has the value {{"InvalidStateError"}} and abort
+                       these steps.</p>
                   </li>
                   <li>
                     <p>Store |uuid| in the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
@@ -1939,8 +1939,7 @@ partial interface RTCRtpTransceiver {
             </ol>
             <p>
               Once a logging session starts, any WebRTC-related activity generated
-              by |doc| or its descendant documents that are of the [=same origin=]
-              as |doc| MAY be logged by the user agent after |p| resolves.
+              by |doc| MAY be logged by the user agent after |p| resolves.
               The log MAY include |metadata| or information derived from it.
               The logging session is identified with |uuid|, which can be used to
               reference logs (e.g., in bug reports).
@@ -1960,9 +1959,11 @@ partial interface RTCRtpTransceiver {
                 <p>Let |metadata| be |options|'s {{RTCDiagnosticLoggingOptions/metadata}} member.</p>
               </li>
               <li>
-                <p>If the size of |metadata| exceeds 5 entries, or if any key or value
-                   in |metadata| exceeds 100 characters, return a promise [=rejected=]
-                   with a {{TypeError}}.</p>
+                <p>If |metadata|'s [=map/size=] is greater than 5, or if any
+                   [=map/entry=] |key| → |value| of |metadata| has a 
+                   [=string/length=] greater than 100, return a promise
+                   [=rejected=] with a {{TypeError}}.
+                  </p>
               </li>
               <li>
                 <p>Let |p| be a new promise.</p>
@@ -1972,8 +1973,10 @@ partial interface RTCRtpTransceiver {
                 <ol>
                   <li>
                     <p>If the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
-                       internal slot is <code>null</code>, [=resolve=] |p| with
-                       <code>undefined</code> and abort these steps.</p>
+                       internal slot is <code>null</code>, [=reject=] |p| with
+                       a {{DOMException}} object whose {{DOMException/name}}
+                       attribute has the value {{"InvalidStateError"}} and abort
+                       these steps.</p>
                   </li>
                   <li>
                     <p>Stop the logging session identified with 
@@ -1993,16 +1996,16 @@ partial interface RTCRtpTransceiver {
               </li>
             </ol>
             <p>
-              The user agent MUST not log any WebRTC-related activity generated by |doc| or
-              its descendant documents after the |p| resolves. The log MAY
-              include |metadata| or information derived from it.
+              The user agent MUST NOT log any WebRTC-related activity generated by |doc|
+              after |p| resolves.
             </p>
           </dd>
           <dt>
-            <dfn>cancelDiagnosticLogging</dfn>
+            <dfn>abortDiagnosticLogging</dfn>
           </dt>
           <dd>
-            <p>The {{cancelDiagnosticLogging}} method cancels an ongoing diagnostic logging session.</p>
+            <p>The {{abortDiagnosticLogging}} method aborts an ongoing diagnostic logging session and deletes
+              all logged data associated with the session.</p>
             <p>When this method is invoked, the [= user agent =] MUST run the following steps:</p>
             <ol class="algorithm">
               <li>
@@ -2012,10 +2015,17 @@ partial interface RTCRtpTransceiver {
                 <p>[=In parallel=], perform the following steps:</p>
                 <ol>
                   <li>
+                    <p>If the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
+                       internal slot is <code>null</code>, [=reject=] |p| with
+                       a {{DOMException}} object whose {{DOMException/name}}
+                       attribute has the value {{"InvalidStateError"}} and abort
+                       these steps.</p>
+                  </li>
+                  <li>
                     <p>Let |uuid| be the value of the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}.</p>
                   </li>
                   <li>
-                    <p>Cancel the logging session identified with 
+                    <p>Abort the logging session identified with 
                       {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}.</p>
                   </li>
                   <li>
@@ -2035,8 +2045,8 @@ partial interface RTCRtpTransceiver {
               After |p| resolves:
               <ul>
                 <li>
-                  The user agent MUST not log any WebRTC-related activity
-                  generated by |doc| or its descendant documents.
+                  The user agent MUST NOT log any WebRTC-related activity
+                  generated by |doc|.
                 </li>
                 <li>
                   The user agent MUST remove any logged data associated with
