@@ -1805,7 +1805,7 @@ partial interface RTCRtpTransceiver {
   <section id="diagnostic-logging">
     <h2>Diagnostic logging</h2>
       The WebRTC Diagnostic Logging API provides a programmatic interface for web
-      applications to start, finish, and abort the collection of internal diagnostic
+      applications to start, finish, and discard the collection of internal diagnostic
       logs for WebRTC-related operations performed by the user agent.
       These diagnostic logs are never exposed to the application. Instead they are
       stored in a location controlled by the user and may be shared with the
@@ -1861,7 +1861,7 @@ partial interface RTCRtpTransceiver {
           ] partial interface RTCPeerConnection {
             static Promise&lt;DOMString&gt; startDiagnosticLogging(optional RTCDiagnosticLoggingOptions options = {});
             static Promise&lt;undefined&gt; finishDiagnosticLogging(optional RTCDiagnosticLoggingOptions options = {});
-            static Promise&lt;undefined&gt; abortDiagnosticLogging();
+            static Promise&lt;undefined&gt; discardDiagnosticLogging();
           };
 
           dictionary RTCDiagnosticLoggingOptions {
@@ -2001,10 +2001,10 @@ partial interface RTCRtpTransceiver {
             </p>
           </dd>
           <dt>
-            <dfn>abortDiagnosticLogging</dfn>
+            <dfn>discardDiagnosticLogging</dfn>
           </dt>
           <dd>
-            <p>The {{abortDiagnosticLogging}} method aborts an ongoing diagnostic logging session and deletes
+            <p>The {{discardDiagnosticLogging}} method discards an ongoing diagnostic logging session and deletes
               all logged data associated with the session.</p>
             <p>When this method is invoked, the [= user agent =] MUST run the following steps:</p>
             <ol class="algorithm">
@@ -2018,14 +2018,14 @@ partial interface RTCRtpTransceiver {
                     <p>If the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
                        internal slot is <code>null</code>, [=reject=] |p| with
                        a {{DOMException}} object whose {{DOMException/name}}
-                       attribute has the value {{"InvalidStateError"}} and abort
+                       attribute has the value {{"InvalidStateError"}} and discard
                        these steps.</p>
                   </li>
                   <li>
                     <p>Let |uuid| be the value of the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}.</p>
                   </li>
                   <li>
-                    <p>Abort the logging session identified with 
+                    <p>Discard the logging session identified with 
                       {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}.</p>
                   </li>
                   <li>
