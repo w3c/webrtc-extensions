@@ -1914,28 +1914,28 @@ partial interface RTCRtpTransceiver {
                     these steps.</p>
               </li>
               <li>
-                <p>Let |uuid| be a randomly generated UUID [[rfc4122]]. To avoid
+                <p>Let |sessionId| be a randomly generated UUID [[rfc4122]]. To avoid
                    fingerprinting, implementations SHOULD use the form in
                    section 4.4 of RFC 4122 when generating UUIDs.</p>
               </li>
               <li>
                 <p>Set {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
-                   to |uuid|.</p>
+                   to |sessionId|.</p>
               </li>
               <li>
                 <p>[=In parallel=], start a logging session of internal WebRTC
-                  activity using |metadata| for context and identify it with
-                  |uuid|.</p>
+                  activity, using |metadata| for context. Identify the logging
+                  session with |sessionId|.</p>
               </li>
               <li>
-                <p>Return |uuid|.</p>
+                <p>Return |sessionId|.</p>
               </li>
             </ol>
             <p>
               Once a logging session starts, any WebRTC-related activity MAY be
               logged by the user agent. The logging session is identified
-              with |uuid|, which can be used to reference logs (e.g., in bug
-              reports).
+              with |sessionId|, which can be used to reference logs (e.g., in
+              bug reports).
             </p>
           </dd>
           <dt>
@@ -1958,7 +1958,7 @@ partial interface RTCRtpTransceiver {
                     these steps.</p>
               </li>
               <li>
-                <p>Let |uuid| be 
+                <p>Let |sessionId| be 
                   {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}</p>
               </li>
               <li>
@@ -1972,7 +1972,7 @@ partial interface RTCRtpTransceiver {
                 <p>[=In parallel=], perform the following steps:</p>
                 <ol>
                   <li>
-                    <p>Finish the logging session identified with |uuid|.</p>
+                    <p>Finish the logging session identified with |sessionId|.</p>
                   </li>
                   <li>
                     <p>[=Queue a global task=] on the [=networking task source=]
@@ -2009,7 +2009,7 @@ partial interface RTCRtpTransceiver {
                     these steps.</p>
               </li>
               <li>
-                <p>Let |uuid| be 
+                <p>Let |sessionId| be 
                   {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}</p>
               </li>
               <li>
@@ -2023,7 +2023,7 @@ partial interface RTCRtpTransceiver {
                 <p>[=In parallel=], perform the following steps:</p>
                 <ol>
                   <li>
-                    <p>Cancel the logging session identified with |uuid|.
+                    <p>Cancel the logging session identified with |sessionId|.
                     </p>
                   </li>
                   <li>
