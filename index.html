@@ -1932,8 +1932,8 @@ partial interface RTCRtpTransceiver {
               </li>
               <li>
                 <p>[=In parallel=], start a logging session of internal WebRTC
-                  activity using an [=implementation-defined=] algorithm and
-                  identify it with |uuid|.</p>
+                  activity using |metadata| for context and identify it with
+                  |uuid|.</p>
               </li>
               <li>
                 <p>Return |uuid|.</p>
@@ -1982,23 +1982,30 @@ partial interface RTCRtpTransceiver {
                    to |value|.</p>
               </li>
               <li>
+                <p>Let |finalMetadata| be 
+                  {{RTCPeerConnection/[[RTCDiagnosticLoggingMetadata]]}}.</p>
+              </li>
+              <li>
+                <p>Let |uuid| be 
+                  {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}</p>
+              </li>
+              <li>
+                <p>Set {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
+                    to <code>null</code>.</p>
+              </li>
+              <li>
+                <p>Set {{RTCPeerConnection/[[RTCDiagnosticLoggingMetadata]]}}
+                    to <code>null</code>.</p>
+              </li>
+              <li>
                 <p>Let |p| be a new promise.</p>
               </li>
               <li>
                 <p>[=In parallel=], perform the following steps:</p>
                 <ol>
                   <li>
-                    <p>Finish the logging session identified with
-                      {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
-                      using an [=implementation-defined=] algorithm.</p>
-                  </li>
-                  <li>
-                    <p>Set {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
-                       to <code>null</code>.</p>
-                  </li>
-                  <li>
-                    <p>Set {{RTCPeerConnection/[[RTCDiagnosticLoggingMetadata]]}}
-                       to <code>null</code>.</p>
+                    <p>Finish the logging session identified with |uuid|, using
+                      |finalMetadata| for context.</p>
                   </li>
                   <li>
                     <p>[=Queue a global task=] on the [=networking task source=]
@@ -2037,20 +2044,26 @@ partial interface RTCRtpTransceiver {
                     these steps.</p>
               </li>
               <li>
+                <p>Let |uuid| be 
+                  {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}</p>
+              </li>
+              <li>
+                <p>Set {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
+                    to <code>null</code>.</p>
+              </li>
+              <li>
+                <p>Set {{RTCPeerConnection/[[RTCDiagnosticLoggingMetadata]]}}
+                    to <code>null</code>.</p>
+              </li>
+              <li>
                 <p>Let |p| be a new promise.</p>
               </li>
               <li>
                 <p>[=In parallel=], perform the following steps:</p>
                 <ol>
                   <li>
-                    <p>Cancel the logging session identified with
-                      {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
-                      using an [=implementation-defined=] algorithm.
+                    <p>Cancel the logging session identified with |uuid|.
                     </p>
-                  </li>
-                  <li>
-                    <p>Set {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
-                       to <code>null</code>.</p>
                   </li>
                   <li>
                     <p>[=Queue a global task=] on the [=networking task source=]
