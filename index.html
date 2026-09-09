@@ -1337,14 +1337,16 @@ dictionary RTCEncodingOptions {
         header extensions and the contributing source (CSRC) identifiers of an RTP packet,
         both of which are left in the clear by [[RFC3711]]. It is signaled with the
         "a=cryptex" SDP attribute, whose presence in an offer or an answer indicates that
-        the endpoint is capable of receiving RTP packets encrypted with cryptex. Once both
-        endpoints have indicated that capability, a sender decides on a per-packet basis
-        whether to apply cryptex.
+        the endpoint is capable of receiving RTP packets encrypted with cryptex.
       </p>
       <p>
         The RTP header encryption policy determines whether the user agent indicates that
         capability, and whether it is willing to continue with a remote endpoint which has
         not indicated it.
+      </p>
+      <p>
+        Once both endpoints have indicated that capability, a user agent SHOULD use cryptex
+        for encrypting RTP header extensions and CSRCs as described in [[RFC9335]] Section 5.1.
       </p>
       <div>
         <pre id="target-rtp-header-encryption-policy" class="idl">enum RTCRtpHeaderEncryptionPolicy {
@@ -1375,9 +1377,7 @@ dictionary RTCEncodingOptions {
                   Negotiate RTP header encryption as defined in [[RFC9335]]. If the remote
                   endpoint does not indicate that it is capable of receiving RTP packets
                   encrypted with cryptex, RTP header extensions and CSRCs are sent in the
-                  clear. If the remote endpoint indicates support for cryptex, the user
-                  agent may use cryptex for endcrypting RTP header extensions and CSRCS
-                  as described in [[RFC9335]] Section 4.
+                  clear.
                 </p>
               </td>
             </tr>
