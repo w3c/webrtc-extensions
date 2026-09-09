@@ -1805,7 +1805,7 @@ partial interface RTCRtpTransceiver {
   <section id="diagnostic-logging">
     <h2>Diagnostic logging</h2>
       The WebRTC Diagnostic Logging API provides a programmatic interface for web
-      applications to start, finish, and cancel the collection of internal diagnostic
+      applications to start, stop, and cancel the collection of internal diagnostic
       logs for WebRTC-related operations performed by the user agent.
       These diagnostic logs are never exposed to the application. Instead they are
       stored in a location controlled by the user and may be shared with the
@@ -1866,7 +1866,7 @@ partial interface RTCRtpTransceiver {
             Exposed=Window
           ] partial interface RTCPeerConnection {
             static DOMString startDiagnosticLogging(optional RTCDiagnosticLoggingOptions options = {});
-            static Promise&lt;undefined&gt; finishDiagnosticLogging();
+            static Promise&lt;undefined&gt; stopDiagnosticLogging();
             static Promise&lt;undefined&gt; cancelDiagnosticLogging();
           };
 
@@ -1939,10 +1939,10 @@ partial interface RTCRtpTransceiver {
             </p>
           </dd>
           <dt>
-            <dfn>finishDiagnosticLogging</dfn>
+            <dfn>stopDiagnosticLogging</dfn>
           </dt>
           <dd>
-            <p>The {{finishDiagnosticLogging}} method ends an ongoing diagnostic
+            <p>The {{stopDiagnosticLogging}} method ends an ongoing diagnostic
               logging session.</p>
             <p>When this method is invoked, the [= user agent =] MUST run the
               following steps:</p>
@@ -1972,7 +1972,7 @@ partial interface RTCRtpTransceiver {
                 <p>[=In parallel=], perform the following steps:</p>
                 <ol>
                   <li>
-                    <p>Finish the logging session identified with |sessionId|.</p>
+                    <p>Stop the logging session identified with |sessionId|.</p>
                   </li>
                   <li>
                     <p>[=Queue a global task=] on the [=networking task source=]
