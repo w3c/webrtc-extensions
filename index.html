@@ -1902,9 +1902,10 @@ partial interface RTCRtpTransceiver {
                   {{RTCDiagnosticLoggingOptions/metadata}}.</p>
               </li>
               <li>
-                <p>If |metadata|'s [=map/size=] is greater than 5, or if any
-                   [=map/entry=] |key| → |value| of |metadata| has a 
-                   [=string/length=] greater than 100, return a promise
+                <p>If |metadata|'s [=map/size=] is greater than 5, or
+                   |metadata| [=map/contains=] any [=map/entry=] whose
+                   [=map/key=] or [=map/value=] have a [=string/length=]
+                   greater than 100, return a promise
                    [=rejected=] with a {{TypeError}}.
                   </p>
               </li>
