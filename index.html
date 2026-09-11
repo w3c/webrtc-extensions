@@ -1932,8 +1932,8 @@ partial interface RTCRtpTransceiver {
               </li>
             </ol>
             <p>
-              Once a logging session starts, any WebRTC-related activity MAY be
-              logged by the user agent. The logging session is identified
+              Once a logging session starts, the [=user agent=] MAY log any
+              WebRTC-related activity. The logging session is identified
               with |sessionId|, which can be used to reference logs (e.g., in
               bug reports).
             </p>
@@ -1966,7 +1966,7 @@ partial interface RTCRtpTransceiver {
               </li>
             </ol>
             <p>
-              The user agent MUST NOT log any WebRTC-related activity once the
+              The [=user agent=] MUST NOT log any WebRTC-related activity once the
               logging session has stopped.
             </p>
           </dd>
@@ -1998,9 +1998,10 @@ partial interface RTCRtpTransceiver {
                    |sessionId|.</p>
               </li>
             </ol>
-            <p>Once the logging session is canceled, the user agent MUST NOT
-              log any WebRTC-related activity. The user agent MUST have removed
-              any logged data associated with the canceled logging session.</p>
+            <p>Once the logging session is canceled, the [=user agent=] MUST NOT
+              log any WebRTC-related activity and the [=user agent=] MUST have
+              removed any logged data associated with the canceled logging
+              session.</p>
           </dd>
         </dl>
       </section>
