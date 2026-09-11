@@ -1856,7 +1856,7 @@ partial interface RTCRtpTransceiver {
         not limited to, dedicated UI, configuration files, enterprise policies, prompts, or
         a combination thereof. Authorization may be limited to specific origins. The
         status of these authorizations is never exposed to the application. Therefore,
-        the APIs provide no guarantees of success.
+        the API provides no guarantees of success.
       </section>
       <section id="diagnostic-logging-extensions-peer-connection">
         <h3>Extensions to the RTCPeerConnection Interface</h3>
@@ -1867,8 +1867,8 @@ partial interface RTCRtpTransceiver {
             Exposed=Window
           ] partial interface RTCPeerConnection {
             static DOMString startDiagnosticLogging(optional RTCDiagnosticLoggingOptions options = {});
-            static Promise&lt;undefined&gt; stopDiagnosticLogging();
-            static Promise&lt;undefined&gt; cancelDiagnosticLogging();
+            static undefined stopDiagnosticLogging();
+            static undefined cancelDiagnosticLogging();
           };
 
           dictionary RTCDiagnosticLoggingOptions {
@@ -1905,20 +1905,17 @@ partial interface RTCRtpTransceiver {
                 <p>If |metadata|'s [=map/size=] is greater than 5, or
                    |metadata| [=map/contains=] any [=map/entry=] whose
                    [=map/key=] or [=map/value=] have a [=string/length=]
-                   greater than 100, return a promise
-                   [=rejected=] with a {{TypeError}}.
+                   greater than 100, 	[=exception/throw=] a {{TypeError}}.
                   </p>
               </li>
               <li>
                 <p>If the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
-                    internal slot is not <code>null</code>, [=reject=] |p| with
-                    a {{DOMException}} object whose {{DOMException/name}}
-                    attribute has the value {{"InvalidStateError"}} and abort
-                    these steps.</p>
+                   internal slot is not <code>null</code>, [=exception/throw=]
+                   an {{"InvalidStateError"}} {{DOMException}}.</p>
               </li>
               <li>
-                <p>Let |sessionId| be a randomly generated UUID [[rfc4122]]. To avoid
-                   fingerprinting, implementations SHOULD use the form in
+                <p>Let |sessionId| be a randomly generated UUID [[rfc4122]]. To
+                   avoid fingerprinting, implementations SHOULD use the form in
                    section 4.4 of RFC 4122 when generating UUIDs.</p>
               </li>
               <li>
@@ -1951,14 +1948,9 @@ partial interface RTCRtpTransceiver {
               following steps:</p>
             <ol class="algorithm">
               <li>
-                <p>Let |options| be the first argument of this method.</p>
-              </li>
-              <li>
                 <p>If the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
-                    internal slot is <code>null</code>, [=reject=] |p| with
-                    a {{DOMException}} object whose {{DOMException/name}}
-                    attribute has the value {{"InvalidStateError"}} and abort
-                    these steps.</p>
+                    internal slot is <code>null</code>, [=exception/throw=] an
+                    {{"InvalidStateError"}} {{DOMException}}.</p>
               </li>
               <li>
                 <p>Let |sessionId| be 
@@ -1969,29 +1961,13 @@ partial interface RTCRtpTransceiver {
                     to <code>null</code>.</p>
               </li>
               <li>
-                <p>Let |p| be a new promise.</p>
-              </li>
-              <li>
-                <p>[=In parallel=], perform the following steps:</p>
-                <ol>
-                  <li>
-                    <p>Stop the logging session identified with |sessionId|.</p>
-                  </li>
-                  <li>
-                    <p>[=Queue a global task=] on the [=networking task source=]
-                       given the current realm's [=global object=] as
-                       <code>global</code> to [=resolve=] |p| with
-                       <code>undefined</code>.</p>
-                  </li>
-                </ol>
-              </li>
-              <li>
-                <p>Return |p|.</p>
+                <p>[=In parallel=], stop the logging session identified with
+                   |sessionId|.</p>
               </li>
             </ol>
             <p>
-              The user agent MUST NOT log any WebRTC-related activity once |p|
-              has resolved.
+              The user agent MUST NOT log any WebRTC-related activity once the
+              logging session has stopped.
             </p>
           </dd>
           <dt>
@@ -2006,10 +1982,8 @@ partial interface RTCRtpTransceiver {
             <ol class="algorithm">
               <li>
                 <p>If the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
-                    internal slot is <code>null</code>, [=reject=] |p| with
-                    a {{DOMException}} object whose {{DOMException/name}}
-                    attribute has the value {{"InvalidStateError"}} and abort
-                    these steps.</p>
+                    internal slot is <code>null</code>, [=exception/throw=] an
+                    {{"InvalidStateError"}} {{DOMException}}.</p>
               </li>
               <li>
                 <p>Let |sessionId| be 
@@ -2020,37 +1994,13 @@ partial interface RTCRtpTransceiver {
                     to <code>null</code>.</p>
               </li>
               <li>
-                <p>Let |p| be a new promise.</p>
-              </li>
-              <li>
-                <p>[=In parallel=], perform the following steps:</p>
-                <ol>
-                  <li>
-                    <p>Cancel the logging session identified with |sessionId|.
-                    </p>
-                  </li>
-                  <li>
-                    <p>[=Queue a global task=] on the [=networking task source=]
-                       given the current realm's [=global object=] as
-                       <code>global</code> to [=resolve=] |p| with
-                       <code>undefined</code>.</p>
-                  </li>
-                </ol>
-              </li>
-              <li>
-                <p>Return |p|.</p>
+                <p>[=In parallel=], cancel the logging session identified with
+                   |sessionId|.</p>
               </li>
             </ol>
-            <p>By the time |p| resolves:</p>
-            <ul>
-              <li>
-                The user agent MUST NOT be logging any WebRTC-related activity.
-              </li>
-              <li>
-                The user agent MUST have removed any logged data associated
-                with the canceled logging session.
-              </li>
-            </ul>
+            <p>Once the logging session is canceled, the user agent MUST NOT
+              log any WebRTC-related activity. The user agent MUST have removed
+              any logged data associated with the canceled logging session.</p>
           </dd>
         </dl>
       </section>
