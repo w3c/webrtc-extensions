@@ -10,12 +10,12 @@ var respecConfig = {
     editors:  [
       //              { name: "Your Name", url: "http://example.org/",
       //                company: "Your Company", companyURL: "http://example.com/" },
+      { name: "Henrik Boström", company: "Google", w3cid: "96936" },
       { name: "Bernard Aboba", company: "Microsoft Corporation",
         w3cid: "65611"
       }
     ],
     formerEditors: [
-      { name: "Henrik Boström", company: "Google", w3cid: "96936", retiredDate: "2021-02-01" }
     ],
     authors: [
     ],
