@@ -1866,13 +1866,10 @@ partial interface RTCRtpTransceiver {
           [
             Exposed=Window
           ] partial interface RTCPeerConnection {
-            static DOMString startDiagnosticLogging(optional RTCDiagnosticLoggingOptions options = {});
+            static DOMString startDiagnosticLogging();
+            static DOMString setDiagnosticLoggingMetadata(record&lt;DOMString, DOMString&gt; metadata);
             static undefined stopDiagnosticLogging();
             static undefined cancelDiagnosticLogging();
-          };
-
-          dictionary RTCDiagnosticLoggingOptions {
-            record&lt;DOMString, DOMString&gt; metadata;
           };
         </pre>
       </section>
@@ -1880,6 +1877,9 @@ partial interface RTCRtpTransceiver {
         <h3>Internal slots</h3>
           <p>Let the the [=relevant global object=] have an
           <dfn data-dfn-for="RTCPeerConnection">[[\RTCDiagnosticLoggingSessionId]]</dfn>
+          internal slot, initialized to <code>null</code>.</p>
+          <p>Let the the [=relevant global object=] have an
+          <dfn data-dfn-for="RTCPeerConnection">[[\RTCDiagnosticLoggingMetadata]]</dfn>
           internal slot, initialized to <code>null</code>.</p>
       </section>
       <section id="diagnostic-logging-methods">
@@ -1894,20 +1894,6 @@ partial interface RTCRtpTransceiver {
             <p>When this method is invoked, the [= user agent =] MUST run the
                following steps:</p>
             <ol class="algorithm">
-              <li>
-                <p>Let |options| be the first argument of this method.</p>
-              </li>
-              <li>
-                <p>Let |metadata| be |options|'s
-                  {{RTCDiagnosticLoggingOptions/metadata}}.</p>
-              </li>
-              <li>
-                <p>If |metadata|'s [=map/size=] is greater than 5, or
-                   |metadata| [=map/contains=] any [=map/entry=] whose
-                   [=map/key=] or [=map/value=] have a [=string/length=]
-                   greater than 100, 	[=exception/throw=] a {{TypeError}}.
-                  </p>
-              </li>
               <li>
                 <p>If the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
                    internal slot is not <code>null</code>, [=exception/throw=]
@@ -1924,8 +1910,7 @@ partial interface RTCRtpTransceiver {
               </li>
               <li>
                 <p>[=In parallel=], start a logging session of internal WebRTC
-                  activity, using |metadata| for context. Identify the logging
-                  session with |sessionId|.</p>
+                  activity. Identify the logging session with |sessionId|.</p>
               </li>
               <li>
                 <p>Return |sessionId|.</p>
@@ -1937,6 +1922,34 @@ partial interface RTCRtpTransceiver {
               with |sessionId|, which can be used to reference logs (e.g., in
               bug reports).
             </p>
+          </dd>
+          <dt>
+            <dfn>setDiagnosticLoggingMetadata</dfn>
+          </dt>
+          <dd>
+            <p>The {{setDiagnosticLoggingMetadata}} method associates metadata
+              to an ongoing logging session, if any.</p>
+            <p>When this method is invoked, the [= user agent =] MUST run the
+               following steps:</p>
+            <ol class="algorithm">
+              <li>
+                <p>If the {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
+                   internal slot is <code>null</code>, [=exception/throw=] an
+                   {{"InvalidStateError"}} {{DOMException}}.</p>
+              </li>
+              <li>
+                <p>Let |metadata| be the first argument of this method.</p>
+              </li>
+              <li>
+                <p>If |metadata|'s [=map/size=] is greater than 10, or
+                   |metadata| [=map/contains=] any [=map/entry=] whose
+                   [=map/key=] or [=map/value=] have a [=string/length=]
+                   greater than 100, 	[=exception/throw=] a {{TypeError}}.</p>
+              <li>
+                <p>Set {{RTCPeerConnection/[[RTCDiagnosticLoggingMetadata]]}}
+                   to |metadata|.</p>
+              </li>
+            </ol>
           </dd>
           <dt>
             <dfn>stopDiagnosticLogging</dfn>
@@ -1953,16 +1966,24 @@ partial interface RTCRtpTransceiver {
                     {{"InvalidStateError"}} {{DOMException}}.</p>
               </li>
               <li>
-                <p>Let |sessionId| be 
+                <p>Let |sessionId| be
                   {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}</p>
+              </li>
+              <li>
+                <p>Let |metadata| be
+                  {{RTCPeerConnection/[[RTCDiagnosticLoggingMetadata]]}}</p>
               </li>
               <li>
                 <p>Set {{RTCPeerConnection/[[RTCDiagnosticLoggingSessionId]]}}
                     to <code>null</code>.</p>
               </li>
               <li>
+                <p>Set {{RTCPeerConnection/[[RTCDiagnosticLoggingMetadata]]}}
+                    to <code>null</code>.</p>
+              </li>
+              <li>
                 <p>[=In parallel=], stop the logging session identified with
-                   |sessionId|.</p>
+                   |sessionId|, using |metadata| for context.</p>
               </li>
             </ol>
             <p>
@@ -1994,6 +2015,10 @@ partial interface RTCRtpTransceiver {
                     to <code>null</code>.</p>
               </li>
               <li>
+                <p>Set {{RTCPeerConnection/[[RTCDiagnosticLoggingMetadata]]}}
+                    to <code>null</code>.</p>
+              </li>
+              <li>
                 <p>[=In parallel=], cancel the logging session identified with
                    |sessionId|.</p>
               </li>
@@ -2002,22 +2027,6 @@ partial interface RTCRtpTransceiver {
               log any WebRTC-related activity and the [=user agent=] MUST have
               removed any logged data associated with the canceled logging
               session.</p>
-          </dd>
-        </dl>
-      </section>
-      <section id="diagnostic-logging-options-dictionary">
-        <h3>Dictionary {{RTCDiagnosticLoggingOptions}} members</h3>
-        <dl data-link-for="RTCDiagnosticLoggingOptions" data-dfn-for="RTCDiagnosticLoggingOptions" class="dictionary-members">
-          <dt>
-            <dfn data-idl>metadata</dfn> of type 
-            <span class="idlMemberType">[=record=]&lt;{{DOMString}}, {{DOMString}}&gt;</span>,
-            defaulting to <code>[]</code>.
-          </dt>
-          <dd>
-            <p>
-              A [=record=] containing key-value pairs that the application can
-              use to provide context that can be stored in the diagnostic logs.
-            </p>
           </dd>
         </dl>
       </section>
