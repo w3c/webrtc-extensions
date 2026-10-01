@@ -1524,6 +1524,484 @@ dictionary RTCEncodingOptions {
       </dd>
     </dl>
   </section>
+  <section id="rtcrtpreceiver-decoder-events">
+    <h2>
+      {{RTCRtpReceiver}} decoder events
+    </h2>
+    <p>
+      The {{RTCRtpReceiver}} interface is defined in [[WEBRTC]]. This document extends video receivers
+      with events that report changes to the decoder state and decoding failures. Applications
+      can call {{RTCRtpReceiver/getStats()}} after receiving an event to inspect the receiver's current
+      codec and, when permitted, decoder implementation.
+    </p>
+    <pre class="idl">partial interface RTCRtpReceiver {
+  attribute EventHandler ondecoderstatechange;
+  attribute EventHandler ondecodererror;
+};</pre>
+
+    <section id="rtcrtpreceiver-decoder-event-attributes">
+      <h3>
+        {{RTCRtpReceiver}} attributes
+      </h3>
+      <dl data-link-for="RTCRtpReceiver" data-dfn-for="RTCRtpReceiver" class="attributes">
+        <dt>
+          <dfn>ondecoderstatechange</dfn> of type {{EventHandler}}
+        </dt>
+        <dd>
+          <p>
+            The event handler for the {{RTCRtpReceiver/decoderstatechange}} event.
+          </p>
+        </dd>
+        <dt>
+          <dfn>ondecodererror</dfn> of type {{EventHandler}}
+        </dt>
+        <dd>
+          <p>
+            The event handler for the {{RTCRtpReceiver/decodererror}} event.
+          </p>
+        </dd>
+      </dl>
+    </section>
+
+    <section id="rtcdecoderstatechangeevent">
+      <h3>
+        <dfn>RTCDecoderStateChangeEvent</dfn>
+      </h3>
+      <p>
+        The {{RTCRtpReceiver/decoderstatechange}} event uses the
+        {{RTCDecoderStateChangeEvent}} interface.
+      </p>
+      <div>
+        <pre class="idl">[Exposed=Window]
+interface RTCDecoderStateChangeEvent : Event {
+  constructor(DOMString type, RTCDecoderStateChangeEventInit eventInitDict);
+  readonly attribute unsigned long firstDecodedRtpTimestamp;
+};</pre>
+      </div>
+      <section id="rtcdecoderstatechangeevent-constructors">
+        <h4>Constructors</h4>
+        <dl data-link-for="RTCDecoderStateChangeEvent" data-dfn-for="RTCDecoderStateChangeEvent"
+          class="constructors">
+          <dt>
+            <dfn>RTCDecoderStateChangeEvent.constructor()</dfn>
+          </dt>
+          <dd>
+            <p>
+              The constructor initializes a new {{RTCDecoderStateChangeEvent}} whose event type is
+              <var>type</var> and whose {{RTCDecoderStateChangeEvent/firstDecodedRtpTimestamp}} attribute is
+              initialized from
+              <var>eventInitDict</var>.{{RTCDecoderStateChangeEventInit/firstDecodedRtpTimestamp}}.
+            </p>
+          </dd>
+        </dl>
+      </section>
+      <section id="rtcdecoderstatechangeevent-attributes">
+        <h4>Attributes</h4>
+        <dl data-link-for="RTCDecoderStateChangeEvent" data-dfn-for="RTCDecoderStateChangeEvent"
+          class="attributes">
+          <dt>
+            <dfn>firstDecodedRtpTimestamp</dfn> of type
+            <span class="idlAttrType">unsigned long</span>, readonly
+          </dt>
+          <dd>
+            <p>
+              The RTP timestamp of the first frame successfully decoded using the new codec or decoder
+              implementation.
+            </p>
+          </dd>
+        </dl>
+      </section>
+      <div>
+        <pre class="idl">dictionary RTCDecoderStateChangeEventInit : EventInit {
+  required unsigned long firstDecodedRtpTimestamp;
+};</pre>
+        <section id="rtcdecoderstatechangeeventinit">
+          <h4>
+            Dictionary <dfn>RTCDecoderStateChangeEventInit</dfn> Members
+          </h4>
+          <dl data-link-for="RTCDecoderStateChangeEventInit" data-dfn-for="RTCDecoderStateChangeEventInit"
+            class="dictionary-members">
+            <dt>
+              <dfn>firstDecodedRtpTimestamp</dfn> of type
+              <span class="idlAttrType">unsigned long</span>, required
+            </dt>
+            <dd>
+              <p>
+                The RTP timestamp of the first frame successfully decoded using the new codec or decoder
+                implementation.
+              </p>
+            </dd>
+          </dl>
+        </section>
+      </div>
+    </section>
+
+    <section id="rtcdecodererrorevent">
+      <h3>
+        <dfn>RTCDecoderErrorEvent</dfn>
+      </h3>
+      <p>
+        The {{RTCRtpReceiver/decodererror}} event uses the {{RTCDecoderErrorEvent}} interface.
+      </p>
+      <div>
+        <pre class="idl">[Exposed=Window]
+interface RTCDecoderErrorEvent : Event {
+  constructor(DOMString type, RTCDecoderErrorEventInit eventInitDict);
+  [SameObject] readonly attribute DOMException error;
+  readonly attribute unsigned long? lastDecodedRtpTimestamp;
+};</pre>
+      </div>
+      <section id="rtcdecodererrorevent-constructors">
+        <h4>Constructors</h4>
+        <dl data-link-for="RTCDecoderErrorEvent" data-dfn-for="RTCDecoderErrorEvent" class="constructors">
+          <dt>
+            <dfn>RTCDecoderErrorEvent.constructor()</dfn>
+          </dt>
+          <dd>
+            <p>
+              The constructor initializes a new {{RTCDecoderErrorEvent}} whose event type is
+              <var>type</var>, whose {{RTCDecoderErrorEvent/error}} attribute is initialized from
+              <var>eventInitDict</var>.{{RTCDecoderErrorEventInit/error}}, and whose
+              {{RTCDecoderErrorEvent/lastDecodedRtpTimestamp}} attribute is initialized from
+              <var>eventInitDict</var>.{{RTCDecoderErrorEventInit/lastDecodedRtpTimestamp}}.
+            </p>
+          </dd>
+        </dl>
+      </section>
+      <section id="rtcdecodererrorevent-attributes">
+        <h4>Attributes</h4>
+        <dl data-link-for="RTCDecoderErrorEvent" data-dfn-for="RTCDecoderErrorEvent" class="attributes">
+          <dt>
+            <dfn>error</dfn> of type <span class="idlAttrType">{{DOMException}}</span>, readonly
+          </dt>
+          <dd>
+            <p>
+              A generic {{"EncodingError"}} {{DOMException}} describing a decoding failure.
+            </p>
+          </dd>
+          <dt>
+            <dfn>lastDecodedRtpTimestamp</dfn> of type
+            <span class="idlAttrType">unsigned long?</span>, readonly
+          </dt>
+          <dd>
+            <p>
+              The RTP timestamp of the most recent frame successfully decoded before the receiver entered
+              the decoding-failure state, or <code>null</code> if the receiver had not successfully
+              decoded a frame.
+            </p>
+          </dd>
+        </dl>
+      </section>
+      <div>
+        <pre class="idl">dictionary RTCDecoderErrorEventInit : EventInit {
+  required DOMException error;
+  unsigned long? lastDecodedRtpTimestamp = null;
+};</pre>
+        <section id="rtcdecodererroreventinit">
+          <h4>
+            Dictionary <dfn>RTCDecoderErrorEventInit</dfn> Members
+          </h4>
+          <dl data-link-for="RTCDecoderErrorEventInit" data-dfn-for="RTCDecoderErrorEventInit"
+            class="dictionary-members">
+            <dt>
+              <dfn>error</dfn> of type <span class="idlAttrType">{{DOMException}}</span>, required
+            </dt>
+            <dd>
+              <p>
+                The error associated with the decoding failure.
+              </p>
+            </dd>
+            <dt>
+              <dfn>lastDecodedRtpTimestamp</dfn> of type <span class="idlAttrType">unsigned long?</span>,
+              defaulting to <code>null</code>
+            </dt>
+            <dd>
+              <p>
+                The RTP timestamp of the most recent frame successfully decoded before the receiver entered
+                the decoding-failure state, or <code>null</code> if the receiver had not successfully
+                decoded a frame.
+              </p>
+            </dd>
+          </dl>
+        </section>
+      </div>
+    </section>
+
+    <section id="rtcrtpreceiver-decoder-event-state">
+      <h3>Internal slots</h3>
+      <p>
+        Each {{RTCRtpReceiver}} has the following internal slots:
+      </p>
+      <ul>
+        <li>
+          <p>
+            <dfn data-dfn-for="RTCRtpReceiver">{{RTCRtpReceiver/[[HasDecodedFrame]]}}</dfn>, a boolean
+            initialized to <code>false</code>, records whether the receiver has successfully decoded a frame.
+          </p>
+        </li>
+        <li>
+          <p>
+            <dfn data-dfn-for="RTCRtpReceiver">{{RTCRtpReceiver/[[LastDecodedCodec]]}}</dfn>, initialized
+            to <code>null</code>, identifies the codec of the last successfully decoded frame.
+          </p>
+        </li>
+        <li>
+          <p>
+            <dfn data-dfn-for="RTCRtpReceiver">{{RTCRtpReceiver/[[LastDecodedRtpTimestamp]]}}</dfn>, an
+            unsigned long or <code>null</code>, initialized to <code>null</code>, records the RTP timestamp
+            of the receiver's most recently successfully decoded video frame.
+          </p>
+        </li>
+        <li>
+          <p>
+            <dfn data-dfn-for="RTCRtpReceiver">{{RTCRtpReceiver/[[LastExposedDecoderImplementation]]}}</dfn>,
+            initialized to <code>null</code>, identifies the last decoder implementation eligible to be
+            exposed to the application.
+          </p>
+        </li>
+        <li>
+          <p>
+            <dfn data-dfn-for="RTCRtpReceiver">{{RTCRtpReceiver/[[InDecoderFailure]]}}</dfn>, a boolean
+            initialized to <code>false</code>, records whether the receiver is in a decoding-failure state.
+          </p>
+        </li>
+      </ul>
+      <p>
+        Decoder and codec identities in these slots are opaque implementation-internal identities at the
+        logical {{RTCRtpReceiver}} decoding level. They do not represent decoder object counts and are not
+        exposed by this specification.
+      </p>
+    </section>
+
+    <section id="rtcrtpreceiver-process-decoded-frame">
+      <h3>Processing a successfully decoded frame</h3>
+      <p>
+        Whenever an {{RTCRtpReceiver}} successfully decodes a frame, the [= user agent =] MUST
+        <dfn data-lt="process a successfully decoded frame">process the successfully decoded frame</dfn>,
+        given an {{RTCRtpReceiver}} |receiver|, the frame's codec |codec|, decoder implementation
+        |decoderImplementation|, and RTP timestamp |firstDecodedRtpTimestamp|, by running the following
+        steps:
+      </p>
+      <ol class="algorithm">
+        <li>
+          <p>
+            If |receiver|.{{RTCRtpReceiver/track}}.{{MediaStreamTrack/kind}} is not `"video"`, abort these
+            steps.
+          </p>
+        </li>
+        <li>
+          <p>
+            If |receiver|.{{RTCRtpReceiver/[[HasDecodedFrame]]}} is <code>false</code>, run the following
+            steps:
+          </p>
+          <ol>
+            <li>
+              <p>Set |receiver|.{{RTCRtpReceiver/[[HasDecodedFrame]]}} to <code>true</code>.</p>
+            </li>
+            <li>
+              <p>Set |receiver|.{{RTCRtpReceiver/[[LastDecodedCodec]]}} to |codec|.</p>
+            </li>
+            <li>
+              <p>
+                Set |receiver|.{{RTCRtpReceiver/[[LastDecodedRtpTimestamp]]}} to
+                |firstDecodedRtpTimestamp|.
+              </p>
+            </li>
+            <li>
+              <p>Set |receiver|.{{RTCRtpReceiver/[[InDecoderFailure]]}} to <code>false</code>.</p>
+            </li>
+            <li>
+              <p>
+                If running
+                <a data-cite="WEBRTC-STATS#dfn-exposing-hardware-is-allowed">check if hardware exposure is
+                allowed</a>, given |receiver|, returns <code>true</code>, set
+                |receiver|.{{RTCRtpReceiver/[[LastExposedDecoderImplementation]]}} to
+                |decoderImplementation|.
+              </p>
+            </li>
+            <li>
+              <p>Abort these steps.</p>
+            </li>
+          </ol>
+        </li>
+        <li>
+          <p>
+            Let |codecChanged:boolean| be whether |codec| is different from
+            |receiver|.{{RTCRtpReceiver/[[LastDecodedCodec]]}}.
+          </p>
+        </li>
+        <li>
+          <p>Set |receiver|.{{RTCRtpReceiver/[[LastDecodedCodec]]}} to |codec|.</p>
+        </li>
+        <li>
+          <p>
+            Set |receiver|.{{RTCRtpReceiver/[[LastDecodedRtpTimestamp]]}} to
+            |firstDecodedRtpTimestamp|.
+          </p>
+        </li>
+        <li>
+          <p>Set |receiver|.{{RTCRtpReceiver/[[InDecoderFailure]]}} to <code>false</code>.</p>
+        </li>
+        <li>
+          <p>Let |implementationChanged:boolean| be <code>false</code>.</p>
+        </li>
+        <li>
+          <p>
+            If running
+            <a data-cite="WEBRTC-STATS#dfn-exposing-hardware-is-allowed">check if hardware exposure is
+            allowed</a>, given |receiver|, returns <code>true</code>, run the following steps:
+          </p>
+          <ol>
+            <li>
+              <p>
+                If |receiver|.{{RTCRtpReceiver/[[LastExposedDecoderImplementation]]}} is <code>null</code>,
+                set it to |decoderImplementation|.
+              </p>
+            </li>
+            <li>
+              <p>
+                Otherwise, if |decoderImplementation| is different from
+                |receiver|.{{RTCRtpReceiver/[[LastExposedDecoderImplementation]]}}, set
+                |implementationChanged| to <code>true</code> and set
+                |receiver|.{{RTCRtpReceiver/[[LastExposedDecoderImplementation]]}} to
+                |decoderImplementation|.
+              </p>
+            </li>
+          </ol>
+        </li>
+        <li>
+          <p>
+            If |codecChanged| and |implementationChanged| are both <code>false</code>, abort these steps.
+          </p>
+        </li>
+        <li>
+          <p>
+            [= Queue a task =] on the [= networking task source =] to [= fire an event =] named
+            {{RTCRtpReceiver/decoderstatechange}} at |receiver|, using {{RTCDecoderStateChangeEvent}}, with
+            the {{RTCDecoderStateChangeEvent/firstDecodedRtpTimestamp}} attribute initialized to
+            |firstDecodedRtpTimestamp|.
+          </p>
+        </li>
+      </ol>
+      <p class="note">
+        Since the first successfully decoded frame establishes the initial decoder state, it does not fire
+        {{RTCRtpReceiver/decoderstatechange}}. If the codec and eligible decoder implementation both change
+        for the same successfully decoded frame, one event is fired.
+      </p>
+      <p>
+        A successful fallback to another decoder is processed by these steps and MUST NOT produce a
+        {{RTCRtpReceiver/decodererror}} event.
+      </p>
+      <p>
+        When running
+        <a data-cite="WEBRTC-STATS#dfn-exposing-hardware-is-allowed">check if hardware exposure is
+        allowed</a>, given |receiver|, returns <code>false</code>, changes to the decoder implementation
+        MUST NOT cause an event to be queued.
+        The [= user agent =] MUST NOT retain a history, timestamps, or count of such changes for later
+        replay.
+      </p>
+      <p>
+        When running
+        <a data-cite="WEBRTC-STATS#dfn-exposing-hardware-is-allowed">check if hardware exposure is
+        allowed</a>, given |receiver|, returns <code>true</code> again, these steps wait for a successfully
+        decoded frame before comparing the decoder implementation used to decode that frame with
+        {{RTCRtpReceiver/[[LastExposedDecoderImplementation]]}}. If they differ, exactly one
+        {{RTCRtpReceiver/decoderstatechange}} event is fired. Its
+        {{RTCDecoderStateChangeEvent/firstDecodedRtpTimestamp}} is the RTP timestamp of that first
+        successfully decoded frame. Intermediate implementation changes and their timing are not revealed.
+      </p>
+      <p class="note">
+        The optional-receiver input to
+        <a data-cite="WEBRTC-STATS#dfn-exposing-hardware-is-allowed">check if hardware exposure is
+        allowed</a> depends on a coordinated future change to [[WEBRTC-STATS]]. This specification does
+        not define the receiver-specific interactive-media recognition or active-state algorithms.
+      </p>
+    </section>
+
+    <section id="rtcrtpreceiver-report-decoder-error">
+      <h3>Reporting a decoder error</h3>
+      <p>
+        When an {{RTCRtpReceiver}} encounters a decoding failure after the [= user agent =] is unable to
+        recover internally or successfully fall back to another decoder, the [= user agent =] MUST
+        <dfn data-lt="report a decoder error">report the decoder error</dfn>, given the receiver, by
+        running the following steps:
+      </p>
+      <ol class="algorithm">
+        <li>
+          <p>
+            If |receiver|.{{RTCRtpReceiver/track}}.{{MediaStreamTrack/kind}} is not `"video"`, abort these
+            steps.
+          </p>
+        </li>
+        <li>
+          <p>
+            If |receiver|.{{RTCRtpReceiver/[[InDecoderFailure]]}} is <code>true</code>, abort these
+            steps.
+          </p>
+        </li>
+        <li>
+          <p>Set |receiver|.{{RTCRtpReceiver/[[InDecoderFailure]]}} to <code>true</code>.</p>
+        </li>
+        <li>
+          <p>
+            Let |lastDecodedRtpTimestamp| be
+            |receiver|.{{RTCRtpReceiver/[[LastDecodedRtpTimestamp]]}}.
+          </p>
+        </li>
+        <li>
+          <p>
+            [= Queue a task =] on the [= networking task source =] to run the following steps:
+          </p>
+          <ol>
+            <li>
+              <p>
+                Let |error:DOMException| be a new {{DOMException}} whose name is `"EncodingError"`.
+              </p>
+            </li>
+            <li>
+              <p>
+                [= Fire an event =] named {{RTCRtpReceiver/decodererror}} at |receiver|, using
+                {{RTCDecoderErrorEvent}}, with the {{RTCDecoderErrorEvent/error}} attribute initialized to
+                |error| and the {{RTCDecoderErrorEvent/lastDecodedRtpTimestamp}} attribute initialized to
+                |lastDecodedRtpTimestamp|.
+              </p>
+            </li>
+          </ol>
+        </li>
+      </ol>
+      <p>
+        The error name and message are intentionally generic. The {{RTCDecoderErrorEvent/error}} attribute
+        MUST NOT expose decoder-, driver-, platform-, device-, vendor-, hardware-, resource-, or
+        implementation-specific details. A continuous decoding failure produces one event, not one event
+        for every subsequently dropped or undecodable frame. After the [= user agent =] next
+        [= process a successfully decoded frame | successfully decodes a frame =], a subsequent decoding
+        failure can produce another event.
+      </p>
+      <p>
+        [= Report a decoder error | Reporting a decoder error =] is not conditional on
+        the result of running
+        <a data-cite="WEBRTC-STATS#dfn-exposing-hardware-is-allowed">check if hardware exposure is
+        allowed</a>, given |receiver|.
+      </p>
+    </section>
+
+    <section id="rtcrtpreceiver-decoder-events-security-privacy">
+      <h3>Security and privacy considerations</h3>
+      <p>
+        Codec changes are not hardware-gated because the active codec is already available through
+        unprotected WebRTC statistics. Decoder implementation changes use the same hardware-exposure gate
+        as {{RTCInboundRtpStreamStats/decoderImplementation}} and
+        {{RTCInboundRtpStreamStats/powerEfficientDecoder}}; protected changes that occur while exposure is
+        unavailable are not replayed.
+      </p>
+      <p>
+        {{RTCRtpReceiver/decodererror}} provides a prompt, direct indication of a decoding failure that is
+        otherwise observable or inferable. It exposes only a generic error and the nullable RTP timestamp
+        of the last successfully decoded frame. These events do not expose decoder or hardware identity,
+        implementation-specific error details, hidden-change histories, or failure counts.
+      </p>
+    </section>
+  </section>
   <section id="disable-hardware">
     <h2>Disabling hardware acceleration</h2>
     <p>
@@ -1743,6 +2221,22 @@ dictionary RTCEncodingOptions {
           <td>{{Event}}</td>
           <td>
             The CSRC identifier changed in response to an RTP packet.
+          </td>
+        </tr>
+        <tr>
+          <th scope=row><dfn data-dfn-for="RTCRtpReceiver" data-dfn-type=event>decoderstatechange</dfn></th>
+          <td>{{RTCDecoderStateChangeEvent}}</td>
+          <td>
+            The receiver successfully decoded a frame using a different codec or an eligible different
+            decoder implementation.
+          </td>
+        </tr>
+        <tr>
+          <th scope=row><dfn data-dfn-for="RTCRtpReceiver" data-dfn-type=event>decodererror</dfn></th>
+          <td>{{RTCDecoderErrorEvent}}</td>
+          <td>
+            The receiver encountered a decoding failure after internal recovery and fallback were
+            unsuccessful.
           </td>
         </tr>
       </tbody>
