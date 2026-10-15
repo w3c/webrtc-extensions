@@ -402,7 +402,6 @@ partial interface RTCRtpTransceiver {
       additional members to control audio packetization.
     </p>
     <pre class="idl">enum RTCEncodingComplexity {
-        "minimum",
         "low",
         "normal",
         "high",
@@ -490,8 +489,7 @@ partial interface RTCRtpTransceiver {
             <li>{{RTCEncodingComplexity/"very-high"}}: +50%</li>
             <li>{{RTCEncodingComplexity/"high"}}: +15%</li>
             <li>{{RTCEncodingComplexity/"normal"}}: +/- 0%</li>
-            <li>{{RTCEncodingComplexity/"low"}}: -15%</li>
-            <li>{{RTCEncodingComplexity/"minimum"}}: As low as possible</li>
+            <li>{{RTCEncodingComplexity/"low"}}: As low as possible</li>
           </ul>
           <p class="note">The user agent MAY choose to alternate between complexity levels to achieve an intermediate effect. This can be particularly useful in scenarios like temporal layering, where applying higher complexity to the base layer frames can yield significant quality benefits.</p>
         </dd>
